@@ -10,7 +10,6 @@ if __name__ == "__main__":
     # randomly initialize a neural network
     model = torch.nn.Sequential(torch.nn.Linear(1, n_hidden),
                                 torch.nn.ReLU(),
-                                torch.nn.BatchNorm1d(n_hidden),
                                 torch.nn.Linear(n_hidden, 1))
 
     inputs = torch.randn(bsize, 1)
@@ -18,7 +17,6 @@ if __name__ == "__main__":
 
 
     params, names = extract_weights(model)
-
 
     def mod2func(*new_params: Tensor) -> Tensor:
         load_weights(model, names, new_params)

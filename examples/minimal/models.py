@@ -15,7 +15,6 @@ class WHNet(torch.nn.Module):
         self.G2 = SisoLinearDynamicalOperator(n_b=self.nb_2, n_a=self.na_2, n_k=0)
 
     def forward(self, u):
-        u = u[..., None]
         y1_lin = self.G1(u)
         y1_nl = self.F_nl(y1_lin)  # B, T, C1
         y2_lin = self.G2(y1_nl)  # B, T, C2
