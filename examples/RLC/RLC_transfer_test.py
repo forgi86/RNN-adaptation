@@ -26,7 +26,7 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_test.csv"))
+    df_X = pd.read_csv(os.path.join("data", "RLC_data_test_nl.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     plt.figure()
     plt.plot(t, y, 'k', label="$y$")
     plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
-    plt.plot(t, y_transfer, 'r', label="$\hat y$")
+    plt.plot(t, y_transfer, 'r', label="$y_transf$")
     plt.legend()
 
 

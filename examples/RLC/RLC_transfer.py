@@ -27,7 +27,7 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_test.csv"))
+    df_X = pd.read_csv(os.path.join("data", "RLC_data_transfer_nl.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     F = J.transpose() @ J
     P_est = sigma*np.linalg.inv(F)
     A = F + sigma * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y_out_1d)
+    theta_lin = np.linalg.solve(A, J.transpose() @ y)  # adaptation!
     np.save(os.path.join("models", model_name, "theta_lin.npy"), theta_lin)
 
 
