@@ -8,6 +8,7 @@ import time
 import functools
 from util.extract_util import extract_weights, load_weights, f_par_mod_in
 
+
 if __name__ == '__main__':
 
     # In[Set seed for reproducibility]
@@ -16,11 +17,6 @@ if __name__ == '__main__':
 
     # In[Settings]
     model_name = 'IIR'
-    add_noise = True
-    lr = 1e-4
-    num_iter = 20000
-    test_freq = 100
-    n_batch = 1
     n_b = 2
     n_a = 2
 
@@ -31,90 +27,22 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_id_lin.csv"))
+    df_X = pd.read_csv(os.path.join("data", "RLC_data_test.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
     u = np.array(df_X[COL_U], dtype=np.float32)
 
-    # In[Add measurement noise]
-    std_noise_V = add_noise * 30.0
-    std_noise_I = add_noise * 1.0
-    std_noise = np.array([std_noise_V, std_noise_I])
-    x_noise = np.copy(x) + np.random.randn(*x.shape) * std_noise
-    x_noise = x_noise.astype(np.float32)
-
     # In[Output]
-    y_noise = np.copy(x_noise[:, [0]])
-    y_nonoise = np.copy(x[:, [0]])
-
+    y = np.copy(x[:, [0]])
 
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
-    y_meas_torch = torch.tensor(y_noise[None, ...], dtype=torch.float)
-    y_true_torch = torch.tensor(y_nonoise[None, ...], dtype=torch.float)
 
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
-
-    with torch.no_grad():
-        G.b_coeff[0, 0, 0] = 0.01
-        G.b_coeff[0, 0, 1] = 0.0
-
-        G.a_coeff[0, 0, 0] = -0.9
-        G.b_coeff[0, 0, 1] = 0.01
-
-    # In[Setup optimizer]
-    optimizer = torch.optim.Adam([
-        {'params': G.parameters(),    'lr': lr},
-    ], lr=lr)
-
-    # In[Train]
-    LOSS = []
-    start_time = time.time()
-    for itr in range(0, num_iter):
-
-        optimizer.zero_grad()
-
-        # Simulate
-        y_hat = G(u_torch)
-
-        # Compute fit loss
-        err_fit = y_meas_torch - y_hat
-        loss_fit = torch.mean(err_fit**2)
-        loss = loss_fit
-
-        LOSS.append(loss.item())
-        if itr % test_freq == 0:
-            print(f'Iter {itr} | Fit Loss {loss_fit:.4f}')
-
-        # Optimize
-        loss.backward()
-        optimizer.step()
-
-    train_time = time.time() - start_time
-    print(f"\nTrain time: {train_time:.2f}") # 182 seconds
-
-    # In[Save model]
-
     model_folder = os.path.join("models", model_name)
-    if not os.path.exists(model_folder):
-        os.makedirs(model_folder)
-    torch.save(G.state_dict(), os.path.join(model_folder, "G.pkl"))
-    # In[Detach and reshape]
-    y_hat = y_hat.detach().numpy()[0, ...]
-    # In[Plot]
-    plt.figure()
-    plt.plot(t, y_nonoise, 'k', label="$y$")
-    plt.plot(t, y_noise, 'r', label="$y_{noise}$")
-    plt.plot(t, y_hat, 'b', label="$\hat y$")
-    plt.legend()
-
-    plt.figure()
-    plt.plot(LOSS)
-    plt.grid(True)
-
-
+    G.load_state_dict(torch.load(os.path.join(model_folder, "G.pt")))
 
     # In[Parameter Jacobians]
     sim_y = G(u_torch)
@@ -143,12 +71,13 @@ if __name__ == '__main__':
         J = torch.cat(jacs_2d, dim=-1).detach().numpy()
 
     # Adaptation in parameter space
-    sigma = std_noise_V**2
+    sigma = 0.1
     Ip = np.eye(n_param)
     F = J.transpose() @ J
     P_est = sigma*np.linalg.inv(F)
     A = F + sigma * Ip
     theta_lin = np.linalg.solve(A, J.transpose() @ y_out_1d)
+    np.save(os.path.join("models", model_name, "theta_lin.npy"), theta_lin)
 
 
 

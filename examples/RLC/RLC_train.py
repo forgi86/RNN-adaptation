@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # In[Settings]
     model_name = 'IIR'
-    add_noise = False
+    add_noise = True
     lr = 1e-4
     num_iter = 20000
     test_freq = 100
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     model_folder = os.path.join("models", model_name)
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)
-    torch.save(G.state_dict(), os.path.join(model_folder, "G.pkl"))
+    torch.save(G.state_dict(), os.path.join(model_folder, "G.pt"))
     # In[Detach and reshape]
     y_hat = y_hat.detach().numpy()[0, ...]
     # In[Plot]
