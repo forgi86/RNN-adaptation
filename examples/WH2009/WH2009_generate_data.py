@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import util.metrics
 import control
 
-from models import WHNet
+from models import WHNet3
 
 # In[Main]
 if __name__ == '__main__':
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     matplotlib.rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica']})
 
     # In[Settings]
-    model_name = "model_WH"
+    model_name = "model_WH3"
 
     # Settings
     n_b = 8
@@ -45,18 +45,29 @@ if __name__ == '__main__':
 
     # In[Instantiate models]
 
+
     # Create models
-    model = WHNet()
+    model = WHNet3()
 
     model_folder = os.path.join("models", model_name)
     # Create model parameters
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
 
     G1 = control.TransferFunction(*model.G1.get_tfdata(), dt=ts)
+    G1 = G1*-1
     G2 = control.TransferFunction(*model.G2.get_tfdata(), dt=ts)
+    F_nl = model.F_nl
+
+    x_lin = torch.linspace(-3, 3, 1000)
+    with torch.no_grad():
+        y_nl = -F_nl(x_lin[..., None]).numpy()
+    x_lin = x_lin.numpy()
 
     plt.figure()
     control.bode(G1)
 
     plt.figure()
     control.bode(G2)
+
+    plt.figure()
+    plt.plot(x_lin, y_nl)
