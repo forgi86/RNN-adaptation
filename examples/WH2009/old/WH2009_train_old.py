@@ -40,7 +40,7 @@ if __name__ == '__main__':
     COL_Y = ['yBenchMark']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "WienerHammerBenchmark.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "WienerHammerBenchmark.csv"))
 
     # Extract data
     y = np.array(df_X[COL_Y], dtype=np.float32)  # batch, time, channel
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     print(f"\nTrain time: {train_time:.2f}")
 
     # In[Save model]
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)
 

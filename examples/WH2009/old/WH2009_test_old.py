@@ -29,7 +29,7 @@ if __name__ == '__main__':
     COL_Y = ['yBenchMark']
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "WienerHammerBenchmark.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "WienerHammerBenchmark.csv"))
 
     # Extract data
     y_meas = np.array(df_X[COL_Y], dtype=np.float32)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     G2 = SisoLinearDynamicalOperator(n_b=n_b, n_a=n_a, n_k=0)
     F_nl = SisoStaticNonLinearity(n_hidden=10, activation='tanh')
 
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     # Create model parameters
     G1.load_state_dict(torch.load(os.path.join(model_folder, "G1.pkl")))
     F_nl.load_state_dict(torch.load(os.path.join(model_folder, "F_nl.pkl")))
@@ -91,11 +91,11 @@ if __name__ == '__main__':
     _, y_imp = control.impulse_response(G1_sys, np.arange(n_imp) * ts)
     #    plt.plot(G1_num)
     plt.plot(y_imp)
-    plt.savefig(os.path.join("models", model_name, "G1_imp.pdf"))
+    plt.savefig(os.path.join("../models", model_name, "G1_imp.pdf"))
     plt.figure()
     mag_G1, phase_G1, omega_G1 = control.bode(G1_sys, omega_limits=[1e2, 1e5])
     plt.suptitle("$G_1$ bode plot")
-    plt.savefig(os.path.join("models", model_name, "G1_bode.pdf"))
+    plt.savefig(os.path.join("../models", model_name, "G1_bode.pdf"))
 
     # G2_b = G2.G.weight.detach().numpy()[0, 0, ::-1]
     G2_num, G2_den = G2.get_tfdata()
@@ -104,11 +104,11 @@ if __name__ == '__main__':
     plt.title("$G_2$ impulse response")
     _, y_imp = control.impulse_response(G2_sys, np.arange(n_imp) * ts)
     plt.plot(y_imp)
-    plt.savefig(os.path.join("models", model_name, "G1_imp.pdf"))
+    plt.savefig(os.path.join("../models", model_name, "G1_imp.pdf"))
     plt.figure()
     mag_G2, phase_G2, omega_G2 = control.bode(G2_sys, omega_limits=[1e2, 1e5])
     plt.suptitle("$G_2$ bode plot")
-    plt.savefig(os.path.join("models", model_name, "G2_bode.pdf"))
+    plt.savefig(os.path.join("../models", model_name, "G2_bode.pdf"))
 
 # In[Inspect static non-linearity]
 

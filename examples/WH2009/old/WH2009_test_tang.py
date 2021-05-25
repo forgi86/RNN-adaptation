@@ -41,7 +41,7 @@ if __name__ == '__main__':
     COL_Y = ['yBenchMark']
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "WienerHammerBenchmark.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "WienerHammerBenchmark.csv"))
 
     # Extract data
     y_meas = np.array(df_X[COL_Y], dtype=np.float32)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     # Create models
     model = WHNet()
 
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     # Create model parameters
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pkl")))
 
