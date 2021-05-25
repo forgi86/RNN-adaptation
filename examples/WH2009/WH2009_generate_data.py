@@ -54,6 +54,10 @@ if __name__ == '__main__':
     model_folder = os.path.join("models", model_name)
     # Create model parameters
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
+    with torch.no_grad():
+        model.G1.b_coeff *= -1
+        model.F_nl.net[0].weight *= -1
+        model.F_nl.net[0].bias *= -1
 
     G1 = control.TransferFunction(*model.G1.get_tfdata(), dt=ts)
     G1 = G1*-1
@@ -61,13 +65,9 @@ if __name__ == '__main__':
     F_nl = model.F_nl
 
 
-#    model_new = WHNet3()
-#    model_new.G1.a_coeff[0, 0, :] = G1.a_coeff
-#    model_new.G1.b_coeff[0, 0, :] = G1.b_coeff
-
     x_lin = torch.linspace(-4, 4, 1000)
     with torch.no_grad():
-        y_nl = -F_nl(x_lin[..., None]).numpy()
+        y_nl = F_nl(x_lin[..., None]).numpy()
 
 
     Y_nl = numpy.empty((100, 1000))
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             F_nl_.eval()
             F_nl_.net[0].weight += 0.05*torch.randn(F_nl_.net[0].weight.shape)
             F_nl_.net[2].weight += 0.05 * torch.randn(F_nl_.net[2].weight.shape)
-            Y_nl[idx, :] = -F_nl_(x_lin[..., None]).squeeze().detach().numpy()
+            Y_nl[idx, :] = F_nl_(x_lin[..., None]).squeeze().detach().numpy()
 
     x_lin = x_lin.numpy()
 
