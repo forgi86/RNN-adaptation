@@ -34,7 +34,7 @@ if __name__ == '__main__':
     ts = 1/fs
     t = np.arange(N)*ts
 
-    N_load = 1000
+    N_load = 10000
     y_meas = y_meas[:N_load, [0]]
     u = u[:N_load, [0]]
 

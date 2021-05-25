@@ -80,6 +80,7 @@ if __name__ == '__main__':
     # In[Plot]
     plt.figure()
     plt.plot(t, y_meas, 'k', label="$y$")
-    #plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
+    plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
     plt.plot(t, y_transfer, 'r', label="$y_{tr}$")
     plt.legend()
+
