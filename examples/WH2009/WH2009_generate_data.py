@@ -1,3 +1,4 @@
+import numpy
 import torch
 import pandas as pd
 import numpy as np
@@ -6,8 +7,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import util.metrics
 import control
-
+import copy
 from models import WHNet3
+
 
 # In[Main]
 if __name__ == '__main__':
@@ -58,9 +60,25 @@ if __name__ == '__main__':
     G2 = control.TransferFunction(*model.G2.get_tfdata(), dt=ts)
     F_nl = model.F_nl
 
-    x_lin = torch.linspace(-3, 3, 1000)
+
+#    model_new = WHNet3()
+#    model_new.G1.a_coeff[0, 0, :] = G1.a_coeff
+#    model_new.G1.b_coeff[0, 0, :] = G1.b_coeff
+
+    x_lin = torch.linspace(-4, 4, 1000)
     with torch.no_grad():
         y_nl = -F_nl(x_lin[..., None]).numpy()
+
+
+    Y_nl = numpy.empty((100, 1000))
+    for idx in range(100):
+        with torch.no_grad():
+            F_nl_ = copy.deepcopy(F_nl)
+            F_nl_.eval()
+            F_nl_.net[0].weight += 0.05*torch.randn(F_nl_.net[0].weight.shape)
+            F_nl_.net[2].weight += 0.05 * torch.randn(F_nl_.net[2].weight.shape)
+            Y_nl[idx, :] = -F_nl_(x_lin[..., None]).squeeze().detach().numpy()
+
     x_lin = x_lin.numpy()
 
     plt.figure()
@@ -70,4 +88,5 @@ if __name__ == '__main__':
     control.bode(G2)
 
     plt.figure()
-    plt.plot(x_lin, y_nl)
+    plt.plot(x_lin, Y_nl.transpose(), 'r')
+    plt.plot(x_lin, y_nl, 'k')
