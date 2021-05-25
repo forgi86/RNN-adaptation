@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 import numpy as np
 import functools
-
+import matplotlib.pyplot as plt
 from models import WHNet
 from util.extract_util import extract_weights, load_weights, f_par_mod_in
 
@@ -34,9 +34,14 @@ if __name__ == '__main__':
     ts = 1/fs
     t = np.arange(N)*ts
 
-    N_load = 1000
+    N_load = 10000
     y_meas = y_meas[:N_load, [0]]
     u = u[:N_load, [0]]
+    t = t[:N_load]
+
+    # Prepare data
+    u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
+
 
     # In[Instantiate models]
 
@@ -44,15 +49,13 @@ if __name__ == '__main__':
     model = WHNet()
     model_folder = os.path.join("models", model_name)
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
-
-
-    # In[Simulate model]
-    transfer_u = torch.tensor(u[None, :, :])
-    transfer_y = torch.tensor(y_meas[None, :, :])
-    sim_y = model(transfer_u)
+    theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
 
     # In[Parameter Jacobians]
-    N_load = transfer_u.numel()
+    with torch.no_grad():
+        y_sim_torch = model(u_torch)
+
+    y_sim_torch = y_sim_torch.numpy()[0, ...]
 
     # extract the parameters from the model in order to be able to take jacobians using the convenient functional API
     # see the discussion in https://discuss.pytorch.org/t/get-gradient-and-jacobian-wrt-the-parameters/98240
@@ -63,24 +66,20 @@ if __name__ == '__main__':
     # [f"{names[i]}_{j}" for i in range(len(names)) for j in range(params[i].numel())]
 
     # from Pytorch module to function of the module parameters only
-    f_par = functools.partial(f_par_mod_in, param_names=names, module=model, inputs=transfer_u)
+    f_par = functools.partial(f_par_mod_in, param_names=names, module=model, inputs=u_torch)
     f_par(*params)
 
     jacs = torch.autograd.functional.jacobian(f_par, params)
     jac_dict = dict(zip(names, jacs))
 
     with torch.no_grad():
-        y_out_1d = torch.ravel(sim_y).detach().numpy()
-        params_1d = list(map(torch.ravel, params))
-        theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
         jacs_2d = list(map(lambda x: x.reshape(N_load, -1), jacs))
         J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+    y_transfer = J @ theta_lin
 
-    # Adaptation in parameter space
-    sigma = 0.1
-    Ip = np.eye(n_param)
-    F = J.transpose() @ J
-    P_est = sigma*np.linalg.inv(F)
-    A = F + sigma * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y_meas)  # adaptation!
-    np.save(os.path.join("models", model_name, "theta_lin.npy"), theta_lin)
+    # In[Plot]
+    plt.figure()
+    plt.plot(t, y_meas, 'k', label="$y$")
+    #plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
+    plt.plot(t, y_transfer, 'r', label="$y_{tr}$")
+    plt.legend()

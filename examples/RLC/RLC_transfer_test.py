@@ -51,7 +51,6 @@ if __name__ == '__main__':
 
     y_sim_torch = y_sim_torch.numpy()[0, ...]
 
-
     # extract the parameters from the model in order to be able to take jacobians using the convenient functional API
     # see the discussion in https://discuss.pytorch.org/t/get-gradient-and-jacobian-wrt-the-parameters/98240
     params, names = extract_weights(G)
