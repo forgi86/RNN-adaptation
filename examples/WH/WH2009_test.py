@@ -15,10 +15,10 @@ if __name__ == '__main__':
     model_name = "model_WH3"  # base model (only used for jacobian feature extraction)
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "data_all.csv"))
+    df_X = pd.read_csv(os.path.join("data", "transfer", "data_all.csv"))
 
     # Extract data
-    y_meas = np.array(df_X[["y0"]], dtype=np.float32)
+    y_meas = np.array(df_X[["y1"]], dtype=np.float32)
     u = np.array(df_X[["u"]], dtype=np.float32)
     fs = 1.0
     N = y_meas.size

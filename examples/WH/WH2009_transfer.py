@@ -15,7 +15,7 @@ if __name__ == '__main__':
     model_name = "model_WH3"
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "data_all.csv"))
+    df_X = pd.read_csv(os.path.join("data", "transfer", "data_all.csv"))
 
     signal_num = 1
     # Extract data
@@ -62,6 +62,7 @@ if __name__ == '__main__':
     jacs = torch.autograd.functional.jacobian(f_par, params)
     jac_dict = dict(zip(names, jacs))
 
+    # Get jacobian matrix as a 2D object
     with torch.no_grad():
         y_out_1d = torch.ravel(sim_y).detach().numpy()
         params_1d = list(map(torch.ravel, params))
