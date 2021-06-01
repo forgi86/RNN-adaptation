@@ -1,0 +1,136 @@
+actionlib==1.12.1
+angles==1.9.12
+backcall @ file:///home/ktietz/src/ci/backcall_1611930011877/work
+bondpy==1.8.5
+camera-calibration==1.15.0
+camera-calibration-parsers==1.11.13
+catkin==0.7.29
+certifi==2020.12.5
+controller-manager==0.18.3
+controller-manager-msgs==0.18.3
+cv-bridge==1.13.0
+cycler==0.10.0
+decorator @ file:///tmp/build/80754af9/decorator_1621259047763/work
+diagnostic-analysis==1.9.7
+diagnostic-common-diagnostics==1.9.7
+diagnostic-updater==1.9.7
+dynamic-reconfigure==1.6.3
+gazebo-plugins==2.8.7
+gazebo-ros==2.8.7
+gencpp==0.6.5
+geneus==2.2.6
+genlisp==0.4.16
+genmsg==0.5.16
+gennodejs==2.0.1
+genpy==0.6.15
+gpytorch==1.4.2
+image-geometry==1.13.0
+interactive-markers==1.11.5
+ipython @ file:///tmp/build/80754af9/ipython_1617120888991/work
+ipython-genutils @ file:///tmp/build/80754af9/ipython_genutils_1606773439826/work
+jedi @ file:///tmp/build/80754af9/jedi_1606932531272/work
+joblib==1.0.1
+joint-state-publisher==1.12.15
+kdl-parser-py==1.13.1
+kiwisolver @ file:///tmp/build/80754af9/kiwisolver_1612281846643/work
+laser-geometry==1.6.7
+matplotlib @ file:///tmp/build/80754af9/matplotlib-suite_1613407855456/work
+message-filters==1.14.10
+mkl-fft==1.3.0
+mkl-random @ file:///tmp/build/80754af9/mkl_random_1618853971975/work
+mkl-service==2.3.0
+numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1620831195661/work
+olefile==0.46
+pandas==1.2.4
+parso==0.7.0
+pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
+Pillow @ file:///tmp/build/80754af9/pillow_1617385572585/work
+prompt-toolkit @ file:///tmp/build/80754af9/prompt-toolkit_1616415428029/work
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+Pygments @ file:///tmp/build/80754af9/pygments_1621606182707/work
+pyparsing @ file:///home/linux1/recipes/ci/pyparsing_1610983426697/work
+python-dateutil @ file:///home/ktietz/src/ci/python-dateutil_1611928101742/work
+python-qt-binding==0.4.3
+pytz @ file:///tmp/build/80754af9/pytz_1612215392582/work
+qt-dotgraph==0.4.2
+qt-gui==0.4.2
+qt-gui-cpp==0.4.2
+qt-gui-py-common==0.4.2
+resource-retriever==1.12.6
+rosbag==1.14.10
+rosboost-cfg==1.14.9
+rosclean==1.14.9
+roscreate==1.14.9
+rosgraph==1.14.10
+roslaunch==1.14.10
+roslib==1.14.9
+roslint==0.11.2
+roslz4==1.14.10
+rosmake==1.14.9
+rosmaster==1.14.10
+rosmsg==1.14.10
+rosnode==1.14.10
+rosparam==1.14.10
+rospy==1.14.10
+rosservice==1.14.10
+rostest==1.14.10
+rostopic==1.14.10
+rosunit==1.14.9
+roswtf==1.14.10
+rqt-action==0.4.9
+rqt-bag==0.5.1
+rqt-bag-plugins==0.5.1
+rqt-console==0.4.9
+rqt-dep==0.4.9
+rqt-graph==0.4.11
+rqt-gui==0.5.2
+rqt-gui-py==0.5.2
+rqt-image-view==0.4.16
+rqt-launch==0.4.8
+rqt-logger-level==0.4.8
+rqt-moveit==0.5.10
+rqt-msg==0.4.8
+rqt-nav-view==0.5.7
+rqt-plot==0.4.13
+rqt-pose-view==0.5.8
+rqt-publisher==0.4.8
+rqt-py-common==0.5.2
+rqt-py-console==0.4.8
+rqt-reconfigure==0.5.4
+rqt-robot-dashboard==0.5.7
+rqt-robot-monitor==0.5.13
+rqt-robot-steering==0.5.10
+rqt-runtime-monitor==0.5.7
+rqt-rviz==0.6.0
+rqt-service-caller==0.4.8
+rqt-shell==0.4.9
+rqt-srv==0.4.8
+rqt-tf-tree==0.6.0
+rqt-top==0.4.8
+rqt-topic==0.4.11
+rqt-web==0.4.8
+rviz==1.13.17
+scikit-learn==0.24.2
+scipy @ file:///tmp/build/80754af9/scipy_1618855955483/work
+sensor-msgs==1.12.8
+sip==4.19.13
+six @ file:///tmp/build/80754af9/six_1605205306277/work
+smach==2.0.1
+smach-ros==2.0.1
+smclib==1.8.5
+tf==1.12.1
+tf-conversions==1.12.1
+tf2-geometry-msgs==0.6.5
+tf2-kdl==0.6.5
+tf2-py==0.6.5
+tf2-ros==0.6.5
+threadpoolctl==2.1.0
+topic-tools==1.14.10
+torch==1.8.1
+tornado @ file:///tmp/build/80754af9/tornado_1606942317143/work
+traitlets @ file:///home/ktietz/src/ci/traitlets_1611929699868/work
+typing-extensions @ file:///home/ktietz/src/ci_mi/typing_extensions_1612808209620/work
+urdfdom-py==0.4.5
+wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
+xacro==1.13.10
