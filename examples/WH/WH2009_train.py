@@ -1,13 +1,12 @@
+import os
 import torch
 import pandas as pd
 import numpy as np
-import os
 from models import WHNet3
 import matplotlib.pyplot as plt
 import time
+import dynonet.utils.metrics
 
-
-import util.metrics
 
 # In[Main]
 if __name__ == '__main__':
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     COL_Y = ['yBenchMark']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "WienerHammerBenchmark.csv"))
+    df_X = pd.read_csv(os.path.join("data", "WH2009", "WienerHammerBenchmark.csv"))
 
     # Extract data
     y = np.array(df_X[COL_Y], dtype=np.float32)  # batch, time, channel
@@ -131,7 +130,7 @@ if __name__ == '__main__':
     plt.grid(True)
 
     # In[Plot]
-    e_rms = util.metrics.error_rmse(y_hat, y_fit)[0]
+    e_rms = dynonet.utils.metrics.error_rmse(y_hat, y_fit)[0]
     print(f"RMSE: {e_rms:.2f}") # target: 1mv
 
 

@@ -19,11 +19,11 @@ class ExactGPModel(gpytorch.models.ExactGP):
 
 
 if __name__ == "__main__":
-    N = 2
+    N = 100
     bsize = 100
-    data_transf = torch.randn(bsize, N)
-    response_transf = torch.randn(bsize, N)
-    data_new = torch.randn(bsize, N)
+    data_transf = torch.randn(bsize, N, 1)
+    response_transf = torch.randn(bsize, N, 1)
+    data_new = torch.randn(bsize, N, 1)
 
     # randomly initialize a neural network
     model = models.WHNet()

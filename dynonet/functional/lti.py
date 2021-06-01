@@ -1,8 +1,8 @@
 import torch
-import numpy as np
 import scipy as sp
+import numpy as np
 import scipy.signal
-from util.filtering import lfilter_mimo_components
+from dynonet.utils.filtering import lfilter_mimo_components
 
 
 class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
@@ -138,7 +138,6 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
 if __name__ == '__main__':
 
     import numpy as np
-    import matplotlib.pyplot as plt
     from torch.autograd import gradcheck
     from torch.autograd.gradcheck import get_numerical_jacobian, get_analytical_jacobian
 

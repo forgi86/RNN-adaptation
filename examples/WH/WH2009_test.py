@@ -3,11 +3,8 @@ import matplotlib
 import torch
 import pandas as pd
 import numpy as np
-import functools
 import matplotlib.pyplot as plt
 from models import WHNet3
-from util.extract_util import extract_weights, load_weights, f_par_mod_in
-
 
 if __name__ == '__main__':
 
@@ -41,7 +38,6 @@ if __name__ == '__main__':
     model = WHNet3()
     model_folder = os.path.join("models", model_name)
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
-    theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
 
     # In[Parameter Jacobians]
     with torch.no_grad():

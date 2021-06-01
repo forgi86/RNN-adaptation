@@ -6,8 +6,8 @@ import numpy as np
 import functools
 import matplotlib.pyplot as plt
 from models import WHNet3
-import util.metrics
-from util.extract_util import extract_weights, load_weights, f_par_mod_in
+import dynonet.utils.metrics
+from dynonet.utils.extract_util import extract_weights, f_par_mod_in
 
 
 if __name__ == '__main__':
@@ -82,5 +82,5 @@ if __name__ == '__main__':
 
     # In[Metrics]
 
-    e_rms_sim = 1000 * util.metrics.error_rmse(y_meas, y_sim_torch)[0]
-    e_rms_transf = 1000 * util.metrics.error_rmse(y_meas, y_transfer)[0]
+    e_rms_sim = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_sim_torch)[0]
+    e_rms_transf = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_transfer)[0]

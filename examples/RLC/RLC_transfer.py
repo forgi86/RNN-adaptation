@@ -2,11 +2,9 @@ import torch
 import pandas as pd
 import numpy as np
 import os
-from torchid.module.lti import SisoLinearDynamicalOperator
-import matplotlib.pyplot as plt
-import time
+from dynonet.module.lti import SisoLinearDynamicalOperator
 import functools
-from util.extract_util import extract_weights, load_weights, f_par_mod_in
+from dynonet.utils.extract_util import extract_weights, f_par_mod_in
 
 
 if __name__ == '__main__':

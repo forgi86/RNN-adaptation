@@ -6,7 +6,7 @@ import numpy as np
 import functools
 
 from models import WHNet3
-from util.extract_util import extract_weights, load_weights, f_par_mod_in
+from dynonet.utils.extract_util import extract_weights, f_par_mod_in
 
 
 if __name__ == '__main__':
