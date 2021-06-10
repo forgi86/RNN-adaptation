@@ -4,7 +4,6 @@ import finite_ntk
 import models
 
 
-
 class ExactGPModel(gpytorch.models.ExactGP):
     # exact RBF Gaussian process class
     def __init__(self, train_x, train_y, likelihood, model):
@@ -19,11 +18,11 @@ class ExactGPModel(gpytorch.models.ExactGP):
 
 
 if __name__ == "__main__":
-    N = 100
-    bsize = 100
-    data_transf = torch.randn(bsize, N, 1)
-    response_transf = torch.randn(bsize, N, 1)
-    data_new = torch.randn(bsize, N, 1)
+    seq_len = 100
+    bsize = 1
+    data_transf = torch.randn(bsize, seq_len, 1)
+    response_transf = torch.randn(bsize, seq_len, 1)
+    data_new = torch.randn(bsize, seq_len, 1)
 
     # randomly initialize a neural network
     model = models.WHNet()

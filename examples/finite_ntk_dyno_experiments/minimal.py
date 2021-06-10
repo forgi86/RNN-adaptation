@@ -19,7 +19,7 @@ loss_function = nn.MSELoss()
 
 # Data
 data_transf = 0.1*torch.randn(n_seq, n_in)
-response_transf = torch.clone(data_transf[:,0]) * 3.
+response_transf = torch.clone(data_transf[:, 0]) * 3.
 
 # randomly initialize a neural network
 model = torch.nn.Sequential(torch.nn.Linear(n_in, n_hidden),
