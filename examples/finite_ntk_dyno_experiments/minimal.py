@@ -18,6 +18,7 @@ n_out = 1
 loss_function = nn.MSELoss()
 
 # Data
+
 data_train = torch.sort(0.1 * torch.randn(n_seq, n_in), 0)[0]
 response_train = torch.exp(torch.clone(data_train[:, 0]) * 3.)
 
