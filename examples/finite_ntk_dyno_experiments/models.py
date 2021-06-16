@@ -29,22 +29,24 @@ class RNNWrapper(torch.nn.Module):
         self.n_in = n_in
         self.n_out = n_out
 
-    def forward(self, u_in_):
-        u_in = u_in_.view(*u_in_.shape[:-1], -1, self.n_in)  # [bsize, seq_len, n_in]
+    def forward(self, u_in):
+        u_in = u_in.view(u_in.shape[0], -1, self.n_in)# [bsize, seq_len, n_in]
+        print(u_in.shape)
         y_out = self.rnn(u_in)  # [bsize, seq_len, n_out]
-        y_out_ = y_out.reshape(*y_out.shape[:-2], -1)  # [bsize, seq_len*n_out]
+        y_out_ = y_out.reshape(y_out.shape[0], -1)  # [bsize, seq_len*n_out]
         return y_out_
 
 
 class LSTMWrapper(torch.nn.Module):
-    def __init__(self, lstm, n_in, n_out):
+    def __init__(self, lstm, n_in, n_out, seq_len):
         super(LSTMWrapper, self).__init__()
         self.lstm = lstm
         self.n_in = n_in
         self.n_out = n_out
+        self.seq_len = seq_len
 
     def forward(self, u_in):
-        u_in = u_in.view(*u_in.shape[:-1], -1, self.n_in)
-        y_out, (hn, cn) = self.lstm(u_in)
-        y_out = y_out.reshape(*y_out.shape[:-2], -1)
+        u_in = u_in.view(u_in.shape[0], -1, self.n_in)
+        y_out, _ = self.lstm(u_in)
+        y_out = y_out[:, -1, :].reshape(y_out.shape[0], -1)
         return y_out

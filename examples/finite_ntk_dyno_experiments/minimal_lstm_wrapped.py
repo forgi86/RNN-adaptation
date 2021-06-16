@@ -2,7 +2,7 @@ import torch
 import gpytorch
 import finite_ntk
 import models
-
+import numpy as np
 
 class ExactGPModel(gpytorch.models.ExactGP):
     # exact RBF Gaussian process class
@@ -22,21 +22,29 @@ if __name__ == "__main__":
     bsize = 32
     n_in = 1
     n_out = 1
-    data_transf = torch.randn(bsize, seq_len, n_in)
-    response_transf = torch.randn(bsize, seq_len, n_out)
-    data_new = torch.randn(bsize, seq_len, n_in)
+
+    # Data
+    data_train = torch.from_numpy(np.random.randn(bsize, seq_len, n_in))
+    response_train = torch.exp(torch.clone(data_train[:, -1, 0]) * 3.)
+
+    data_transf = torch.from_numpy(np.random.randn(bsize, seq_len, n_in))
+    response_transf = torch.exp(torch.clone(data_transf[:, -1, 0]) * 5.)
+
+    data_transf_test = torch.from_numpy(np.random.randn(bsize, seq_len, n_in))
+    response_transf_test = torch.exp(torch.clone(data_transf_test[:, -1, 0]) * 5.)
+
 
     # randomly initialize a neural network
     lstm = torch.nn.LSTM(n_in, n_out, 1, batch_first=True)
-    lstm_wrapped = models.LSTMWrapper(lstm, n_in, n_out)  # [bsize, seq_len*n_in] -> [bsize, seq_len*n_out]
-
+    lstm_wrapped = models.LSTMWrapper(lstm, n_in, n_out, seq_len).double()  # [bsize, seq_len*n_in] -> [bsize, seq_len*n_out]
+    print(lstm.state_dict())
     # reshape input & output data
-    data_transf_ = data_transf.view(*data_transf.shape[:-2], -1)
-    response_transf_ = response_transf.view(*data_transf.shape[:-2], -1)
-    data_new_ = data_new.view(*data_new.shape[:-2], -1)
+    data_transf_ = data_transf.reshape(bsize, n_in*seq_len)
+    response_transf_ = response_transf.reshape(bsize, n_out)
+    data_transf_test = data_transf_test.reshape(bsize, n_out*seq_len)
     response_model_ = lstm_wrapped(data_transf_)
 
-    lstm_wrapped(data_transf_).shape
+    print(response_model_.shape)
 
     gp_lh = gpytorch.likelihoods.GaussianLikelihood()
     gp_model = ExactGPModel(data_transf_, response_transf_, gp_lh, lstm_wrapped)
