@@ -2,6 +2,7 @@ import torch
 from dynonet.module.lti import SisoLinearDynamicalOperator
 from dynonet.module.static import SisoStaticNonLinearity
 
+import torch.nn as nn
 
 class WHNet(torch.nn.Module):
     def __init__(self, nb_1=8, na_1=8, nb_2=8, na_2=8):
@@ -38,15 +39,28 @@ class RNNWrapper(torch.nn.Module):
 
 
 class LSTMWrapper(torch.nn.Module):
-    def __init__(self, lstm, n_in, n_out, seq_len):
+    def __init__(self, lstm, n_in, n_out, seq_len, n_hidden):
         super(LSTMWrapper, self).__init__()
         self.lstm = lstm
         self.n_in = n_in
         self.n_out = n_out
         self.seq_len = seq_len
+        self.n_hidden = n_hidden
 
     def forward(self, u_in):
-        u_in = u_in.view(-1, self.seq_len, self.n_in)
-        y_out, _ = self.lstm(u_in)
-        y_out = y_out.reshape(-1, y_out.shape[-1])
+        u_in = u_in.view(*u_in.shape[:-1], -1, self.n_in)
+        y_out = self.lstm(u_in)
+        y_out = y_out.reshape(-1, y_out.shape[-1]) if y_out.shape[-1] > 1 else y_out.reshape(-1, )
         return y_out
+
+
+class Model(nn.Module):
+
+    def __init__(self, input_size, hidden_size, num_layers, output_size, bidirectional=False):
+        super(Model, self).__init__()
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, bidirectional=bidirectional).double()
+        self.decoder = nn.Linear(hidden_size * (1 + int(bidirectional)), output_size).double()
+
+    def forward(self, inputs):
+        output, _ = self.lstm(inputs)
+        return self.decoder(output)

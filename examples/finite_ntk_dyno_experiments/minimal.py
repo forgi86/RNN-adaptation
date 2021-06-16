@@ -3,7 +3,6 @@ import torch
 import gpytorch
 import finite_ntk
 import matplotlib.pyplot as plt
-import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn as nn
 
@@ -70,7 +69,7 @@ print("GP model ", gp_model)
 # TODO: This term needs to be trained (with or after the network)
 # using the GP likelihood
 with torch.no_grad():
-    mse = loss_function(model(data_train),response_train)
+    mse = loss_function(model(data_train), response_train)
 gp_model.likelihood.noise = mse
 
 print("Noise term", gp_model.likelihood.noise.item())
