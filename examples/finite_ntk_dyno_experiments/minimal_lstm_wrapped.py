@@ -27,7 +27,7 @@ loss_function = nn.MSELoss()
 
 if __name__ == "__main__":
 
-    epochs = 1000
+    epochs = 3000
     seq_len = 10
     bsize = 32
     n_in = 10
