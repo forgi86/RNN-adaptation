@@ -18,28 +18,30 @@ class ExactGPModel(gpytorch.models.ExactGP):
 
 
 if __name__ == "__main__":
-    seq_len = 20
-    bsize = 32
+    seq_len = 64
+    bsize = 1
     n_in = 1
-    n_out = 1
-    data_transf = torch.randn(bsize, seq_len, n_in)
-    response_transf = torch.randn(bsize, seq_len, n_out)
-    data_new = torch.randn(bsize, seq_len, n_in)
+    n_out = 1  # must be on (GP model is only scalar)
+
+    x_transf = torch.randn(bsize, seq_len, n_in)
+    y_transf = torch.randn(bsize, seq_len, n_out)
+    x_new = torch.randn(bsize, seq_len, n_in)
 
     # randomly initialize a neural network
-    #rnn = torch.nn.LSTM(n_in, n_out, 1, batch_first=True)
-    rnn = models.WHNet()  # [bsize, seq_len, n_in] -> [bsize, seq_len, n_out]
-    rnn_wrapped = models.RNNWrapper(rnn, n_in, n_out)  # [bsize, seq_len*n_in] -> [bsize, seq_len*n_out]
+    dyno = models.WHNet()  # [bsize, seq_len, n_in] -> [bsize, seq_len, n_out]
+    dyno_wrapped = models.DynoWrapper(dyno, n_in, n_out)  # [bsize*seq_len, n_in] -> [bsize*seq_len, n_out]
 
     # reshape input & output data
     # note: underscore denotes "flattened" data: time and channel dimensions are united
-    data_transf_ = data_transf.view(*data_transf.shape[:-2], -1)  # [bsize, seq_len*n_in]
-    response_transf_ = response_transf.view(*data_transf.shape[:-2], -1)  # [bsize, seq_len*n_out]
-    data_new_ = data_new.view(*data_new.shape[:-2], -1)
-    response_model_ = rnn_wrapped(data_transf_)
-    assert(response_model_.shape == response_transf_.shape)
+    x_transf_f = torch.clone(x_transf.view(1 * seq_len, n_in))  # [bsize*seq_len, n_in]
+    y_transf_f = torch.clone(y_transf.view(1 * seq_len, ))  # [bsize*seq_len, ]
+    x_new_ = torch.clone(x_new.view(1 * seq_len, n_in))
+    response_model_ = dyno_wrapped(x_transf_f)
+    assert(response_model_.shape == y_transf_f.shape)
 
     gp_lh = gpytorch.likelihoods.GaussianLikelihood()
-    gp_model = ExactGPModel(data_transf_, response_transf_, gp_lh, rnn_wrapped)
+    gp_model = ExactGPModel(x_transf_f, y_transf_f, gp_lh, dyno_wrapped)
 
-    zeromean_pred = gp_lh(gp_model(data_transf_)).sample()
+    gp_model.eval()
+    gp_lh.eval()
+    zeromean_pred = gp_lh(gp_model(x_transf_f)).sample()

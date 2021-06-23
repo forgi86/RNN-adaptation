@@ -59,6 +59,7 @@ if __name__ == "__main__":
         ))
         optimizer.step()
 
+    #a
     # Get into evaluation (predictive posterior) mode
     model.eval()
     likelihood.eval()
