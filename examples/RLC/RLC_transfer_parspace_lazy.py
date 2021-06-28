@@ -52,9 +52,9 @@ if __name__ == '__main__':
     u_torch_f = torch.clone(u_torch.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
     y_torch_f = torch.clone(y_torch.view(1 * n_data, n_out))  # [bsize*seq_len, ]
 
-    # In[Adaptation in parameter space (lazy way)]
+    # In[Adaptation in parameter space (lazy smart way)]
     K = NeuralTangent(model=G_wrapped, data=u_torch_f)
-    JtJ = K.get_expansion(epsilon=1e-4)  # J^T J using the fisher matrix trick
-    JtJ_hat = JtJ.add_jitter(sigma**2)  # (J^T J + \sigma^2 I)
-    Jt = K.get_root()  #Jacobian(G_wrapped, u_torch_f, y_torch_f, num_outputs=1)
+    JtJ = K.get_expansion(epsilon=1e-4)  # lazy J^T J using the Fisher matrix trick
+    JtJ_hat = JtJ.add_jitter(sigma**2)  # lazy (J^T J + \sigma^2 I)
+    Jt = K.get_root()  # or Jacobian(G_wrapped, u_torch_f, y_torch_f, num_outputs=1)
     theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))  # (J^T J + \sigma^2 I)^-1 J^T y
