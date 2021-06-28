@@ -34,7 +34,7 @@ class DynoWrapper(torch.nn.Module):
         u_in = u_in[None, :, :]  # [bsize, seq_len, n_in]
         y_out = self.dyno(u_in)  # [bsize, seq_len, n_out]
         n_out = y_out.shape[-1]
-        y_out_ = y_out.reshape(-1, n_out) if n_out > 1 else y_out.reshape(-1, )
+        y_out_ = y_out.reshape(-1, n_out)  if n_out > 1 else y_out.reshape(-1, )
         # [bsize*seq_len, n_out] or [bsize*seq_len, ]
         return y_out_
 
@@ -51,7 +51,7 @@ class LSTMWrapper(torch.nn.Module):
     def forward(self, u_in):
         u_in = u_in.view(*u_in.shape[:-1], -1, self.n_in)
         y_out = self.lstm(u_in)
-        y_out = y_out.reshape(-1, y_out.shape[-1]) if y_out.shape[-1] > 1 else y_out.reshape(-1, )
+        y_out = y_out.reshape(-1, y_out.shape[-1]) #if y_out.shape[-1] > 1 else y_out.reshape(-1, )
         return y_out
 
 

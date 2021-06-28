@@ -1,0 +1,8 @@
+- RLC_generate_*.py: generate the dataset for:
+    - train: train the neural network model
+    - test: test the neural network model
+    - transfer: adapt the linearized (GP-like) model using the nominal model's Jacobian to generate the features
+    - eval: evaluate the performance of the linearized GP-like model on new data
+
+- RLC_train.py: fit a dynoNet model on the training dataset
+- RLC_transfer_parspace_naive.py: adapt the linearized model in parameter space building the Jacobian matrix explicitly
