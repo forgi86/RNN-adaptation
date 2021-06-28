@@ -1,4 +1,4 @@
-- RLC_generate_*.py: generate the dataset for:
+- RLC_generate_*.py: generate the datasets for:
     - train: train the neural network model
     - test: test the neural network model
     - transfer: adapt the linearized (GP-like) model using the nominal model's Jacobian to generate the features
@@ -6,3 +6,4 @@
 
 - RLC_train.py: fit a dynoNet model on the training dataset
 - RLC_transfer_parspace_naive.py: adapt the linearized model in parameter space building the Jacobian matrix explicitly
+- RLC_transfer_parspace_lazy.py: adapt the linearized model in parameter space using the Fisher-vector trick (and more)

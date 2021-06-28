@@ -57,4 +57,4 @@ if __name__ == '__main__':
     JtJ = K.get_expansion(epsilon=1e-4)  # J^T J using the fisher matrix trick
     JtJ_hat = JtJ.add_jitter(sigma**2)  # (J^T J + \sigma^2 I)
     Jt = K.get_root()  #Jacobian(G_wrapped, u_torch_f, y_torch_f, num_outputs=1)
-    theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))
+    theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))  # (J^T J + \sigma^2 I)^-1 J^T y
