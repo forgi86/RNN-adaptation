@@ -71,7 +71,7 @@ utils.train_fullds(model, train_x, train_y, iterations=2500, lr=1e-3, momentum=0
 # construct likelihood and gp model
 gplh = gpytorch.likelihoods.GaussianLikelihood()
 gpmodel = ExactGPModel(
-    train_x, train_y.squeeze(), gplh, model, use_linearstrategy=True #args.fisher
+    train_x, train_y.squeeze(), gplh, model, use_linearstrategy=args.fisher
 )
 
 

@@ -26,7 +26,7 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_test_nl.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "RLC_data_test_nl.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
@@ -41,9 +41,9 @@ if __name__ == '__main__':
 
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     G.load_state_dict(torch.load(os.path.join(model_folder, "G.pt")))
-    theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
+    theta_lin = np.load(os.path.join("../models", model_name, "theta_lin.npy"))
 
     # In[Parameter Jacobians]
     with torch.no_grad():

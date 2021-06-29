@@ -52,3 +52,5 @@ if __name__ == '__main__':
     plt.plot(t_new, y_sim_new, 'r', label="Sim")
     plt.plot(t_new, y_lin_new, 'b', label="Lin")
     plt.legend()
+
+    np.save("y_lin_parspace.npy", y_lin_new)
