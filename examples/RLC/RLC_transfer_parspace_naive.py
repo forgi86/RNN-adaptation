@@ -53,4 +53,4 @@ if __name__ == '__main__':
     plt.plot(t_new, y_lin_new, 'b', label="Lin")
     plt.legend()
 
-    np.save("y_lin_parspace.npy", y_lin_new)
+    np.save("y_lin_parspace_naive.npy", y_lin_new)

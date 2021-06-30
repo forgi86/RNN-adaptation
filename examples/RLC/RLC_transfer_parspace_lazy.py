@@ -58,3 +58,12 @@ if __name__ == '__main__':
     JtJ_hat = JtJ.add_jitter(sigma**2)  # lazy (J^T J + \sigma^2 I)
     Jt = K.get_root()  # or finite_ntl.lazy.jacobian.Jacobian(G_wrapped, u_torch_f, y_torch_f, num_outputs=1)
     theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))  # (J^T J + \sigma^2 I)^-1 J^T y
+
+    # In[Evaluate linearized model on new data]
+    t_new, u_new, y_new, x_new = loader.rlc_loader("eval", noise_std=0.0)
+    u_torch_new = torch.tensor(u_new[None, :, :])
+    u_torch_new_f = torch.clone(u_torch_new.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
+    K = NeuralTangent(model=G_wrapped, data=u_torch_new_f)
+    Jt_new = K.get_root()  # or finite_ntl.lazy.jacobian.Jacobian...
+    y_lin_new = Jt_new.t().matmul(theta_lin)
+    np.save("y_lin_parspace_lazy.npy", y_lin_new)
