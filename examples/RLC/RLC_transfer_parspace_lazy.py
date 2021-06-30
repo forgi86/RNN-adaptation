@@ -53,6 +53,7 @@ if __name__ == '__main__':
     y_torch_f = torch.clone(y_torch.view(1 * n_data, n_out))  # [bsize*seq_len, ]
 
     # In[Adaptation in parameter space (the lazy/smart way)]
+    # NOTE: the jacobian in the formulas and comments has the classical definition (not transposed as in the paper)
     K = NeuralTangent(model=G_wrapped, data=u_torch_f)
     JtJ = K.get_expansion(epsilon=1e-4)  # lazy J^T J using the Fisher matrix trick
     JtJ_hat = JtJ.add_jitter(sigma**2)  # lazy (J^T J + \sigma^2 I)

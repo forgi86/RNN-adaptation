@@ -27,6 +27,7 @@ if __name__ == '__main__':
     G.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
 
     # In[Adaptation in parameter space (naive way)]
+    # NOTE: the jacobian in the formulas and comments has the classical definition (not transposed as in the paper)
     u_torch = torch.tensor(u[None, :, :])
     J = parameter_jacobian(G, u_torch)  # custom-made full parameter jacobian
     n_param = J.shape[1]
@@ -36,7 +37,7 @@ if __name__ == '__main__':
     theta_lin = np.linalg.solve(A, J.transpose() @ y)  # adaptation!
     np.save(os.path.join("models", model_name, "theta_lin.npy"), theta_lin)
 
-    # In[Evaluate linearized model on new data
+    # In[Evaluate linearized model on new data]
     t_new, u_new, y_new, x_new = loader.rlc_loader("eval", noise_std=0.0)
     u_torch_new = torch.tensor(u_new[None, :, :])
     J_new = parameter_jacobian(G, u_torch_new)
