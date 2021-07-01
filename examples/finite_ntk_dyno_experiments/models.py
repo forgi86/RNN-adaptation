@@ -39,19 +39,24 @@ class RNNWrapper(torch.nn.Module):
 
 
 class LSTMWrapper(torch.nn.Module):
-    def __init__(self, lstm, n_in, n_out, seq_len, n_hidden):
+    def __init__(self, lstm, n_in, n_out, seq_len, n_hidden, on_batch=True):
         super(LSTMWrapper, self).__init__()
         self.lstm = lstm
         self.n_in = n_in
         self.n_out = n_out
         self.seq_len = seq_len
         self.n_hidden = n_hidden
+        self.on_batch = on_batch
 
     def forward(self, u_in):
         u_in = u_in.view(*u_in.shape[:-1], -1, self.n_in)
         y_out = self.lstm(u_in)
-        y_out = y_out.reshape(-1, y_out.shape[-1]) if y_out.shape[-1] > 1 else y_out.reshape(-1, )
+        if self.on_batch:
+            y_out = y_out.reshape(-1, y_out.shape[-1]) if y_out.shape[-1] > 1 else y_out.reshape(-1, )
+        else:
+            y_out = y_out[:,-1, :].reshape(-1, y_out.shape[-1]*self.seq_len)
         return y_out
+
 
 
 class Model(nn.Module):

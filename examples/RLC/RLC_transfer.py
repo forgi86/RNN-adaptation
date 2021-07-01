@@ -33,6 +33,7 @@ if __name__ == '__main__':
 
     # In[Output]
     y = np.copy(x[:, [0]])
+    print("y.shape", y.shape)
 
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
@@ -68,6 +69,7 @@ if __name__ == '__main__':
         jacs_2d = list(map(lambda x: x.reshape(N_load, -1), jacs))
         J = torch.cat(jacs_2d, dim=-1).detach().numpy()
 
+    print(" J shape ", J.shape)
     # Adaptation in parameter space
     sigma = 0.1
     Ip = np.eye(n_param)

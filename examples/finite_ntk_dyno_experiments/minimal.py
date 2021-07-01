@@ -12,20 +12,20 @@ torch.manual_seed(1)
 epochs = 100
 n_hidden = 100
 n_in = 10
-n_seq = 30
+batch = 30
 n_out = 1
 loss_function = nn.MSELoss()
 
 # Data
 
-data_train = torch.sort(0.1 * torch.randn(n_seq, n_in), 0)[0]
+data_train = torch.sort(0.1 * torch.randn(batch, n_in), 0)[0]
 response_train = torch.exp(torch.clone(data_train[:, 0]) * 3.)
 
-data_transf = torch.sort(.2*torch.randn(n_seq, n_in), 0)[0]
-response_transf = torch.exp(torch.clone(data_transf[:,0]) * 5.)
+data_transf = torch.sort(.2 * torch.randn(batch, n_in), 0)[0]
+response_transf = torch.exp(torch.clone(data_transf[:, 0]) * 5.)
 
-data_transf_test = torch.sort(.2*torch.randn(n_seq, n_in), 0)[0]
-response_transf_test = torch.exp(torch.clone(data_transf_test[:,0]) * 5.)
+data_transf_test = torch.sort(.2 * torch.randn(batch, n_in), 0)[0]
+response_transf_test = torch.exp(torch.clone(data_transf_test[:,  0]) * 5.)
 
 # randomly initialize a neural network
 model = torch.nn.Sequential(torch.nn.Linear(n_in, n_hidden),
@@ -68,17 +68,20 @@ print("GP model ", gp_model)
 
 # TODO: This term needs to be trained (with or after the network)
 # using the GP likelihood
-with torch.no_grad():
-    mse = loss_function(model(data_train), response_train)
-gp_model.likelihood.noise = mse
+# with torch.no_grad():
+#     mse = loss_function(model(data_train), response_train)
+# gp_model.likelihood.noise = mse
 
 print("Noise term", gp_model.likelihood.noise.item())
 
 gp_lh.eval()
 gp_model.eval()
+print("mean fun")
 # zeromean_pred = gp_lh(gp_model(data_transf))
 zeromean_pred = gp_lh(gp_model(data_train)).mean
 # conf = gp_lh(gp_model(data_transf)).stddev.mul_(2.)
+print("confidence")
+
 lower, upper = gp_lh(gp_model(data_train)).confidence_region()
 
 f, ax = plt.subplots()
@@ -87,11 +90,11 @@ ax.plot(zeromean_pred.detach().numpy(), "b--", label="GP predictions")
 ax.legend()
 # Plot training data as black stars
 # Shade between the lower and upper confidence bounds
-ax.fill_between(range(n_seq), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
+ax.fill_between(range(batch), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
 
 # ax.set_ylim([-6, 6])
 ax.legend(['Observed Data', 'Mean', 'Confidence'])
-
+exit()
 # zeromean_pred = gp_lh(gp_model(data_train)).mean
 # conf = gp_lh(gp_model(data_train)).stddev.mul_(3.)
 
@@ -121,7 +124,7 @@ gp_model.eval()
 zeromean_pred = gp_lh(gp_model(data_transf_test)).mean
 # conf = gp_lh(gp_model(data_transf)).stddev.mul_(2.)
 lower, upper = gp_lh(gp_model(data_transf_test)).confidence_region()
-
+exit()
 
 #
 f2, ax2 = plt.subplots()
@@ -131,7 +134,7 @@ ax2.plot(zeromean_pred.detach().numpy(), "b--", label="GP predictions")
 ax2.legend()
 # Plot training data as black stars
 # Shade between the lower and upper confidence bounds
-ax2.fill_between(range(n_seq), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
+ax2.fill_between(range(batch), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
 
 # ax.set_ylim([-6, 6])
 ax2.legend(['Observed Data', 'Mean', 'Confidence'])
@@ -164,7 +167,7 @@ ax5.plot(zeromean_pred.detach().numpy(), "b--", label="GP predictions")
 ax5.legend()
 # Plot training data as black stars
 # Shade between the lower and upper confidence bounds
-ax5.fill_between(range(n_seq), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
+ax5.fill_between(range(batch), lower.detach().numpy(), upper.detach().numpy(), alpha=0.5)
 
 # ax.set_ylim([-6, 6])
 ax5.legend(['Observed Data', 'Mean', 'Confidence'])
