@@ -55,7 +55,8 @@ if __name__ == '__main__':
     # In[Adaptation in parameter space (the lazy/smart way)]
     # NOTE: the jacobian in the formulas and comments has the classical definition (not transposed as in the paper)
     K = NeuralTangent(model=G_wrapped, data=u_torch_f)
-    JtJ = K.get_expansion(epsilon=1e-4)  # lazy J^T J using the Fisher matrix trick
+    JtJ = K.get_expansion(epsilon=1e-3)  # lazy J^T J using the Fisher matrix trick.
+    # Note: 1e-4 is perhaps more accurate on this example, but I left it to 1e-3 to make it identical to the GP code...
     JtJ_hat = JtJ.add_jitter(sigma**2)  # lazy (J^T J + \sigma^2 I)
     Jt = K.get_root()  # or finite_ntl.lazy.jacobian.Jacobian(G_wrapped, u_torch_f, y_torch_f, num_outputs=1)
     theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))  # (J^T J + \sigma^2 I)^-1 J^T y
