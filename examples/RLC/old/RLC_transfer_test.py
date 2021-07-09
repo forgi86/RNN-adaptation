@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from dynonet.module.lti import SisoLinearDynamicalOperator
+import matplotlib.pyplot as plt
 import functools
 from dynonet.utils.extract_util import extract_weights, f_par_mod_in
 
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_transfer_nl.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "RLC_data_test_nl.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
@@ -33,19 +34,22 @@ if __name__ == '__main__':
 
     # In[Output]
     y = np.copy(x[:, [0]])
-    print("y.shape", y.shape)
+    N = y.shape[0]
 
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
 
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     G.load_state_dict(torch.load(os.path.join(model_folder, "G.pt")))
+    theta_lin = np.load(os.path.join("../models", model_name, "theta_lin.npy"))
 
     # In[Parameter Jacobians]
-    sim_y = G(u_torch)
-    N_load = u_torch.numel()
+    with torch.no_grad():
+        y_sim_torch = G(u_torch)
+
+    y_sim_torch = y_sim_torch.numpy()[0, ...]
 
     # extract the parameters from the model in order to be able to take jacobians using the convenient functional API
     # see the discussion in https://discuss.pytorch.org/t/get-gradient-and-jacobian-wrt-the-parameters/98240
@@ -63,21 +67,16 @@ if __name__ == '__main__':
     jac_dict = dict(zip(names, jacs))
 
     with torch.no_grad():
-        y_out_1d = torch.ravel(sim_y).detach().numpy()
-        params_1d = list(map(torch.ravel, params))
-        theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
-        jacs_2d = list(map(lambda x: x.reshape(N_load, -1), jacs))
+        jacs_2d = list(map(lambda x: x.reshape(N, -1), jacs))
         J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+    y_transfer = J @ theta_lin
 
-    print(" J shape ", J.shape)
-    # Adaptation in parameter space
-    sigma = 0.1
-    Ip = np.eye(n_param)
-    F = J.transpose() @ J
-    P_est = sigma*np.linalg.inv(F)
-    A = F + sigma * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y)  # adaptation!
-    np.save(os.path.join("models", model_name, "theta_lin.npy"), theta_lin)
+    # In[Plot]
+    plt.figure()
+    plt.plot(t, y, 'k', label="$y$")
+    plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
+    plt.plot(t, y_transfer, 'r', label="$y_transf$")
+    plt.legend()
 
 
 

@@ -4,7 +4,6 @@ import numpy as np
 import os
 from dynonet.module.lti import SisoLinearDynamicalOperator
 import matplotlib.pyplot as plt
-import time
 import functools
 from dynonet.utils.extract_util import extract_weights, f_par_mod_in
 
@@ -31,7 +30,7 @@ if __name__ == '__main__':
     COL_Y = ['V_C']
 
     # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_id_lin.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "RLC_data_train_lin.csv"))
     t = np.array(df_X[COL_T], dtype=np.float32)
     y = np.array(df_X[COL_Y], dtype=np.float32)
     x = np.array(df_X[COL_X], dtype=np.float32)
@@ -48,7 +47,6 @@ if __name__ == '__main__':
     y_noise = np.copy(x_noise[:, [0]])
     y_nonoise = np.copy(x[:, [0]])
 
-
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
     y_meas_torch = torch.tensor(y_noise[None, ...], dtype=torch.float)
@@ -56,64 +54,19 @@ if __name__ == '__main__':
 
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
+    model_folder = os.path.join("../models", model_name)
+    G.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
 
     with torch.no_grad():
-        G.b_coeff[0, 0, 0] = 0.01
-        G.b_coeff[0, 0, 1] = 0.0
+        y_hat = y_hat = G(u_torch)
 
-        G.a_coeff[0, 0, 0] = -0.9
-        G.b_coeff[0, 0, 1] = 0.01
-
-    # In[Setup optimizer]
-    optimizer = torch.optim.Adam([
-        {'params': G.parameters(),    'lr': lr},
-    ], lr=lr)
-
-    # In[Train]
-    LOSS = []
-    start_time = time.time()
-    for itr in range(0, num_iter):
-
-        optimizer.zero_grad()
-
-        # Simulate
-        y_hat = G(u_torch)
-
-        # Compute fit loss
-        err_fit = y_meas_torch - y_hat
-        loss_fit = torch.mean(err_fit**2)
-        loss = loss_fit
-
-        LOSS.append(loss.item())
-        if itr % test_freq == 0:
-            print(f'Iter {itr} | Fit Loss {loss_fit:.4f}')
-
-        # Optimize
-        loss.backward()
-        optimizer.step()
-
-    train_time = time.time() - start_time
-    print(f"\nTrain time: {train_time:.2f}") # 182 seconds
-
-    # In[Save model]
-
-    model_folder = os.path.join("models", model_name)
-    if not os.path.exists(model_folder):
-        os.makedirs(model_folder)
-    torch.save(G.state_dict(), os.path.join(model_folder, "G.pkl"))
-    # In[Detach and reshape]
-    y_hat = y_hat.detach().numpy()[0, ...]
+    y_hat = y_hat.numpy()[0, ...]
     # In[Plot]
     plt.figure()
     plt.plot(t, y_nonoise, 'k', label="$y$")
     plt.plot(t, y_noise, 'r', label="$y_{noise}$")
     plt.plot(t, y_hat, 'b', label="$\hat y$")
     plt.legend()
-
-    plt.figure()
-    plt.plot(LOSS)
-    plt.grid(True)
-
 
 
     # In[Parameter Jacobians]
@@ -148,7 +101,7 @@ if __name__ == '__main__':
     F = J.transpose() @ J
     P_est = sigma*np.linalg.inv(F)
     A = F + sigma * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y_out_1d)
+    theta_lin = np.linalg.solve(A, J.transpose() @ y_noise)
 
 
 

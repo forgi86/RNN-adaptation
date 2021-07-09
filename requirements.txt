@@ -134,3 +134,4 @@ typing-extensions @ file:///home/ktietz/src/ci_mi/typing_extensions_161280820962
 urdfdom-py==0.4.5
 wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
 xacro==1.13.10
+control==0.9.0
