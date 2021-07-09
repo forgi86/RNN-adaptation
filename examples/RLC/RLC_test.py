@@ -46,7 +46,6 @@ if __name__ == '__main__':
 
     y_sim_torch = y_sim_torch.numpy()[0, ...]
 
-
     # In[Plot]
     plt.figure()
     plt.plot(t, y, 'k', label="$y$")

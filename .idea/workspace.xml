@@ -2,64 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2174c4d8-11ed-4e4c-ae0f-276f779c74f4" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/examples/RLC/README.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/RLC_generate_eval.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_lazy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_naive.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/compare_techniques.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_eval_lin.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_eval_nl.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_train_lin.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_train_nl.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/RLC/loader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/basic_gpytorch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_dyno_wrapped_ext.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynonet/functional/lti.py" beforeDir="false" afterPath="$PROJECT_DIR$/dynonet/functional/lti.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_generate_id.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_generate_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_generate_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_generate_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_generate_transfer.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_generate_transfer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_jac.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/old/RLC_jac.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_transfer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_transfer_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/old/RLC_transfer_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_id_lin.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_id_nl.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_test_lin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_test_lin.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_test_nl.csv" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_test_nl.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_transfer_lin.csv" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_transfer_lin.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/data/RLC_data_transfer_nl.csv" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/data/RLC_data_transfer_nl.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/symbolic_RLC.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/symbolic_RLC.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/WH/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_dyno_wrapped.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_dyno_wrapped.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_lstm_wrapped.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_lstm_wrapped.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/finite_ntk_simple_reg/ntk_transfer_regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/finite_ntk_simple_reg/ntk_transfer_regression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dynonet-tangent.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dynonet-tangent.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/RLC/models/IIR/G.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/RLC/models/IIR/theta_lin.npy" beforeDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lstm_tests.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/lstm_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -101,6 +55,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/anaconda3/envs/dynonet-tangent/lib/python3.9/site-packages/gpytorch/lazy/lazy_tensor.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -152,125 +109,93 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Python.lstm_tests">
-    <configuration name="RLC_train" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.RLC_test">
+    <configuration name="RLC_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="RLC_train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="dynonet-tangent" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_train.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="RLC_transfer" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="RLC_transfer_parspace_naive" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer.py" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_naive.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="lstm_tests" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/lstm_tests.py" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration name="minimal" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="dynonet-tangent" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="minimal_lstm_wrapped" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="dynonet-tangent" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments/minimal_lstm_wrapped.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <list>
-      <item itemvalue="Python.minimal" />
-      <item itemvalue="Python.minimal_lstm_wrapped" />
-      <item itemvalue="Python.RLC_train" />
-      <item itemvalue="Python.lstm_tests" />
-      <item itemvalue="Python.RLC_transfer" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.lstm_tests" />
-        <item itemvalue="Python.RLC_transfer" />
-        <item itemvalue="Python.minimal" />
+        <item itemvalue="Python.RLC_test" />
         <item itemvalue="Python.RLC_train" />
-        <item itemvalue="Python.minimal_lstm_wrapped" />
+        <item itemvalue="Python.RLC_transfer_parspace_naive" />
       </list>
     </recent_temporary>
   </component>
@@ -355,6 +280,27 @@
     <MESSAGE value="added all plots and handled different hidden size in LSTM" />
     <MESSAGE value="increased num epochs" />
     <option name="LAST_COMMIT_MESSAGE" value="increased num epochs" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal.coverage" NAME="minimal Coverage Results" MODIFIED="1624871486855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_jac_lazy.coverage" NAME="RLC_jac_lazy Coverage Results" MODIFIED="1624890378268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_funcspace_tmp.coverage" NAME="RLC_transfer_funcspace_tmp Coverage Results" MODIFIED="1624972251439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_funcspace.coverage" NAME="RLC_transfer_funcspace Coverage Results" MODIFIED="1624971319961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_orig.coverage" NAME="experiment_lazycov Coverage Results" MODIFIED="1624286558847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$ntk.coverage" NAME="ntk Coverage Results" MODIFIED="1624276123468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finite_ntk/lazy" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_dyno_wrapped.coverage" NAME="minimal_dyno_wrapped Coverage Results" MODIFIED="1624371738517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_dyno.coverage" NAME="minimal_dyno Coverage Results" MODIFIED="1624871351372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_parspace_naive.coverage" NAME="RLC_transfer_parspace_naive Coverage Results" MODIFIED="1624918543136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$memoize.coverage" NAME="memoize Coverage Results" MODIFIED="1624266944700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/anaconda3/envs/dynonet-tangent/lib/python3.9/site-packages/gpytorch/utils" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_feedforward.coverage" NAME="minimal_feedforward Coverage Results" MODIFIED="1624973327408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_lstm_wrapped.coverage" NAME="minimal_lstm_wrapped Coverage Results" MODIFIED="1624528824083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$linear_strategy.coverage" NAME="linear_strategy Coverage Results" MODIFIED="1624871753746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finite_ntk/strategies" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_train.coverage" NAME="RLC_train Coverage Results" MODIFIED="1625867670149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$experiment_manual_2.coverage" NAME="experiment_manual_2 Coverage Results" MODIFIED="1624287037936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_generate_id.coverage" NAME="RLC_generate_id Coverage Results" MODIFIED="1624893865530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$experiment_lazycov.coverage" NAME="experiment_lazycov Coverage Results" MODIFIED="1624305044370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$ntk_transfer_regression.coverage" NAME="ntk_transfer_regression Coverage Results" MODIFIED="1624974127228" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_simple_reg" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$ntk_lazytensor.coverage" NAME="ntk_lazytensor Coverage Results" MODIFIED="1624286178134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finite_ntk/lazy" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/examples/RLC/RLC_transfer.py" />
