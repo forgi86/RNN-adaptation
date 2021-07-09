@@ -41,11 +41,13 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.manual_seed(0)
 
+
     # In[Settings]
     model_name = 'IIR'  # model to be loaded
     n_b = 2  # numerator coefficients
     n_a = 2  # denominator coefficients
     sigma = 10.0
+    use_linearstrategy = False
 
     # In[Load dataset]
     t, u, y, x = loader.rlc_loader("transfer", noise_std=sigma)
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     G_wrapped = DynoWrapper(G, n_in, n_out)
     gp_lh = gpytorch.likelihoods.GaussianLikelihood()
     gp_lh.noise = sigma**2
-    gp_model = ExactGPModel(u_torch_f, y_torch_f.squeeze(), gp_lh, G_wrapped, use_linearstrategy=True)
+    gp_model = ExactGPModel(u_torch_f, y_torch_f.squeeze(), gp_lh, G_wrapped, use_linearstrategy=use_linearstrategy)
 
     # No GP training (we consider the kernel (hyper)parameters fixed.
     # We may think of training the measurement noise by mll optimization...
@@ -81,10 +83,9 @@ if __name__ == '__main__':
     u_torch_new = torch.tensor(u_new[None, :, :])
     u_torch_new_f = torch.clone(u_torch_new.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
 
-    with gpytorch.settings.fast_pred_var():
+    with gpytorch.settings.fast_pred_var(): #, gpytorch.settings.max_cg_iterations(4000), gpytorch.settings.cg_tolerance(0.1):
         predictive_dist = gp_model(u_torch_new_f)
-
-    y_lin_new = predictive_dist.mean.data
+        y_lin_new = predictive_dist.mean.data
 
     # In[Plot]
     with torch.no_grad():
@@ -97,4 +98,7 @@ if __name__ == '__main__':
     plt.plot(t_new, y_lin_new.detach().numpy(), 'b', label="Lin")
     plt.legend()
 
-    np.save("y_lin_gp_parspace.npy", y_lin_new.detach().numpy())
+    if use_linearstrategy:
+        np.save("y_lin_gp_parspace.npy", y_lin_new.detach().numpy())
+    else:
+        np.save("y_lin_gp_funspace.npy", y_lin_new.detach().numpy())

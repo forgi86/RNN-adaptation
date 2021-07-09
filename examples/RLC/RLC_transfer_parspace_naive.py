@@ -55,3 +55,4 @@ if __name__ == '__main__':
     plt.legend()
 
     np.save("y_lin_parspace_naive.npy", y_lin_new)
+    np.save("y_sim.npy", y_sim_new)
