@@ -39,3 +39,19 @@ class WHNet3(torch.nn.Module):
         y2_lin = self.G2(y1_nl)  # B, T, C2
 
         return y2_lin
+
+
+class DynoWrapper(torch.nn.Module):
+    def __init__(self, dyno, n_in, n_out):
+        super(DynoWrapper, self).__init__()
+        self.dyno = dyno
+        self.n_in = n_in
+        self.n_out = n_out
+
+    def forward(self, u_in):
+        u_in = u_in[None, :, :]  # [bsize, seq_len, n_in]
+        y_out = self.dyno(u_in)  # [bsize, seq_len, n_out]
+        n_out = y_out.shape[-1]
+        y_out_ = y_out.reshape(-1, n_out) if n_out > 1 else y_out.reshape(-1, )
+        # [bsize*seq_len, n_out] or [bsize*seq_len, ]
+        return y_out_

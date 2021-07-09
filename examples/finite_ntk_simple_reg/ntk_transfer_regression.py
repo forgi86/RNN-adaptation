@@ -29,13 +29,13 @@ from utils import parse_and_generate_tasks
 
 
 args = lambda : 0
-args.fisher = False
+args.fisher = True
 args.output_file = "aa.pkl"
 
 
 class ExactGPModel(gpytorch.models.ExactGP):
     # exact Gaussian process class
-    def __init__(self, train_x, train_y, likelihood, model, use_linearstrategy=False):
+    def __init__(self, train_x, train_y, likelihood, model, use_linearstrategy=True):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
         self.mean_module = gpytorch.means.ConstantMean()
         self.covar_module = finite_ntk.lazy.NTK(
@@ -66,12 +66,12 @@ model = torch.nn.Sequential(
 )
 
 # train model
-utils.train_fullds(model, train_x, train_y, iterations=2500, lr=1e-3, momentum=0.9)
+utils.train_fullds(model, train_x, train_y, iterations=2500, lr=1e-3, momentum=0.9)  # train neural network model
 
 # construct likelihood and gp model
 gplh = gpytorch.likelihoods.GaussianLikelihood()
 gpmodel = ExactGPModel(
-    train_x, train_y.squeeze(), gplh, model, use_linearstrategy=False #args.fisher
+    train_x, train_y.squeeze(), gplh, model, use_linearstrategy=args.fisher
 )
 
 
