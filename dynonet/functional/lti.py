@@ -105,6 +105,7 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
                 sens_b[:, idx_coeff:, :, :, idx_coeff] = sens_b[:, :-idx_coeff, :, :, 0]
             sens_b = torch.as_tensor(sens_b)
             grad_b = torch.einsum('bto,btoid->oid', grad_output, sens_b)  # einstein summation
+            grad_b.requires_grad_(True)
 
         if ctx.needs_input_grad[1]:  # a_coeff
             # compute forward sensitivities w.r.t. the f_i parameters
@@ -117,20 +118,22 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
                 sens_a[:, idx_coeff:, :, :, idx_coeff] = sens_a[:, :-idx_coeff, :, :, 0]
             sens_a = torch.as_tensor(sens_a)
             # compute vector-jacobian product for f
-            grad_a =  torch.einsum('bto,btoid->oid', grad_output, sens_a)
+            grad_a = torch.einsum('bto,btoid->oid', grad_output, sens_a)
+            grad_a.requires_grad_(True)
 
-
-        if ctx.needs_input_grad[2]: # u_in
+        if ctx.needs_input_grad[2]:  # u_in
             # compute jacobian w.r.t. u
-            grad_output_flip = grad_output.numpy()[:, ::-1, :]  # [B, T, O]
+            grad_output_flip = grad_output.detach().numpy()[:, ::-1, :]  # [B, T, O]
 
             grad_u = np.zeros_like(u_in)  # [B, T, I]
             for in_idx in range(in_channels):
                 for out_idx in range(out_channels):
-                    grad_u[:, :, in_idx] += scipy.signal.lfilter(b_poly[out_idx, in_idx, :], a_poly[out_idx, in_idx, :], grad_output_flip[:, :, out_idx], axis=-1)
+                    grad_u[:, :, in_idx] += scipy.signal.lfilter(
+                        b_poly[out_idx, in_idx, :], a_poly[out_idx, in_idx, :], grad_output_flip[:, :, out_idx], axis=-1)
             grad_u = np.array(grad_u[:, ::-1, :]).astype(dtype_np)
 
             grad_u = torch.as_tensor(grad_u)
+            grad_u.requires_grad_(True)
 
         return grad_b, grad_a, grad_u, grad_y0, grad_u0
 

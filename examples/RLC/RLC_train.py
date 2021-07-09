@@ -1,11 +1,10 @@
-import torch
-import pandas as pd
-import numpy as np
 import os
+import numpy as np
+import torch
 from dynonet.module.lti import SisoLinearDynamicalOperator
 import matplotlib.pyplot as plt
 import time
-
+import loader
 
 if __name__ == '__main__':
 
@@ -17,51 +16,21 @@ if __name__ == '__main__':
     model_name = 'IIR'
     add_noise = True
     lr = 1e-4
-    num_iter = 20000
+    num_iter = 30000
     test_freq = 100
     n_batch = 1
     n_b = 2
     n_a = 2
 
-    # In[Column names in the dataset]
-    COL_T = ['time']
-    COL_X = ['V_C', 'I_L']
-    COL_U = ['V_IN']
-    COL_Y = ['V_C']
-
-    # In[Load dataset]
-    df_X = pd.read_csv(os.path.join("data", "RLC_data_id_lin.csv"))
-    t = np.array(df_X[COL_T], dtype=np.float32)
-    y = np.array(df_X[COL_Y], dtype=np.float32)
-    x = np.array(df_X[COL_X], dtype=np.float32)
-    u = np.array(df_X[COL_U], dtype=np.float32)
-
-    # In[Add measurement noise]
-    std_noise_V = add_noise * 10.0
-    std_noise_I = add_noise * 1.0
-    std_noise = np.array([std_noise_V, std_noise_I])
-    x_noise = np.copy(x) + np.random.randn(*x.shape) * std_noise
-    x_noise = x_noise.astype(np.float32)
-
-    # In[Output]
-    y_noise = np.copy(x_noise[:, [0]])
-    y_nonoise = np.copy(x[:, [0]])
-
+    # In[Load data]
+    t, u, y, x = loader.rlc_loader("train")
 
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
-    y_meas_torch = torch.tensor(y_noise[None, ...], dtype=torch.float)
-    y_true_torch = torch.tensor(y_nonoise[None, ...], dtype=torch.float)
+    y_meas_torch = torch.tensor(y[None, ...], dtype=torch.float)
 
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
-
-    with torch.no_grad():
-        G.b_coeff[0, 0, 0] = 0.01
-        G.b_coeff[0, 0, 1] = 0.0
-
-        G.a_coeff[0, 0, 0] = -0.9
-        G.b_coeff[0, 0, 1] = 0.01
 
     # In[Setup optimizer]
     optimizer = torch.optim.Adam([
@@ -99,13 +68,15 @@ if __name__ == '__main__':
     model_folder = os.path.join("models", model_name)
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)
-    torch.save(G.state_dict(), os.path.join(model_folder, "G.pt"))
+    torch.save(G.state_dict(), os.path.join(model_folder, "model.pt"))
     # In[Detach and reshape]
     y_hat = y_hat.detach().numpy()[0, ...]
+    y_nonoise = np.copy(x[:, [0]])
+
     # In[Plot]
     plt.figure()
     plt.plot(t, y_nonoise, 'k', label="$y$")
-    plt.plot(t, y_noise, 'r', label="$y_{noise}$")
+    plt.plot(t, y, 'r', label="$y_{noise}$")
     plt.plot(t, y_hat, 'b', label="$\hat y$")
     plt.legend()
 
