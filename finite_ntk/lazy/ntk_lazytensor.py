@@ -196,13 +196,14 @@ class NeuralTangent(LazyTensor):
 
                 prod_list.append(torch.stack(curr_prod))
 
-        res = torch.stack(prod_list, dim=-2)
+        res = torch.stack(prod_list, dim=-2) # reshape here if 3D
         output = res.transpose(-2, -1) * lhs_norm
 
         if not self.keep_outputs or self.num_outputs == 1:
             output = output.squeeze(0)
 
         output[torch.isnan(output)] = 0.0
+
 
         return output
 
@@ -284,7 +285,6 @@ class NeuralTangent(LazyTensor):
                 )
 
                 diag_vec[i] = gradval.norm() ** 2
-
         return diag_vec
 
     def _approx_diag(self):
@@ -317,7 +317,7 @@ class NeuralTangent(LazyTensor):
         # squares the n dimensional vector
         return jac_sum_by_point.pow(2.0)
 
-    def get_root(self, dim=-2):
+    def _matmulget_root(self, dim=-2):
         if self.use_cross and dim == -1:
             return Jacobian(
                 self.model,
