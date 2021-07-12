@@ -317,7 +317,7 @@ class NeuralTangent(LazyTensor):
         # squares the n dimensional vector
         return jac_sum_by_point.pow(2.0)
 
-    def _matmulget_root(self, dim=-2):
+    def get_root(self, dim=-2):
         if self.use_cross and dim == -1:
             return Jacobian(
                 self.model,

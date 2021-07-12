@@ -47,7 +47,7 @@ if __name__ == '__main__':
     n_b = 2  # numerator coefficients
     n_a = 2  # denominator coefficients
     sigma = 10.0
-    use_linearstrategy = False
+    use_linearstrategy = True
 
     # In[Load dataset]
     t, u, y, x = loader.rlc_loader("transfer", noise_std=sigma)

@@ -3,11 +3,10 @@ import matplotlib
 import torch
 import pandas as pd
 import numpy as np
-import functools
 import matplotlib.pyplot as plt
 from models import WHNet3
 import dynonet.utils.metrics
-from dynonet.utils.extract_util import extract_weights, f_par_mod_in
+from dynonet.utils.jacobian import parameter_jacobian
 
 
 if __name__ == '__main__':
@@ -36,39 +35,18 @@ if __name__ == '__main__':
     # Prepare data
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
 
-
     # In[Instantiate models]
-
     # Create models
     model = WHNet3()
     model_folder = os.path.join("models", model_name)
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
     theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
 
+    # In[Simulate nominal model]
+    y_sim_torch = model(u_torch).detach().numpy()[0]
+
     # In[Parameter Jacobians]
-    with torch.no_grad():
-        y_sim_torch = model(u_torch)
-
-    y_sim_torch = y_sim_torch.numpy()[0, ...]
-
-    # extract the parameters from the model in order to be able to take jacobians using the convenient functional API
-    # see the discussion in https://discuss.pytorch.org/t/get-gradient-and-jacobian-wrt-the-parameters/98240
-    params, names = extract_weights(model)
-    params_dict = dict(zip(names, params))
-    n_param = sum(map(torch.numel, params))
-    scalar_names = [f"{name}_{pos}" for name in params_dict for pos in range(params_dict[name].numel())]
-    # [f"{names[i]}_{j}" for i in range(len(names)) for j in range(params[i].numel())]
-
-    # from Pytorch module to function of the module parameters only
-    f_par = functools.partial(f_par_mod_in, param_names=names, module=model, inputs=u_torch)
-    f_par(*params)
-
-    jacs = torch.autograd.functional.jacobian(f_par, params)
-    jac_dict = dict(zip(names, jacs))
-
-    with torch.no_grad():
-        jacs_2d = list(map(lambda x: x.reshape(N_test, -1), jacs))
-        J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+    J = parameter_jacobian(model, u_torch)  # custom-made full parameter jacobian
     y_transfer = J @ theta_lin
 
     # In[Plot]
@@ -77,8 +55,6 @@ if __name__ == '__main__':
     plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
     plt.plot(t, y_transfer, 'r', label="$y_{tr}$")
     plt.legend()
-
-
 
     # In[Metrics]
 

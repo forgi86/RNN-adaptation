@@ -20,7 +20,6 @@ if __name__ == '__main__':
     # In[Settings]
     model_name = "model_WH3"
 
-
     # Column names in the dataset
     COL_F = ['fs']
     COL_U = ['uBenchMark']
@@ -45,10 +44,8 @@ if __name__ == '__main__':
 
     # In[Instantiate models]
 
-
     # Create models
     model = WHNet3()
-
     model_folder = os.path.join("models", model_name)
     # Create model parameters
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))

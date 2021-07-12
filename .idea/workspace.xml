@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2174c4d8-11ed-4e4c-ae0f-276f779c74f4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dynonet-tangent.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dynonet-tangent.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="2174c4d8-11ed-4e4c-ae0f-276f779c74f4" name="Default" comment="small refactoring">
+      <change afterPath="$PROJECT_DIR$/examples/WH/WH2009_transfer_naive.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/models/IIR/G.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/models/IIR/theta_lin.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_generate_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_generate_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_transfer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_transfer_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_eval_naive.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finite_ntk/lazy/ntk_lazytensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/finite_ntk/lazy/ntk_lazytensor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +78,7 @@
     <option name="width" value="1680" />
     <option name="height" value="968" />
   </component>
+  <component name="ProjectId" id="1v8l9FDZL9NOsdUePJnQBateKgR" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -107,12 +109,24 @@
       <pane id="Scope" />
     </panes>
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/examples/WH" />
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
   </component>
-  <component name="RunManager" selected="Python.RLC_test">
-    <configuration name="RLC_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/examples/WH" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.WH2009_eval_lazy">
+    <configuration name="RLC_transfer_gp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -122,7 +136,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -131,7 +145,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="RLC_train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="RLC_transfer_parspace_lazy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -141,7 +155,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_train.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_lazy.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -150,17 +164,36 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="RLC_transfer_parspace_naive" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="WH2009_eval_lazy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_naive.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/WH2009_eval_lazy.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="WH2009_transfer_lazy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="dynonet-tangent" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/WH2009_transfer_lazy.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -191,14 +224,36 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="compare_techniques" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="dynonet-tangent" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/compare_techniques.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.RLC_test" />
-        <item itemvalue="Python.RLC_train" />
-        <item itemvalue="Python.RLC_transfer_parspace_naive" />
+        <item itemvalue="Python.WH2009_eval_lazy" />
+        <item itemvalue="Python.WH2009_transfer_lazy" />
+        <item itemvalue="Python.compare_techniques" />
+        <item itemvalue="Python.RLC_transfer_gp" />
+        <item itemvalue="Python.RLC_transfer_parspace_lazy" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -209,6 +264,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1622550266288</updated>
+      <workItem from="1625951454479" duration="108000" />
+      <workItem from="1625951719748" duration="355000" />
+      <workItem from="1626074499458" duration="5938000" />
+      <workItem from="1626094829207" duration="464000" />
+      <workItem from="1626096370812" duration="2778000" />
     </task>
     <task id="LOCAL-00001" summary="fixed lstm example - works if output is last prediction step">
       <created>1623847477273</created>
@@ -245,7 +305,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625133278701</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="small refactoring">
+      <created>1625868169635</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1625868169635</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -271,6 +338,9 @@
       <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -279,13 +349,26 @@
     <MESSAGE value="aggregating on batch dimension seems to work" />
     <MESSAGE value="added all plots and handled different hidden size in LSTM" />
     <MESSAGE value="increased num epochs" />
-    <option name="LAST_COMMIT_MESSAGE" value="increased num epochs" />
+    <MESSAGE value="small refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="small refactoring" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/finite_ntk/lazy/jacobian.py</url>
+          <line>148</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/dynonet_tangent$minimal.coverage" NAME="minimal Coverage Results" MODIFIED="1624871486855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_jac_lazy.coverage" NAME="RLC_jac_lazy Coverage Results" MODIFIED="1624890378268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_funcspace_tmp.coverage" NAME="RLC_transfer_funcspace_tmp Coverage Results" MODIFIED="1624972251439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_funcspace.coverage" NAME="RLC_transfer_funcspace Coverage Results" MODIFIED="1624971319961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$WH2009_eval_lazy.coverage" NAME="WH2009_eval_lazy Coverage Results" MODIFIED="1626097728277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/WH" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_orig.coverage" NAME="experiment_lazycov Coverage Results" MODIFIED="1624286558847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$ntk.coverage" NAME="ntk Coverage Results" MODIFIED="1624276123468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finite_ntk/lazy" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_dyno_wrapped.coverage" NAME="minimal_dyno_wrapped Coverage Results" MODIFIED="1624371738517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
@@ -293,6 +376,7 @@
     <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_transfer_parspace_naive.coverage" NAME="RLC_transfer_parspace_naive Coverage Results" MODIFIED="1624918543136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$memoize.coverage" NAME="memoize Coverage Results" MODIFIED="1624266944700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/anaconda3/envs/dynonet-tangent/lib/python3.9/site-packages/gpytorch/utils" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_feedforward.coverage" NAME="minimal_feedforward Coverage Results" MODIFIED="1624973327408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
+    <SUITE FILE_PATH="coverage/dynonet_tangent$WH2009_transfer_naive.coverage" NAME="WH2009_transfer_naive Coverage Results" MODIFIED="1626097414369" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/WH" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$minimal_lstm_wrapped.coverage" NAME="minimal_lstm_wrapped Coverage Results" MODIFIED="1624528824083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/finite_ntk_dyno_experiments" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$linear_strategy.coverage" NAME="linear_strategy Coverage Results" MODIFIED="1624871753746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finite_ntk/strategies" />
     <SUITE FILE_PATH="coverage/dynonet_tangent$RLC_train.coverage" NAME="RLC_train Coverage Results" MODIFIED="1625867670149" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples/RLC" />
