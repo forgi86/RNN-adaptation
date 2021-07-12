@@ -49,6 +49,8 @@ if __name__ == '__main__':
     J = parameter_jacobian(model, u_torch)  # custom-made full parameter jacobian
     y_transfer = J @ theta_lin
 
+    np.save("y_eval_naive.npy", y_transfer)
+
     # In[Plot]
     plt.figure()
     plt.plot(t, y_meas, 'k', label="$y$")

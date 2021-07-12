@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2174c4d8-11ed-4e4c-ae0f-276f779c74f4" name="Default" comment="small refactoring">
-      <change afterPath="$PROJECT_DIR$/examples/WH/WH2009_transfer_naive.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_generate_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_generate_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_transfer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_transfer_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_eval_naive.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/WH/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/finite_ntk/lazy/ntk_lazytensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/finite_ntk/lazy/ntk_lazytensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_eval_lazy.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_eval_lazy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/WH/WH2009_eval_naive.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/WH/WH2009_eval_naive.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,37 +120,18 @@
       <recent name="$PROJECT_DIR$/examples/WH" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.WH2009_eval_lazy">
-    <configuration name="RLC_transfer_gp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.WH2009_comparison1">
+    <configuration name="WH2009_comparison1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_gp.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="RLC_transfer_parspace_lazy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="dynonet-tangent" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/RLC/RLC_transfer_parspace_lazy.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/WH2009_comparison1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -168,6 +144,9 @@
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -183,17 +162,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="WH2009_transfer_lazy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="WH2009_eval_naive" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/WH2009_transfer_lazy.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/WH2009_eval_naive.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -224,10 +206,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="compare_techniques" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="compare_techniques (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="dynonet-tangent" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/dynonet-tangent/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/RLC" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -243,13 +228,61 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="compare_techniques" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="dynonet-tangent" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/compare_techniques.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="compare_techniques" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="dynonet-tangent" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples/WH" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/WH/compare_techniques.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.compare_techniques" />
+      <item itemvalue="Python.compare_techniques (1)" />
+      <item itemvalue="Python.WH2009_eval_lazy" />
+      <item itemvalue="Python.WH2009_comparison1" />
+      <item itemvalue="Python.WH2009_eval_naive" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.WH2009_comparison1" />
+        <item itemvalue="Python.WH2009_eval_naive" />
         <item itemvalue="Python.WH2009_eval_lazy" />
-        <item itemvalue="Python.WH2009_transfer_lazy" />
         <item itemvalue="Python.compare_techniques" />
-        <item itemvalue="Python.RLC_transfer_gp" />
-        <item itemvalue="Python.RLC_transfer_parspace_lazy" />
+        <item itemvalue="Python.compare_techniques (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -268,7 +301,9 @@
       <workItem from="1625951719748" duration="355000" />
       <workItem from="1626074499458" duration="5938000" />
       <workItem from="1626094829207" duration="464000" />
-      <workItem from="1626096370812" duration="2778000" />
+      <workItem from="1626096370812" duration="3579000" />
+      <workItem from="1626099970699" duration="2885000" />
+      <workItem from="1626119558864" duration="102000" />
     </task>
     <task id="LOCAL-00001" summary="fixed lstm example - works if output is last prediction step">
       <created>1623847477273</created>
@@ -312,7 +347,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625868169635</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="small refactoring">
+      <created>1626099324006</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1626099324006</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">

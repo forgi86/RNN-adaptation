@@ -57,13 +57,13 @@ if __name__ == '__main__':
 
     # In[Inference]
     #theta_lin = torch.load(os.path.join("models", model_name, "theta_lin_lazy.pt"))
-    #theta_lin = torch.tensor(np.load(os.path.join("models", model_name, "theta_lin.npy")))
     theta_lin = torch.tensor(np.load(os.path.join("models", model_name, "theta_lin.npy")))
     K = NeuralTangent(model=model_wrapped, data=u_torch_f)
     Jt = K.get_root()
     #Jt = Jacobian(model_wrapped, u_torch_f, None, num_outputs=1)
-
     y_transfer = Jt.t().matmul(theta_lin)
+
+    np.save("y_eval_lazy.npy", y_transfer)
 
     # In[Plot]
     plt.figure()
