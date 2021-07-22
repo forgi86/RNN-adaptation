@@ -33,7 +33,7 @@ class MimoStaticNonLinearity(nn.Module):
         self.net = nn.Sequential(
             nn.Linear(in_channels, n_hidden),
             activation_dict[activation](),  #nn.Tanh(),
-            nn.Linear(n_hidden, out_channels)
+            nn.Linear(n_hidden, out_channels, bias=False)
         )
 
     def forward(self, u_lin):

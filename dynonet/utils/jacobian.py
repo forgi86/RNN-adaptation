@@ -4,7 +4,7 @@ from dynonet.utils.extract_util import extract_weights, load_weights, f_par_mod_
 import copy
 
 
-def parameter_jacobian(model, input):
+def parameter_jacobian(model, input, vectorize=True):
 
     model = copy.deepcopy(model)  # do not touch original model
     # In[Parameter Jacobians]
@@ -20,7 +20,7 @@ def parameter_jacobian(model, input):
     f_par = functools.partial(f_par_mod_in, param_names=names, module=model, inputs=input)
     f_par(*params)
 
-    jacs = torch.autograd.functional.jacobian(f_par, params)
+    jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize)
     jac_dict = dict(zip(names, jacs))
     with torch.no_grad():
         sim_y = model(input)
