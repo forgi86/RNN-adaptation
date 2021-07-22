@@ -85,13 +85,12 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
         _, _, n_a = a_coeff.shape
         batch_size, seq_len, _ = u_in.shape
 
-
         a_poly = np.empty_like(a_coeff, shape=(out_channels, in_channels, n_a + 1))
         a_poly[:, :, 0] = 1
         a_poly[:, :, 1:] = a_coeff[:, :, :]
         b_poly = np.array(b_coeff)  # not required?
 
-        d0_np = np.array([1.0], dtype=dtype_np) #np.ones_like(u_in, shape=(out_channels, in_channels, 1))
+        d0_np = np.array([1.0], dtype=dtype_np)  # np.ones_like(u_in, shape=(out_channels, in_channels, 1))
         d1_np = np.array([0.0, 1.0], dtype=dtype_np)
 
         if ctx.needs_input_grad[0]:  # b_coeff
@@ -105,12 +104,12 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
                 sens_b[:, idx_coeff:, :, :, idx_coeff] = sens_b[:, :-idx_coeff, :, :, 0]
             sens_b = torch.as_tensor(sens_b)
             grad_b = torch.einsum('bto,btoid->oid', grad_output, sens_b)  # einstein summation
-            grad_b.requires_grad_(True)
+            #grad_b.requires_grad_(True)
 
         if ctx.needs_input_grad[1]:  # a_coeff
             # compute forward sensitivities w.r.t. the f_i parameters
             sens_a = np.zeros_like(u_in, shape=(batch_size, seq_len, out_channels, in_channels, n_a))
-            for out_idx in range(out_channels): # it is like a lfilter_mimo_components, can be optimized
+            for out_idx in range(out_channels):  # it is like a lfilter_mimo_components, can be optimized
                 for in_idx in range(in_channels):
                     sens_a[:, :, out_idx, in_idx, 0] = sp.signal.lfilter(d1_np, a_poly[out_idx, in_idx, :], -y_out_comp[:, :, out_idx, in_idx], axis=-1)
 
@@ -119,7 +118,7 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
             sens_a = torch.as_tensor(sens_a)
             # compute vector-jacobian product for f
             grad_a = torch.einsum('bto,btoid->oid', grad_output, sens_a)
-            grad_a.requires_grad_(True)
+            #grad_a.requires_grad_(True)
 
         if ctx.needs_input_grad[2]:  # u_in
             # compute jacobian w.r.t. u
@@ -128,12 +127,14 @@ class MimoLinearDynamicalOperatorFun(torch.autograd.Function):
             grad_u = np.zeros_like(u_in)  # [B, T, I]
             for in_idx in range(in_channels):
                 for out_idx in range(out_channels):
-                    grad_u[:, :, in_idx] += scipy.signal.lfilter(
-                        b_poly[out_idx, in_idx, :], a_poly[out_idx, in_idx, :], grad_output_flip[:, :, out_idx], axis=-1)
+                    grad_u[:, :, in_idx] += scipy.signal.lfilter(b_poly[out_idx, in_idx, :],
+                                                                 a_poly[out_idx, in_idx, :],
+                                                                 grad_output_flip[:, :, out_idx],
+                                                                 axis=-1)
             grad_u = np.array(grad_u[:, ::-1, :]).astype(dtype_np)
 
             grad_u = torch.as_tensor(grad_u)
-            grad_u.requires_grad_(True)
+            #grad_u.requires_grad_(True)
 
         return grad_b, grad_a, grad_u, grad_y0, grad_u0
 
@@ -144,7 +145,6 @@ if __name__ == '__main__':
     from torch.autograd import gradcheck
     from torch.autograd.gradcheck import get_numerical_jacobian, get_analytical_jacobian
 
-
     # copied from torch.autograd.gradcheck
     def istuple(obj):
         # Usually instances of PyStructSequence is also an instance of tuple
@@ -153,7 +153,6 @@ if __name__ == '__main__':
         # by a pytorch operator.
         t = type(obj)
         return isinstance(obj, tuple) or t.__module__ == 'torch.return_types'
-
 
     # copied from torch.autograd.gradcheck
     def _as_tuple(x):
@@ -191,6 +190,6 @@ if __name__ == '__main__':
     numerical = get_numerical_jacobian(G_fun, inputs)
 
     # In[Autodiff derivatives computation]
-    analytical, reentrant, correct_grad_sizes = get_analytical_jacobian(inputs, y_out)
+    analytical, reentrant, correct_grad_sizes, correct_grad_types = get_analytical_jacobian(inputs, y_out)
     #torch.max(numerical[0]- analytical[0])
     test = gradcheck(G, inputs, eps=1e-6, atol=1e-4, raise_exception=True)
