@@ -1,3 +1,6 @@
+*.pyc
 /examples/WH2009/models/
 /examples/RLC/models/
+/examples/RLC_SS_NL/models/
+/examples/RLC_SS_NL/fig/
 .idea/
