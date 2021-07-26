@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from simbl_common.utils import mat, tensor
+from worlds.utils import mat, tensor
 
 
 class WorldBase(object):
