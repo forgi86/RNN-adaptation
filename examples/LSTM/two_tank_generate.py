@@ -2,11 +2,16 @@ from worlds.worlds import Two_tank_model
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    system = Two_tank_model()
 
     batch_size = 2
-    n_steps = 1000
-    input_train, input_test, output_train, output_test, init_states_train, init_states_test = system.generate_data(batch_size, n_steps)
+    T = 120000  # simulation length (s)
+    Ts = 10  # sampling time (s)
+    n_steps = T//Ts
+
+    system = Two_tank_model(Ts=Ts)
+
+    input_train, input_test, output_train, output_test, init_states_train, init_states_test\
+        = system.generate_data(batch_size, n_steps)
 
     # In[Plot]
     fig, ax = plt.subplots(2, 1, sharex=True)
