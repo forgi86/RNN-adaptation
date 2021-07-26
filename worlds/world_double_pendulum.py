@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
 from simbl_common.utils import tensor, saturate
-from simbl_common.worlds.world_template import WorldBase
+from worlds.world_template import WorldBase
 
 
 class DoublePendulumWorld(WorldBase):

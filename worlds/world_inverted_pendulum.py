@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from scipy import signal
 
-from simbl_common.worlds.world_template import WorldBase
+from worlds.world_template import WorldBase
 
 
 class InvertedPendulumWorld(WorldBase):
