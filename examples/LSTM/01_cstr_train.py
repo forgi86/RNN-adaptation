@@ -11,14 +11,14 @@ if __name__ == "__main__":
     np.random.seed(0)
     torch.manual_seed(0)
 
-    num_iter = 5000  # gradient-based optimization steps
+    num_iter = 10000  # gradient-based optimization steps
     lr = 1e-3  # learning rate
     test_freq = 10
 
     u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
     y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))
 
-    model = nn.LSTM(input_size=2, hidden_size=2, num_layers=1, batch_first=True)
+    model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
     loss_fn = nn.MSELoss()
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         y_sim, _ = model(u_train)
 
         # Compute loss
-        loss = loss_fn(y_sim, y_train)
+        loss = loss_fn(y_sim[:, 128:, :], y_train[:, 128:, :])
         loss.backward()
 
         # Reporting
@@ -56,12 +56,32 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots(2, 1, sharex=True)
-    ax[0].plot(y_train.detach().numpy()[0, :, 0], label='True')
-    ax[0].plot(y_sim.detach().numpy()[0, :, 0], label='Fit')
+    plt.suptitle("Train")
+    batch_idx = 10
+    ax[0].plot(y_train.detach().numpy()[batch_idx, :, 0], label='True')
+    ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
     ax[0].legend()
 
-    ax[1].plot(y_train.detach().numpy()[0, :, 1], label='True')
-    ax[1].plot(y_sim.detach().numpy()[0, :, 1], label='Fit')
+    ax[1].plot(y_train.detach().numpy()[batch_idx, :, 1], label='True')
+    ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
+    ax[1].legend()
+
+
+    # Test
+    u_test = torch.tensor(np.load(os.path.join("data", "cstr", "u_test.npy")).astype(np.float32))
+    y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_test.npy")).astype(np.float32))
+    y_sim, _ = model(u_test)
+
+
+    fig, ax = plt.subplots(2, 1, sharex=True)
+    plt.suptitle("Test")
+    batch_idx = 10
+    ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='True')
+    ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
+    ax[0].legend()
+
+    ax[1].plot(y_test.detach().numpy()[batch_idx, :, 1], label='True')
+    ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
     ax[1].legend()
 
 
