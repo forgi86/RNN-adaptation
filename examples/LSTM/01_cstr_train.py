@@ -32,7 +32,7 @@ if __name__ == "__main__":
         y_sim, _ = model(u_train)
 
         # Compute loss
-        loss = loss_fn(y_sim[:, 128:, :], y_train[:, 128:, :])
+        loss = loss_fn(y_sim[:, 64:, :], y_train[:, 64:, :])
         loss.backward()
 
         # Reporting
