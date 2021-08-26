@@ -11,7 +11,7 @@ if __name__ == "__main__":
     np.random.seed(0)
     torch.manual_seed(0)
 
-    num_iter = 10000  # gradient-based optimization steps
+    num_iter = 2000  # gradient-based optimization steps
     lr = 1e-3  # learning rate
     n_skip = 64  # skip initial n_skip samples for training (ignore transient)
     test_freq = 10  # print a message every test_freq iterations
