@@ -20,7 +20,7 @@ if __name__ == "__main__":
     n_steps = 256
     u_train, u_test, y_train, y_test = system_nom.generate_data(batch_size, n_steps, flow_period=50)
 
-    # Computer rescaling factors
+    # Compute rescaling factors using the training data
     u_mean = np.mean(np.mean(u_train, axis=1), axis=0)
     u_std = np.mean(np.std(u_train, axis=1), axis=0)
     y_mean = np.mean(np.mean(y_train, axis=1), axis=0)
