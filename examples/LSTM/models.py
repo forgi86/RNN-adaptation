@@ -10,6 +10,7 @@ class LSTMWrapper(torch.nn.Module):
 
     def forward(self, u_in_f):
 
-        u_in = u_in_f.view(1, self.seq_len, self.input_size)
+        print(u_in_f.shape)
+        u_in = u_in_f.view(1, -1, self.input_size)
         y_out, _ = self.lstm(u_in)
         return y_out.view(-1, 1)

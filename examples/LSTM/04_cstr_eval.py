@@ -42,7 +42,6 @@ if __name__ == '__main__':
     y_torch_new = torch.tensor(y_new, dtype=torch.float)
     u_torch_new_f = torch.clone(u_torch_new.view((input_size * seq_len, 1)))  # [bsize*seq_len, n_in]
     y_torch_new_f = torch.clone(y_torch_new.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
-    y_f = y_torch_new_f.detach().numpy()
 
     # In[Load theta_lin]
     theta_lin = np.load(os.path.join("models", "theta_lin.npy"))

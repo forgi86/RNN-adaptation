@@ -15,6 +15,7 @@ class DynoWrapper(torch.nn.Module):
         self.n_out = n_out
 
     def forward(self, u_in):
+        # print(u_in.shape)
         u_in = u_in[None, :, :]  # [bsize, seq_len, n_in]
         y_out = self.dyno(u_in)  # [bsize, seq_len, n_out]
         n_out = y_out.shape[-1]
