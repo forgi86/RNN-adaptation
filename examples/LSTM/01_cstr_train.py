@@ -13,7 +13,8 @@ if __name__ == "__main__":
 
     num_iter = 10000  # gradient-based optimization steps
     lr = 1e-3  # learning rate
-    test_freq = 10
+    n_skip = 64  # skip initial n_skip samples for training (ignore transient)
+    test_freq = 10  # print a message every test_freq iterations
 
     u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
     y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))

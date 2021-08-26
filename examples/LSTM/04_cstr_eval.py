@@ -4,21 +4,8 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from finite_ntk.lazy.ntk_lazytensor import Jacobian
+from models import LSTMWrapper
 from torchid import metrics
-
-
-class LSTMWrapper(torch.nn.Module):
-    def __init__(self, lstm, seq_len, input_size):
-        super(LSTMWrapper, self).__init__()
-        self.lstm = lstm
-        self.seq_len = seq_len
-        self.input_size = input_size
-
-    def forward(self, u_in_f):
-
-        u_in = u_in_f.view(1, self.seq_len, self.input_size)
-        y_out, _ = self.lstm(u_in)
-        return y_out.view(-1, 1)
 
 
 if __name__ == '__main__':
@@ -28,20 +15,19 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    vectorize = True  # vectorize jacobian evaluation (experimental!)
-    sigma = 10.0
+    n_skip = 64  # skip initial n_skip samples for metrics (ignore transient)
     model_name = "lstm"
 
     # In[Load dataset]
-    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)
-    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)
+    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
-    batch_size, seq_len, input_size = u_new.shape
-    batch_size_, seq_len_, output_size = y_new.shape
-    assert(batch_size == 1)
-    assert(batch_size == batch_size_)
+    batch_size = 1
+    seq_len, input_size = u_new.shape
+    seq_len_, output_size = y_new.shape
     assert(seq_len == seq_len_)
+
 
     # In[Load LSTM model]
     # Setup neural model structure and load fitted model parameters
@@ -73,13 +59,19 @@ if __name__ == '__main__':
     y_sim_new = y_sim_new_f.reshape(seq_len, output_size)
 
     # In[Plot]
-    plt.plot(y_new[0, :, :], 'k')
-    plt.plot(y_sim_new, 'r')
-    plt.plot(y_lin_new, 'b')
+    fig, ax = plt.subplots(2, 1, sharex=True)
+    ax[0].plot(y_new[:, 0], 'k', label="True")
+    ax[0].plot(y_sim_new[:, 0], 'r', label="Sim")
+    ax[0].plot(y_lin_new[:, 0], 'b', label="Lin")
+    ax[0].legend()
+
+    ax[1].plot(y_new[:, 1], 'k')
+    ax[1].plot(y_sim_new[:, 1], 'r')
+    ax[1].plot(y_lin_new[:, 1], 'b')
 
     # R-squared metrics
-    R_sq = metrics.r_squared(y_new, y_lin_new_f)
+    R_sq = metrics.r_squared(y_new[n_skip:, :], y_lin_new[n_skip:, :])
     print(f"R-squared linear model: {R_sq}")
 
-    R_sq = metrics.r_squared(y_new, y_sim_new)
+    R_sq = metrics.r_squared(y_new[n_skip:, :], y_sim_new[n_skip:, :])
     print(f"R-squared nominal model: {R_sq}")

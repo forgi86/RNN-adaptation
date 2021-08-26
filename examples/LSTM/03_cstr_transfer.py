@@ -4,20 +4,7 @@ import time
 import torch
 import torch.nn as nn
 from dynonet.utils.jacobian import parameter_jacobian
-
-class LSTMWrapper(torch.nn.Module):
-    def __init__(self, lstm, seq_len, input_size):
-        super(LSTMWrapper, self).__init__()
-        self.lstm = lstm
-        self.seq_len = seq_len
-        self.input_size = input_size
-
-    def forward(self, u_in_f):
-
-        u_in = u_in_f.view(1, self.seq_len, self.input_size)
-        y_out, _ = self.lstm(u_in)
-        return y_out.view(-1, 1)
-
+from models import LSTMWrapper
 
 if __name__ == '__main__':
 
@@ -30,17 +17,17 @@ if __name__ == '__main__':
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
     sigma = 1.0
+    n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
 
     # In[Load dataset]
-    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)
-    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
-    batch_size, seq_len, input_size = u.shape
-    batch_size_, seq_len_, output_size = y.shape
-    assert(batch_size == 1)
-    assert(batch_size == batch_size_)
+    batch_size = 1
+    seq_len, input_size = u.shape
+    seq_len_, output_size = y.shape
     assert(seq_len == seq_len_)
 
     # In[Load LSTM model]
@@ -60,11 +47,15 @@ if __name__ == '__main__':
 
     # In[Adaptation in parameter space (naive way)]
     J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize)  # custom-made full parameter jacobian
+
+    J_red = J[n_skip * output_size:, :]
+    y_f_red = y_f[n_skip * output_size:]
     n_param = J.shape[1]
+
     Ip = np.eye(n_param)
-    F = J.transpose() @ J
+    F = J_red.transpose() @ J_red
     A = F + sigma**2 * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y_f)  # adaptation!
+    theta_lin = np.linalg.solve(A, J_red.transpose() @ y_f_red)  # adaptation!
     np.save(os.path.join("models", "theta_lin.npy"), theta_lin)
 
     adapt_time = time.time() - time_start
