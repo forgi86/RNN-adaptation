@@ -14,13 +14,11 @@ if __name__ == '__main__':
 
     plot_input = False
 
-
-    #dataset_type = 'train'
+    # dataset_type = 'train'
     dataset_type = 'test'
-    #dataset_type = 'transfer'
-    #dataset_type = 'eval'
+    # dataset_type = 'transfer'
+    # dataset_type = 'eval'
 
-    #model_type = '64step_noise'
     model_type = '256step_noise_V'
 
     # Column names in the dataset

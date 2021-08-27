@@ -41,7 +41,7 @@ if __name__ == '__main__':
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     nn_solution = ForwardEulerSimulator(ss_model)
     model_filename = f"model_SS_{model_type}.pt"
-    nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
+    nn_solution.ss_model.load_state_dict(torch.load(os.path.join("../models", model_filename)))
 
     # In[Model wrapping]
     n_in = 1
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     model_wrapped = StateSpaceWrapper(nn_solution)
 
     # In[Load theta_lin]
-    theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")))
+    theta_lin = np.load(os.path.join("../models", "theta_lin.npy"))
 
     # In[Parameter jacobian-vector product]
     Jt_new = Jacobian(model_wrapped, u_torch_new_f, None, num_outputs=1)

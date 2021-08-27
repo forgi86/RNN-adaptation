@@ -31,7 +31,6 @@ if __name__ == '__main__':
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
     sigma = 10.0
-    #model_type = '1step_nonoise'
     model_type = "256step_noise_V"
 
     # In[Load dataset]
