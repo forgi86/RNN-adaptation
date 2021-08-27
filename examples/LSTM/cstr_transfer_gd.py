@@ -17,11 +17,10 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    use_linearstrategy = True
     sigma = 0.03
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
-    n_iter = 500 #100
+    n_iter = 500  # 100
     lr = 1e-3
 
     # In[Load dataset]
