@@ -44,8 +44,11 @@ if __name__ == '__main__':
     y_torch_new_f = torch.clone(y_torch_new.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
 
     # In[Load theta_lin]
-    theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))
-    #theta_lin = np.zeros_like(theta_lin)
+    # theta_lin = np.zeros_like(theta_lin)
+    # theta_lin = np.load(os.path.join("models", "theta_lin_cf.npy"))
+    # theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))
+    theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))
+
 
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new_f)

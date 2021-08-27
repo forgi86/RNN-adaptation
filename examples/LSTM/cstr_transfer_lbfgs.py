@@ -94,7 +94,7 @@ if __name__ == '__main__':
     adapt_time = time.time() - time_start
     print(f"\nAdapt time: {adapt_time:.2f}")
 
-    np.save(os.path.join("models", "theta_lin_gd.npy"), theta_lin.detach().numpy())
+    np.save(os.path.join("models", "theta_lin_lbfgs.npy"), theta_lin.detach().numpy())
 
     # In[Plot]
 

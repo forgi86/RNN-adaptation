@@ -56,7 +56,7 @@ if __name__ == '__main__':
     F = J_red.transpose() @ J_red
     A = F + sigma**2 * Ip
     theta_lin = np.linalg.solve(A, J_red.transpose() @ y_f_red)  # adaptation!
-    np.save(os.path.join("models", "theta_lin.npy"), theta_lin)
+    np.save(os.path.join("models", "theta_lin_cf.npy"), theta_lin)  # cf: closed-form
 
     adapt_time = time.time() - time_start
     print(f"\nAdapt time: {adapt_time:.2f}")

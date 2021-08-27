@@ -9,6 +9,7 @@ if __name__ == "__main__":
 
     model_name = "lstm"
     dataset_name = "test"
+    # dataset_name = "eval"
     n_skip = 64  # skip initial n_skip samples for metrics (ignore transient)
 
     # Test
@@ -37,11 +38,11 @@ if __name__ == "__main__":
     # R-squared metrics
     R_sq = metrics.r_squared(y_test.detach().numpy()[:, n_skip:, :],
                              y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
-    print(f"R-squared metrics: {R_sq}")
+    # print(f"R-squared metrics: {R_sq}")
 
     rmse = metrics.error_rmse(y_test.detach().numpy()[:, n_skip:, :],
                              y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
 
-    print(f"RMSE: {rmse}")
+    # print(f"RMSE: {rmse}")
     R_sq_mean = R_sq.mean(axis=0)
     rmse_mean = rmse.mean(axis=0)
