@@ -3,7 +3,7 @@ import numpy as np
 import time
 import torch
 import torch.nn as nn
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.jacobian import parameter_jacobian
 from models import LSTMWrapper
 
 if __name__ == '__main__':

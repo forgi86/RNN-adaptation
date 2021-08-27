@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from utils import jvp, unflatten_like
+from diffutil.products import jvp, unflatten_like
 from models import LSTMWrapper
 from torchid import metrics
 
