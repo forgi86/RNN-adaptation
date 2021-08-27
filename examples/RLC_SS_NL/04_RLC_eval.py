@@ -29,7 +29,6 @@ if __name__ == '__main__':
 
     # In[Settings]
     model_type = "256step_noise_V"
-    sigma = 10.0
     seq_len = 2000
 
     # In[Load dataset]
