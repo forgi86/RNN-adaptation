@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from models import WHNet3
 from torchid import metrics
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.jacobian import parameter_jacobian
 
 
 if __name__ == '__main__':

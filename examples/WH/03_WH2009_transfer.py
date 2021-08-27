@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 import numpy as np
 from models import WHNet3
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.jacobian import parameter_jacobian
 
 if __name__ == '__main__':
 
