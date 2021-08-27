@@ -4,7 +4,6 @@ import torch
 import matplotlib.pyplot as plt
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
 from torchid.statespace.module.ss_simulator_ct import ForwardEulerSimulator
-from finite_ntk.lazy.ntk_lazytensor import Jacobian
 from diffutil.products import jvp, unflatten_like
 from torchid import metrics
 import loader
@@ -16,8 +15,8 @@ class StateSpaceWrapper(torch.nn.Module):
         self.model = model
 
     def forward(self, u_in):
-        x_0 = np.zeros(2).astype(np.float32)
-        x_sim_torch = self.model(torch.tensor(x_0), u_in)
+        x_0 = torch.zeros(2)
+        x_sim_torch = self.model(x_0, u_in)
         y_out = x_sim_torch[:, [0]]
         return y_out
 

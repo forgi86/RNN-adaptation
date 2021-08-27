@@ -19,6 +19,9 @@ if __name__ == '__main__':
     omega_input = 100e3
     std_input = 70
 
+    scale_u = 80.
+    scale_x = [90., 3.]
+
     tau_input = 1 / omega_input
     Hu = control.TransferFunction([1], [1 / omega_input, 1])
     Hu = Hu * Hu
@@ -57,6 +60,9 @@ if __name__ == '__main__':
     x1 = y1.y.T
     x2 = y2.y.T
 
+    x1 = x1 / scale_x
+    x2 = x2 / scale_x
+    u = u / scale_u
     # In[plot]
     fig, ax = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
     ax[0].plot(t_sim, x1[:, 0], 'b')

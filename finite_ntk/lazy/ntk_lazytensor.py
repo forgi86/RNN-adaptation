@@ -178,9 +178,12 @@ class NeuralTangent(LazyTensor):
                 curr_prod = []
                 for dim in range(self.num_outputs):
                     # compute jacobian vector product
-                    z_current = Jacvec(
-                        loss[..., dim], self.model.parameters(), v[..., dim]
-                    )
+                    if loss[..., dim].grad_fn is not None:
+                        z_current = Jacvec(
+                            loss[..., dim], self.model.parameters(), v[..., dim]
+                        )
+                    else:
+                        z_current = [torch.zeros_like(par) for par in self.model.parameters()]
 
                     # compute second loss
                     if self.use_cross:

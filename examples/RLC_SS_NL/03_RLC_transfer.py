@@ -14,8 +14,8 @@ class StateSpaceWrapper(torch.nn.Module):
         self.model = model
 
     def forward(self, u_in):
-        x_0 = np.zeros(2).astype(np.float32)
-        x_sim_torch = self.model(torch.tensor(x_0), u_in)
+        x_0 = torch.zeros(2)
+        x_sim_torch = self.model(x_0, u_in)
         y_out = x_sim_torch[:, [0]]
         return y_out
 
@@ -30,11 +30,11 @@ if __name__ == '__main__':
 
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
-    sigma = 10.0
+    sigma = 0.1
     model_type = "256step_noise_V"
 
     # In[Load dataset]
-    t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=10.0, n_data=2000)
+    t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=sigma, n_data=2000)
     seq_len = t.size
 
     # In[Second-order dynamical system custom defined]

@@ -28,7 +28,7 @@ if __name__ == '__main__':
     add_noise = True
 
     # Column names in the dataset
-    t, u, y, x = rlc_loader("train", "nl", noise_std=10.0)
+    t, u, y, x = rlc_loader("train", "nl", noise_std=0.1)
 
     # Get fit data #
     ts = t[1] - t[0]
