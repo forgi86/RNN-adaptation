@@ -40,7 +40,7 @@ if __name__ == "__main__":
         LOSS.append(loss.item())
         if itr % test_freq == 0:
             with torch.no_grad():
-                print(f'Iter {itr} | Tradeoff Loss {loss:.4f}')
+                print(f'Iter {itr} | Train Loss {loss:.4f}')
 
         optimizer.step()
 

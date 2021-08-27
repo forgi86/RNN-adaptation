@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     params_pert = {'C_A0': 0.75,
                    'k0_list': [1.0, 0.7, 0.1, 0.006],
-                   'E': [8.33, 10.0, 50.0, 83.3]}
+                   'E': [7.33, 9.0, 60.0, 93.3]}
     system_pert = CSTR(params=params_pert)  # perturbed system
 
     # Generate train and test datasets

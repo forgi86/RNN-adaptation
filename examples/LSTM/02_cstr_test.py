@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # R-squared metrics
     R_sq = metrics.r_squared(y_test.detach().numpy()[:, n_skip:, :],
                              y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
-    # print(f"R-squared metrics: {R_sq}")
+    print(f"R-squared metrics: {R_sq}")
 
     rmse = metrics.error_rmse(y_test.detach().numpy()[:, n_skip:, :],
                              y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
