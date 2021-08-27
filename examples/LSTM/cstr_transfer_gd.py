@@ -4,7 +4,7 @@ import time
 import torch
 import torch.nn as nn
 from models import LSTMWrapper
-from diffutil.products import jvp, unflatten_like
+from diffutil.products import jvp_diff, unflatten_like
 import torch.optim as optim
 
 

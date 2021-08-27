@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
 from torchid.statespace.module.ss_simulator_ct import ForwardEulerSimulator
 from finite_ntk.lazy.ntk_lazytensor import Jacobian
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.products import jvp, unflatten_like
 from torchid import metrics
 import loader
 
@@ -31,10 +31,10 @@ if __name__ == '__main__':
     # In[Settings]
     model_type = "256step_noise_V"
     sigma = 10.0
-    n_data = 2000
+    seq_len = 2000
 
     # In[Load dataset]
-    t_new, u_new, y_new, x_new = loader.rlc_loader("eval", dataset_type="nl", noise_std=0.0, n_data=n_data)
+    t_new, u_new, y_new, x_new = loader.rlc_loader("eval", dataset_type="nl", noise_std=0.0, n_data=seq_len)
 
     # In[Second-order dynamical system custom defined]
     # Setup neural model structure and load fitted model parameters
@@ -44,24 +44,24 @@ if __name__ == '__main__':
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    n_in = 1
-    n_out = 1
+    input_size = 1
+    output_size = 1
     u_torch_new = torch.tensor(u_new[None, :, :])
-    u_torch_new_f = torch.clone(u_torch_new.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
+    u_torch_new_f = torch.clone(u_torch_new.view((1 * seq_len, input_size)))  # [bsize*seq_len, n_in]
     model_wrapped = StateSpaceWrapper(nn_solution)
 
     # In[Load theta_lin]
     theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")))
 
-    # In[Parameter jacobian-vector product]
-    Jt_new = Jacobian(model_wrapped, u_torch_new_f, None, num_outputs=1)
-    y_lin_new = Jt_new.t().matmul(torch.tensor(theta_lin)).numpy()
-    #np.save("y_lin_parspace_lazy.npy", y_lin_new)
+    # In[Nominal model output]
+    y_sim_new_f = model_wrapped(u_torch_new_f)
+    y_sim_new = y_sim_new_f.reshape(seq_len, output_size).detach().numpy()
 
-    # In[Compute nominal model out on transfer dataset]
-    with torch.no_grad():
-        y_sim_new_torch = model_wrapped(u_torch_new_f)
-    y_sim_new = y_sim_new_torch.detach().numpy()
+    # In[Parameter jacobian-vector product]
+    theta_lin = torch.tensor(theta_lin)
+    theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
+    y_lin_new_f = jvp(y_sim_new_f, model_wrapped.parameters(), theta_lin_f)[0]
+    y_lin_new = y_lin_new_f.reshape(seq_len, output_size).detach().numpy()
 
     # In[Plot]
     plt.plot(y_new, 'k')

@@ -28,10 +28,8 @@ if __name__ == '__main__':
     seq_len_, output_size = y_new.shape
     assert(seq_len == seq_len_)
 
-
     # In[Load LSTM model]
     # Setup neural model structure and load fitted model parameters
-
     model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
     model_filename = f"{model_name}.pt"
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
@@ -45,10 +43,9 @@ if __name__ == '__main__':
 
     # In[Load theta_lin]
     # theta_lin = np.zeros_like(theta_lin)
-    # theta_lin = np.load(os.path.join("models", "theta_lin_cf.npy"))
-    # theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))
-    theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))
-
+    theta_lin = np.load(os.path.join("models", "theta_lin_cf.npy"))  # closed-form
+    # theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))  # gradient descent
+    # theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))  # L-BFGS
 
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new_f)

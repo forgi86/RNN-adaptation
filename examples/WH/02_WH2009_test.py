@@ -48,8 +48,8 @@ if __name__ == '__main__':
     y_sim = y_sim_torch.numpy()[0, ...]
 
     # In[Metrics]
-    R_sq = metrics.r_squared(y_meas, y_sim)
-    rmse = metrics.error_rmse(y_meas, y_sim)
+    R_sq = metrics.r_squared(y_meas, y_sim)[0]
+    rmse = metrics.error_rmse(y_meas, y_sim)[0]
 
     print(f"R-squared metrics: {R_sq}")
     print(f"RMSE metrics: {rmse}")

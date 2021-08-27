@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import os
 from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.jacobian import parameter_jacobian
 import loader
 
 if __name__ == '__main__':

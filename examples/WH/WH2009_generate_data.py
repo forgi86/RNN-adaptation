@@ -36,23 +36,14 @@ if __name__ == '__main__':
     ts = 1/fs
     t = np.arange(N)*ts
 
-    t_fit_start = 0
-    t_fit_end = 100000
-    t_test_start = 100000
-    t_test_end = 188000
-    t_skip = 1000  # skip for statistics
-
     # In[Instantiate models]
 
-    # Create models
+    # Create model
     model = WHNet3()
     model_folder = os.path.join("models", model_name)
-    # Create model parameters
+
+    # Load model parameters
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
-#    with torch.no_grad():
-#        model.G1.b_coeff *= -1
-#        model.F_nl.net[0].weight *= -1
-#        model.F_nl.net[0].bias *= -1
 
     u_torch = torch.tensor(u[None, :, :], dtype=torch.float, requires_grad=False)
     y_train = model(u_torch)
@@ -74,8 +65,6 @@ if __name__ == '__main__':
     data_mat = np.c_[t.reshape(-1,1), u, Y_nl]
     cols = ["t", "u"] + [f"y{i}" for i in range(n_sim)]
     df_data = pd.DataFrame(data_mat, columns=cols)
-
-    #df_data.to_csv(os.path.join("data", "transfer", "data_all.csv"), index=False)
 
     F_nl = model.F_nl
     x_lin = torch.linspace(-4, 4, 1000)

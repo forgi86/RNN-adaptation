@@ -4,7 +4,7 @@ import time
 import torch
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
 from torchid.statespace.module.ss_simulator_ct import ForwardEulerSimulator
-from dynonet.utils.jacobian import parameter_jacobian
+from diffutil.jacobian import parameter_jacobian
 import loader
 
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     # In[Load dataset]
     t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=10.0, n_data=2000)
-    n_data = t.size
+    seq_len = t.size
 
     # In[Second-order dynamical system custom defined]
     # Setup neural model structure and load fitted model parameters
@@ -45,13 +45,13 @@ if __name__ == '__main__':
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    n_in = 1
-    n_out = 1
+    input_size = 1
+    output_size = 1
     model_wrapped = StateSpaceWrapper(nn_solution)
     u_torch = torch.tensor(u[None, ...], dtype=torch.float, requires_grad=False)
     y_torch = torch.tensor(y[None, ...], dtype=torch.float)
-    u_torch_f = torch.clone(u_torch.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
-    y_torch_f = torch.clone(y_torch.view(1 * n_data, n_out))  # [bsize*seq_len, ]
+    u_torch_f = torch.clone(u_torch.view((1 * seq_len, input_size)))  # [bsize*seq_len, n_in]
+    y_torch_f = torch.clone(y_torch.view(1 * seq_len, output_size))  # [bsize*seq_len, ]
 
     # In[Adaptation in parameter space (naive way)]
     J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize)  # custom-made full parameter jacobian

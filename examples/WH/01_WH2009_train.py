@@ -5,7 +5,7 @@ import numpy as np
 from models import WHNet3
 import matplotlib.pyplot as plt
 import time
-import dynonet.utils.metrics
+import torchid.metrics
 
 
 # In[Main]
@@ -130,8 +130,8 @@ if __name__ == '__main__':
     plt.grid(True)
 
     # In[Plot]
-    e_rms = dynonet.utils.metrics.error_rmse(y_hat, y_fit)[0]
-    print(f"RMSE: {e_rms:.2f}") # target: 1mv
+    e_rms = torchid.metrics.error_rmse(y_hat, y_fit)[0]
+    print(f"RMSE: {e_rms:.2f}")  # target: 1mv
 
 
 
