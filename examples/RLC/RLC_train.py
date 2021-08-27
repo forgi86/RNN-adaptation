@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import torch
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 import matplotlib.pyplot as plt
 import time
 import loader

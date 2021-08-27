@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':

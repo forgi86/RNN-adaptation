@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 import gpytorch
 import finite_ntk
 import loader
