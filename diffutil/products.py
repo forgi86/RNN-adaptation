@@ -28,6 +28,7 @@ def jvp(y, x, v):
     w = torch.ones_like(y, requires_grad=True)
     return torch.autograd.grad(torch.autograd.grad(y, x, w, create_graph=True), w, v)
 
+
 def jvp_diff(y, x, v):
     """Computes a jacobian-vector product J v, aka Rop (Right Operation)
     This is what forward-mode automatic differentiation directly obtains.
