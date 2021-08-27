@@ -39,4 +39,9 @@ if __name__ == "__main__":
                              y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
     print(f"R-squared metrics: {R_sq}")
 
+    rmse = metrics.error_rmse(y_test.detach().numpy()[:, n_skip:, :],
+                             y_sim.detach().numpy()[:, n_skip:, :], time_axis=1)
+
+    print(f"RMSE: {rmse}")
     R_sq_mean = R_sq.mean(axis=0)
+    rmse_mean = rmse.mean(axis=0)

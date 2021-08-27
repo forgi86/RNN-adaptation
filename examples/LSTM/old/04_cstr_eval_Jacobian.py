@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from utils import jvp, unflatten_like
+from finite_ntk.lazy.ntk_lazytensor import Jacobian
 from models import LSTMWrapper
 from torchid import metrics
 
@@ -19,8 +19,8 @@ if __name__ == '__main__':
     model_name = "lstm"
 
     # In[Load dataset]
-    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    u_new = np.load(os.path.join("../data", "cstr", "u_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("../data", "cstr", "y_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
     batch_size = 1
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
     model_filename = f"{model_name}.pt"
-    model.load_state_dict(torch.load(os.path.join("models", model_filename)))
+    model.load_state_dict(torch.load(os.path.join("../models", model_filename)))
 
     # In[Model wrapping]
     model_wrapped = LSTMWrapper(model, seq_len, input_size)
@@ -44,18 +44,18 @@ if __name__ == '__main__':
     y_torch_new_f = torch.clone(y_torch_new.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
 
     # In[Load theta_lin]
-    theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))
-    #theta_lin = np.zeros_like(theta_lin)
+    theta_lin = np.load(os.path.join("../models", "theta_lin.npy"))
 
-    # In[Nominal model output]
-    y_sim_new_f = model_wrapped(u_torch_new_f)
-    y_sim_new = y_sim_new_f.reshape(seq_len, output_size).detach().numpy()
+    # In[Parameter jacobian-vector product]
+    Jt_new = Jacobian(model_wrapped, u_torch_new_f, None, num_outputs=1)
+    y_lin_new_f = Jt_new.t().matmul(torch.tensor(theta_lin)).numpy()
+    y_lin_new = y_lin_new_f.reshape(seq_len, output_size)
 
-    # In[Linearized model output]
-    theta_lin = torch.tensor(theta_lin)
-    theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
-    y_lin_new_f = jvp(y_sim_new_f, model_wrapped.parameters(), theta_lin_f)[0]
-    y_lin_new = y_lin_new_f.reshape(seq_len, output_size).detach().numpy()
+    # In[Compute nominal model out on transfer dataset]
+    with torch.no_grad():
+        y_sim_new_torch_f = model_wrapped(u_torch_new_f)
+    y_sim_new_f = y_sim_new_torch_f.detach().numpy()
+    y_sim_new = y_sim_new_f.reshape(seq_len, output_size)
 
     # In[Plot]
     fig, ax = plt.subplots(2, 1, sharex=True)

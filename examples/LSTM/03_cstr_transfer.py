@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
-    sigma = 1.0
+    sigma = 0.03  # 1.0
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
 
