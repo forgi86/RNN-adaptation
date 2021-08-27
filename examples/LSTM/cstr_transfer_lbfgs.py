@@ -20,8 +20,8 @@ if __name__ == '__main__':
     sigma = 0.03
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
-    n_iter = 500  # 100
-    lr = 1e-2
+    n_iter = 10  # 100
+    lr = 1e-1
 
     # In[Load dataset]
     u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
@@ -55,18 +55,16 @@ if __name__ == '__main__':
     theta_lin = torch.zeros(n_param)
     theta_lin.requires_grad_(True)
 
-    optimizer = optim.Adam([theta_lin], lr=lr)
+    optimizer = optim.LBFGS([theta_lin], lr=lr)
 
     LOSS = []
     LOSS_REG = []
     LOSS_FIT = []
-    for itr in range(n_iter):
 
+    def closure():
         optimizer.zero_grad()
 
         theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
-
-        # Compute nominal and linear model output
         y_sim_f = model_wrapped(u_torch_f)
         y_lin_f = jvp_diff(y_sim_f, model_wrapped.parameters(), theta_lin_f)[0]
 
@@ -77,15 +75,21 @@ if __name__ == '__main__':
         loss = loss_fit + loss_reg
         loss = loss/1000
 
-        # Statistics
         print(f'Iter {itr} | Tradeoff Loss {loss:.3f} | Fit Loss {loss_fit:.6f} | Reg Loss {loss_reg:.6f}')
-        LOSS.append(loss.item())
-        LOSS_FIT.append(loss_fit.item())
-        LOSS_REG.append(loss_reg.item())
+        loss.backward()
+        return loss
+
+    for itr in range(n_iter):
+
+        loss = optimizer.step(closure)
+
+        # Statistics
+        #LOSS.append(loss.item())
+        #LOSS_FIT.append(loss_fit.item())
+        #LOSS_REG.append(loss_reg.item())
 
         # Optimization
-        loss.backward()
-        optimizer.step()
+        #loss.backward()
 
     adapt_time = time.time() - time_start
     print(f"\nAdapt time: {adapt_time:.2f}")
@@ -93,6 +97,11 @@ if __name__ == '__main__':
     np.save(os.path.join("models", "theta_lin_gd.npy"), theta_lin.detach().numpy())
 
     # In[Plot]
+
+    theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
+    y_sim_f = model_wrapped(u_torch_f)
+    y_lin_f = jvp_diff(y_sim_f, model_wrapped.parameters(), theta_lin_f)[0]
+
     y_sim = y_sim_f.detach().numpy().reshape(seq_len, output_size)
     y_lin = y_lin_f.detach().numpy().reshape(seq_len, output_size)
 
