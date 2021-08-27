@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from models import WHNet3, DynoWrapper
+from torchid import metrics
 from finite_ntk.lazy.ntk_lazytensor import Jacobian, NeuralTangent
 
 
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     model_name = "model_WH3"  # base model (only used for jacobian feature extraction)
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "transfer",  "data_all.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "transfer", "data_all.csv"))
 
     # Extract data
     signal_num = 1
@@ -37,7 +38,7 @@ if __name__ == '__main__':
     # In[Instantiate models]
     # Create models
     model = WHNet3()
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
     #theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
 
@@ -57,13 +58,13 @@ if __name__ == '__main__':
 
     # In[Inference]
     #theta_lin = torch.load(os.path.join("models", model_name, "theta_lin_lazy.pt"))
-    theta_lin = torch.tensor(np.load(os.path.join("models", model_name, "theta_lin.npy")))
+    theta_lin = torch.tensor(np.load(os.path.join("../models", model_name, "theta_lin.npy")))
     K = NeuralTangent(model=model_wrapped, data=u_torch_f)
     Jt = K.get_root()
     #Jt = Jacobian(model_wrapped, u_torch_f, None, num_outputs=1)
     y_transfer = Jt.t().matmul(theta_lin)
 
-    np.save("y_eval_lazy.npy", y_transfer)
+    np.save("../y_eval_lazy.npy", y_transfer)
 
     # In[Plot]
     plt.figure()
@@ -74,5 +75,5 @@ if __name__ == '__main__':
 
     # In[Metrics]
 
-    #e_rms_sim = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_sim_torch)[0]
-    #e_rms_transf = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_transfer)[0]
+    e_rms_sim = 1000 * metrics.error_rmse(y_meas, y_sim_torch)[0]
+    e_rms_transf = 1000 * metrics.error_rmse(y_meas, y_transfer)[0]

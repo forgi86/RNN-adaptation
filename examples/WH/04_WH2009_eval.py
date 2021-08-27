@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from models import WHNet3
-import dynonet.utils.metrics
+from torchid import metrics
 from dynonet.utils.jacobian import parameter_jacobian
 
 
@@ -43,22 +43,29 @@ if __name__ == '__main__':
     theta_lin = np.load(os.path.join("models", model_name, "theta_lin.npy"))
 
     # In[Simulate nominal model]
-    y_sim_torch = model(u_torch).detach().numpy()[0]
+    y_sim = model(u_torch).detach().numpy()[0]
 
     # In[Parameter Jacobians]
-    J = parameter_jacobian(model, u_torch)  # custom-made full parameter jacobian
-    y_transfer = J @ theta_lin
+    J = parameter_jacobian(model, u_torch, vectorize=False)  # custom-made full parameter jacobian
+    y_lin = J @ theta_lin
 
-    np.save("y_eval_naive.npy", y_transfer)
+    # np.save("y_eval_naive.npy", y_lin)
 
     # In[Plot]
     plt.figure()
     plt.plot(t, y_meas, 'k', label="$y$")
-    plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
-    plt.plot(t, y_transfer, 'r', label="$y_{tr}$")
+    plt.plot(t, y_sim, 'b', label="$y_{sim}$")
+    plt.plot(t, y_lin, 'r', label="$y_{lin}$")
     plt.legend()
 
     # In[Metrics]
 
-    e_rms_sim = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_sim_torch)[0]
-    e_rms_transf = 1000 * dynonet.utils.metrics.error_rmse(y_meas, y_transfer)[0]
+    # RMSE
+    e_rms_lin = 1000 * metrics.error_rmse(y_meas, y_lin)[0]
+    e_rms_sim = 1000 * metrics.error_rmse(y_meas, y_sim)[0]
+
+    # R^2
+    R_sq_lin = metrics.r_squared(y_meas, y_lin)
+    R_sq_sim = metrics.r_squared(y_meas, y_sim)
+    print(f"R-squared linear model: {R_sq_lin}")
+    print(f"R-squared nominal model: {R_sq_sim}")

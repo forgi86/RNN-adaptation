@@ -1,5 +1,4 @@
 import numpy as np
-#np.array
 
 
 def r_squared(y_true, y_pred, time_axis=0):

@@ -14,7 +14,7 @@ if __name__ == '__main__':
     sigma = 10.0
 
     # Load dataset
-    df_X = pd.read_csv(os.path.join("data", "transfer", "data_all.csv"))
+    df_X = pd.read_csv(os.path.join("../data", "transfer", "data_all.csv"))
     signal_num = 1  # signal used for transfer (nominal model trained on signal 0)
 
     # Extract data
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # In[Instantiate models]
 
     model = WHNet3()
-    model_folder = os.path.join("models", model_name)
+    model_folder = os.path.join("../models", model_name)
     model.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))
 
     # In[Simulate model]
@@ -59,4 +59,4 @@ if __name__ == '__main__':
     Jt = Jacobian(model_wrapped, u_torch_f, y_torch_f, num_outputs=1)
     theta_lin = JtJ_hat.inv_matmul(Jt.matmul(y_torch_f))  # (J^T J + \sigma^2 I)^-1 J^T y
 
-    torch.save(theta_lin, os.path.join("models", model_name, "theta_lin_lazy.pt"))
+    torch.save(theta_lin, os.path.join("../models", model_name, "theta_lin_lazy.pt"))

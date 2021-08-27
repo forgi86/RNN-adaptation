@@ -72,8 +72,8 @@ if __name__ == '__main__':
     ax[1].plot(y_lin_new[:, 1], 'b')
 
     # R-squared metrics
-    R_sq = metrics.r_squared(y_new[n_skip:, :], y_lin_new[n_skip:, :])
-    print(f"R-squared linear model: {R_sq}")
+    R_sq_lin = metrics.r_squared(y_new[n_skip:, :], y_lin_new[n_skip:, :])
+    print(f"R-squared linear model: {R_sq_lin}")
 
-    R_sq = metrics.r_squared(y_new[n_skip:, :], y_sim_new[n_skip:, :])
-    print(f"R-squared nominal model: {R_sq}")
+    R_sq_sim = metrics.r_squared(y_new[n_skip:, :], y_sim_new[n_skip:, :])
+    print(f"R-squared nominal model: {R_sq_sim}")

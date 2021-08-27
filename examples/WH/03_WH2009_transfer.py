@@ -12,7 +12,7 @@ if __name__ == '__main__':
         matplotlib.rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica']})
 
         model_name = "model_WH3"
-        sigma = 10.0
+        sigma = 1e-6
 
         # Load dataset
         df_X = pd.read_csv(os.path.join("data", "transfer", "data_all.csv"))
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     sim_y = model(transfer_u)
 
     # In[Parameter Jacobians]
-    J = parameter_jacobian(model, transfer_u)  # custom-made full parameter jacobian
+    J = parameter_jacobian(model, transfer_u, vectorize=False)  # custom-made full parameter jacobian
 
     # Adaptation in parameter space
     n_param = J.shape[1]
