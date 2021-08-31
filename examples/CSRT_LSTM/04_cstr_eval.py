@@ -17,10 +17,12 @@ if __name__ == '__main__':
     # In[Settings]
     n_skip = 64  # skip initial n_skip samples for metrics (ignore transient)
     model_name = "lstm"
+    # dataset_name = "transf"
+    dataset_name = "eval"
 
     # In[Load dataset]
-    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    u_new = np.load(os.path.join("data", "cstr", f"u_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("data", "cstr", f"y_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
     batch_size = 1
