@@ -46,7 +46,9 @@ if __name__ == '__main__':
     y_f = y_torch_f.detach().numpy()
 
     # In[Adaptation in parameter space (naive way)]
+    time_jac_start = time.time()
     J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize)  # custom-made full parameter jacobian
+    time_jac = time.time() - time_jac_start
 
     J_red = J[n_skip * output_size:, :]
     y_f_red = y_f[n_skip * output_size:]

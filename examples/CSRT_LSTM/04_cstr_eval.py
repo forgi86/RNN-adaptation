@@ -1,4 +1,5 @@
 import os
+import time
 import numpy as np
 import torch
 import torch.nn as nn
@@ -48,15 +49,16 @@ if __name__ == '__main__':
     theta_lin = np.load(os.path.join("models", "theta_lin_cf.npy"))  # closed-form
     # theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))  # gradient descent
     # theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))  # L-BFGS
-
+    theta_lin = torch.tensor(theta_lin)
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new_f)
     y_sim_new = y_sim_new_f.reshape(seq_len, output_size).detach().numpy()
 
     # In[Linearized model output]
-    theta_lin = torch.tensor(theta_lin)
     theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
+    time_jvp_start = time.time()
     y_lin_new_f = jvp(y_sim_new_f, model_wrapped.parameters(), theta_lin_f)[0]
+    time_jvp = time.time() - time_jvp_start
     y_lin_new = y_lin_new_f.reshape(seq_len, output_size).detach().numpy()
 
     # In[Plot]

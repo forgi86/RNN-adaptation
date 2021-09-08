@@ -30,9 +30,11 @@ if __name__ == '__main__':
     # In[Settings]
     model_type = "256step_noise_V"
     seq_len = 2000
+    # dataset = "transfer"
+    dataset = "eval"
 
     # In[Load dataset]
-    t_new, u_new, y_new, x_new = loader.rlc_loader("eval", dataset_type="nl", noise_std=0.0, n_data=seq_len)
+    t_new, u_new, y_new, x_new = loader.rlc_loader(dataset, dataset_type="nl", noise_std=0.0, n_data=seq_len)
 
     # In[Second-order dynamical system custom defined]
     # Setup neural model structure and load fitted model parameters
