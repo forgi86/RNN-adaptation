@@ -85,15 +85,21 @@ def parameter_jacobian(model, input, vectorize=True):
     f_par(*params)
 
     jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize)
-    jac_dict = dict(zip(names, jacs))
-    with torch.no_grad():
-        sim_y = model(input)
-        n_data = input.squeeze().shape[0]
-        y_out_1d = torch.ravel(sim_y).detach().numpy()
-        params_1d = list(map(torch.ravel, params))
-        theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
-        jacs_2d = list(map(lambda x: x.reshape(n_data, -1), jacs))
-        J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+    n_data = input.squeeze().shape[0]
+    jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
+    #jacs_2d = list(map(lambda x: x.reshape(n_data, -1), jacs))
+    J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+
+    #jac_dict = dict(zip(names, jacs))
+
+    #with torch.no_grad():
+    #    sim_y = model(input)
+    #    n_data = input.squeeze().shape[0]
+    #    y_out_1d = torch.ravel(sim_y).detach().numpy()
+    #    params_1d = list(map(torch.ravel, params))
+    #    theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
+    #    jacs_2d = list(map(lambda x: x.reshape(n_data, -1), jacs))
+    #    J = torch.cat(jacs_2d, dim=-1).detach().numpy()
 
     # load_weights(model, names, tuple(params))
     return J

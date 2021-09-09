@@ -73,7 +73,6 @@ if __name__ == "__main__":
     y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_test.npy")).astype(np.float32))
     y_sim, _ = model(u_test)
 
-
     fig, ax = plt.subplots(2, 1, sharex=True)
     plt.suptitle("Test")
     batch_idx = 10
