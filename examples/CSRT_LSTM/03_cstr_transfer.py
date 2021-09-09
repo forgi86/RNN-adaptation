@@ -41,7 +41,7 @@ if __name__ == '__main__':
     model_wrapped = LSTMWrapper(model, seq_len, input_size)
     u_torch = torch.tensor(u, dtype=torch.float, requires_grad=False)
     y_torch = torch.tensor(y, dtype=torch.float)
-    u_torch_f = torch.clone(u_torch.view((input_size * seq_len, 1)))  # [bsize*seq_len, n_in]
+    u_torch_f = torch.clone(u_torch.view((input_size * seq_len, 1)))  # [bsize*seq_len*n_in, ]
     y_torch_f = torch.clone(y_torch.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
     y_f = y_torch_f.detach().numpy()
 
