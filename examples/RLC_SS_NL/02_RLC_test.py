@@ -16,10 +16,10 @@ if __name__ == '__main__':
 
     # dataset_type = 'train'
     # dataset_type = 'test'
-    dataset_type = 'transfer'
-    # dataset_type = 'eval'
+    # dataset_type = 'transfer'
+    dataset_type = 'eval'
 
-    model_type = '256step_noise_V'
+    # model_name = 'ss_model_retrain'
 
     # Column names in the dataset
     t, u, y, x = rlc_loader(dataset_type, "nl", noise_std=0.0)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # Setup neural model structure and load fitted model parameters
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     nn_solution = ForwardEulerSimulator(ss_model)
-    model_filename = f"model_SS_{model_type}.pt"
+    model_filename = f"{model_name}.pt"
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # Evaluate the model in open-loop simulation against validation data
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         ax[2].set_ylabel("Input voltage $v_C$ (V)")
         #ax[2].set_ylim([-400, 400])
 
-    fig_name = f"RLC_SS_{dataset_type}_{model_type}.pdf"
+    fig_name = f"RLC_SS_{dataset_type}_{model_name}.pdf"
     fig.savefig(os.path.join("fig", fig_name), bbox_inches='tight')
 
     # R-squared metrics

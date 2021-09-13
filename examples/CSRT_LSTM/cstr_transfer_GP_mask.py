@@ -31,7 +31,7 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    output_idx = 0
+    output_idx = 1  # must run the code twice for output 0/1
     use_linearstrategy = False
     sigma = 0.03
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     with gpytorch.settings.fast_pred_var():  #, gpytorch.settings.max_cg_iterations(4000), gpytorch.settings.cg_tolerance(0.1):
         predictive_dist = gp_model(u_torch_new)
         y_lin_new = predictive_dist.mean.data
-    y_lin_new = y_lin_new[..., None]
+    y_lin_new = y_lin_new[..., None].detach().numpy()
     time_inference = time.time() - time_inference_start
 
     # In[Plot]
@@ -111,3 +111,4 @@ if __name__ == '__main__':
     print(f"R-squared nominal model: {R_sq_sim}")
 
     print(f"\nInference time: {time_inference:.2f}")
+

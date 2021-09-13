@@ -10,3 +10,4 @@ Main scripts:
 - 02_cstr_test.py: test the nominal LSTM model performance on the test dataset
 - 03_cstr_transfer: estimate the parameters of the linear model on the transfer dataset
 - 04_cstr_eval: evaluate the parameters of the linear model on the eval dataset
+- cstr_retrain: alternative (and basic) model adaptation: full re-train on the transfer dataset

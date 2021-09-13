@@ -7,11 +7,13 @@ from torchid import metrics
 
 if __name__ == "__main__":
 
-    model_name = "lstm"
+    # model_name = "lstm"
+    model_name = "lstm_retrain"
+
     # dataset_name = "train"
-    dataset_name = "test"
-    # dataset_name = "eval"
+    # dataset_name = "test"
     # dataset_name = "transf"
+    dataset_name = "eval"
 
     n_skip = 64  # skip initial n_skip samples for metrics (ignore transient)
 

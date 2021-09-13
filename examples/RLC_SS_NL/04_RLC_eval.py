@@ -28,7 +28,7 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    model_type = "256step_noise_V"
+    model_name = "ss_model"
     seq_len = 2000
     # dataset = "transfer"
     dataset = "eval"
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # Setup neural model structure and load fitted model parameters
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     nn_solution = ForwardEulerSimulator(ss_model)
-    model_filename = f"model_SS_{model_type}.pt"
+    model_filename = f"{model_name}.pt"
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]

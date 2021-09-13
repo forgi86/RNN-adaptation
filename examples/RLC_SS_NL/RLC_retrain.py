@@ -28,7 +28,7 @@ if __name__ == '__main__':
     add_noise = True
 
     # Column names in the dataset
-    t, u, y, x = rlc_loader("train", "nl", noise_std=0.1)
+    t, u, y, x = rlc_loader("transfer", "nl", noise_std=0.1)
 
     # Get fit data #
     ts = t[1] - t[0]
@@ -139,8 +139,9 @@ if __name__ == '__main__':
     # else:
     #     model_filename = f"model_SS_{seq_len}step_nonoise_V.pt"
     #     hidden_filename = f"hidden_SS_{seq_len}step_nonoise_V.pt"
-    model_filename = "ss_model.pt"
-    hidden_filename = "ss_hidden.pt"
+
+    model_filename = "ss_model_retrain.pt"
+    hidden_filename = "ss_hidden_retrain.pt"
 
     torch.save(nn_solution.ss_model.state_dict(), os.path.join("models", model_filename))
     torch.save(x_hidden_fit, os.path.join("models", hidden_filename))

@@ -16,8 +16,9 @@ if __name__ == "__main__":
     n_skip = 64  # skip initial n_skip samples for training (ignore transient)
     test_freq = 10  # print a message every test_freq iterations
 
-    u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
-    y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))
+    # training the full non-linear system on the transfer dataset
+    u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32))
+    y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32))
 
     model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
     loss_fn = nn.MSELoss()
@@ -51,14 +52,14 @@ if __name__ == "__main__":
     if not os.path.exists("models"):
         os.makedirs("models")
 
-    model_name = "lstm"
+    model_name = "lstm_retrain"
     model_filename = f"{model_name}.pt"
     torch.save(model.state_dict(), os.path.join("models", model_filename))
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots(2, 1, sharex=True)
-    plt.suptitle("Train")
-    batch_idx = 10
+    plt.suptitle("Transfer")
+    batch_idx = 0
     ax[0].plot(y_train.detach().numpy()[batch_idx, :, 0], label='True')
     ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
     ax[0].legend()
@@ -68,14 +69,14 @@ if __name__ == "__main__":
     ax[1].legend()
 
 
-    # Test
-    u_test = torch.tensor(np.load(os.path.join("data", "cstr", "u_test.npy")).astype(np.float32))
-    y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_test.npy")).astype(np.float32))
+    # Eval
+    u_test = torch.tensor(np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32))
+    y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32))
     y_sim, _ = model(u_test)
 
     fig, ax = plt.subplots(2, 1, sharex=True)
-    plt.suptitle("Test")
-    batch_idx = 10
+    plt.suptitle("Evaluation")
+    batch_idx = 0
     ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='True')
     ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
     ax[0].legend()
