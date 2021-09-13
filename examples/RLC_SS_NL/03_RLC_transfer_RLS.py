@@ -61,11 +61,12 @@ if __name__ == '__main__':
 
     P = torch.zeros(seq_len, n_param, n_param)
     theta = torch.zeros(seq_len, n_param)
-    for time_idx in range(seq_len):
+    for time_idx in range(2, seq_len):
         print(time_idx)
 
-        #y_sim_f = model_wrapped(u_torch_f[:time_idx, :])
-        phis = torch.autograd.grad(y_sim_f[time_idx, 0], model.parameters(), retain_graph=True)
+        y_sim_f = model_wrapped(u_torch_f[:time_idx, :])
+
+        phis = torch.autograd.grad(y_sim_f[-1, 0], model.parameters())#, retain_graph=True)
         phi = torch.cat([phi.ravel() for phi in phis]).view(-1, 1)  # column vector for simplicity here
 
         L = P_old @ phi/(1 + phi.t()@P_old@phi)
