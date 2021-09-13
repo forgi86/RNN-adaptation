@@ -64,6 +64,7 @@ if __name__ == '__main__':
     for time_idx in range(seq_len):
         print(time_idx)
 
+        y_sim_f = model_wrapped(u_torch_f[:time_idx, :])
         phis = torch.autograd.grad(y_sim_f[time_idx, 0], model.parameters(), retain_graph=True)
         phi = torch.cat([phi.ravel() for phi in phis]).view(-1, 1)  # column vector for simplicity here
 
