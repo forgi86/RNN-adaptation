@@ -89,8 +89,8 @@ if __name__ == '__main__':
 
         # Jacobian of delta_x wrt theta
         jacs_theta = [torch.autograd.grad(delta_x, model.parameters(), v, retain_graph=True) for v in basis_x]
-        jacs_theta_f = [torch.cat([jac.ravel() for jac in jacs_theta[j]]) for j in range(n_x)]
-        J_theta = torch.stack(jacs_theta_f)
+        jacs_theta_f = [torch.cat([jac.ravel() for jac in jacs_theta[j]]) for j in range(n_x)]  # ravel jacobian rows
+        J_theta = torch.stack(jacs_theta_f)  # stack jacobian rows to obtain a jacobian matrix
 
         x_step = (x_step + delta_x).detach().requires_grad_(True)
         y_step = x_step[0]
