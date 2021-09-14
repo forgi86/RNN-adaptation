@@ -46,7 +46,7 @@ if __name__ == '__main__':
     y_sim = model(u_torch).detach().numpy()[0]
 
     # In[Parameter Jacobians]
-    J = parameter_jacobian(model, u_torch, vectorize=False)  # custom-made full parameter jacobian
+    J = parameter_jacobian(model, u_torch, vectorize=False).detach().numpy()  # full parameter jacobian
     y_lin = J @ theta_lin
 
     # np.save("y_eval_naive.npy", y_lin)

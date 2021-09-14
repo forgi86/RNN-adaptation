@@ -20,6 +20,7 @@ if __name__ == '__main__':
     dataset_type = 'eval'
 
     # model_name = 'ss_model_retrain'
+    model_name = 'ss_model'
 
     # Column names in the dataset
     t, u, y, x = rlc_loader(dataset_type, "nl", noise_std=0.0)

@@ -41,7 +41,7 @@ class ForwardEulerSimulator(nn.Module):
         """
 
         X_sim_list: List[torch.Tensor] = []
-        x_step = x0_batch #+ 1e-9*u_batch[0,0]
+        x_step = x0_batch
 
         for u_step in u_batch.split(1):  # i in range(seq_len):
             u_step = u_step.squeeze(0)

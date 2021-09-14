@@ -37,8 +37,7 @@ if __name__ == '__main__':
     t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=sigma, n_data=2000)
     seq_len = t.size
 
-    # In[Second-order dynamical system custom defined]
-    # Setup neural model structure and load fitted model parameters
+    # In[Setup neural model structure and load fitted model parameters]
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     nn_solution = ForwardEulerSimulator(ss_model)
     model_filename = f"{model_name}.pt"
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     y_torch_f = torch.clone(y_torch.view(1 * seq_len, output_size))  # [bsize*seq_len, ]
 
     # In[Adaptation in parameter space (naive way)]
-    J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize)  # custom-made full parameter jacobian
+    J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize).detach().numpy()  # full parameter jacobian
     n_param = J.shape[1]
     Ip = np.eye(n_param)
     F = J.transpose() @ J

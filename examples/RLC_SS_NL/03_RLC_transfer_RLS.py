@@ -37,8 +37,7 @@ if __name__ == '__main__':
     t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=sigma, n_data=2000)
     seq_len = t.size
 
-    # In[Second-order dynamical system custom defined]
-    # Setup neural model structure and load fitted model parameters
+    # In[Setup neural model structure and load fitted model parameters]
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     model = ForwardEulerSimulator(ss_model)
     model_filename = f"{model_name}.pt"

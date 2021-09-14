@@ -44,7 +44,7 @@ if __name__ == '__main__':
     sim_y = model(transfer_u)
 
     # In[Parameter Jacobians]
-    J = parameter_jacobian(model, transfer_u, vectorize=False)  # custom-made full parameter jacobian
+    J = parameter_jacobian(model, transfer_u, vectorize=False).detach().numpy()  # full parameter jacobian
 
     # Adaptation in parameter space
     n_param = J.shape[1]
