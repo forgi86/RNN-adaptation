@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
         s_step = s_step + J_x @ s_step + J_theta
 
-        phi = s_step[[0], :].t()  # regressor: sensitivity of x0wrt theta
+        phi = s_step[[0], :].t()  # regressor: sensitivity of x0 wrt theta
         # Estimate update
         # New regressor
         # phis = torch.autograd.grad(y_step, model.parameters(), retain_graph=True)
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     P = sigma ** 2 * P  #
 
-    J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize)
+    J = parameter_jacobian(model_wrapped, u_torch_f, vectorize=vectorize).detach().numpy()
     sy = s[:, 0, :]
 
     import matplotlib.pyplot as plt
