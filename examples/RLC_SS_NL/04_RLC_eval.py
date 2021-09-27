@@ -64,9 +64,11 @@ if __name__ == '__main__':
     y_lin_new = y_lin_new_f.reshape(seq_len, output_size).detach().numpy()
 
     # In[Plot]
-    plt.plot(y_new, 'k')
-    plt.plot(y_sim_new, 'r')
-    plt.plot(y_lin_new, 'b')
+    plt.plot(y_new, 'k', label="True")
+    plt.plot(y_sim_new, 'r', label="Sim")
+    plt.plot(y_lin_new, 'b', label="Lin")
+    plt.legend()
+    plt.grid()
 
     # R-squared metrics
     R_sq = metrics.r_squared(y_new, y_lin_new)
