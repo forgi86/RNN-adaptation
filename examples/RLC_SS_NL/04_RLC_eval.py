@@ -64,9 +64,9 @@ if __name__ == '__main__':
     y_lin_new = y_lin_new_f.reshape(seq_len, output_size).detach().numpy()
 
     # In[Plot]
-    plt.plot(y_new, 'k')
-    plt.plot(y_sim_new, 'r')
-    plt.plot(y_lin_new, 'b')
+    plt.plot(y_new, 'k', label="data")
+    plt.plot(y_sim_new, 'r', label="nominal")
+    plt.plot(y_lin_new, '--b', label="adapted")
 
     # R-squared metrics
     R_sq = metrics.r_squared(y_new, y_lin_new)
@@ -74,3 +74,7 @@ if __name__ == '__main__':
 
     R_sq = metrics.r_squared(y_new, y_sim_new)
     print(f"R-squared nominal model: {R_sq}")
+
+    plt.legend()
+
+    plt.show()

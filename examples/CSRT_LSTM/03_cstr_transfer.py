@@ -6,6 +6,8 @@ import torch.nn as nn
 from diffutil.jacobian import parameter_jacobian
 from models import LSTMWrapper
 
+learn_state = False
+
 if __name__ == '__main__':
 
     time_start = time.time()
@@ -17,12 +19,16 @@ if __name__ == '__main__':
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
     sigma = 0.03  # 1.0
+
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
 
     # In[Load dataset]
     u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
     y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+
+    u = u[:500, :]
+    y = y[:500, :]
 
     # In[Check dimensions]
     batch_size = 1
@@ -37,8 +43,18 @@ if __name__ == '__main__':
     model_filename = f"{model_name}.pt"
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
-    # In[Model wrapping]
-    model_wrapped = LSTMWrapper(model, seq_len, input_size)
+    if learn_state is False:
+        # In[Model wrapping]
+        with torch.no_grad():
+            _, hid = model(torch.tensor(np.zeros((1, 1, input_size)), dtype=torch.float32))
+        hid_ = [0*hid[0], 0*hid[1]]
+
+        model_wrapped = LSTMWrapper(model, seq_len, input_size, hid_)
+
+    else:
+        model_wrapped = LSTMWrapper(model, seq_len, input_size)
+
+
     u_torch = torch.tensor(u, dtype=torch.float, requires_grad=False)
     y_torch = torch.tensor(y, dtype=torch.float)
     u_torch_f = torch.clone(u_torch.view((input_size * seq_len, 1)))  # [bsize*seq_len*n_in, ]

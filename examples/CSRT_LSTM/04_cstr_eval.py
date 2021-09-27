@@ -9,6 +9,8 @@ from models import LSTMWrapper
 from torchid import metrics
 
 
+learn_state = False
+
 if __name__ == '__main__':
 
     # In[Set seed for reproducibility]
@@ -22,8 +24,16 @@ if __name__ == '__main__':
     dataset_name = "eval"
 
     # In[Load dataset]
-    u_new = np.load(os.path.join("data", "cstr", f"u_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y_new = np.load(os.path.join("data", "cstr", f"y_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    # u_new = np.load(os.path.join("data", "cstr", f"u_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    # y_new = np.load(os.path.join("data", "cstr", f"y_{dataset_name}.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+
+    # In[Load dataset]
+    u_new = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+
+    u_new = u_new[:, :]
+    y_new = y_new[:, :]
+
 
     # In[Check dimensions]
     batch_size = 1
@@ -38,7 +48,18 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    model_wrapped = LSTMWrapper(model, seq_len, input_size)
+    if learn_state is False:
+        with torch.no_grad():
+            _, hid = model(torch.tensor(np.zeros((1, 1, input_size)), dtype=torch.float32))
+        hid_ = [0*hid[0], 0*hid[1]]
+
+        model_wrapped = LSTMWrapper(model, seq_len, input_size, hid_)
+
+    else:
+        model_wrapped = LSTMWrapper(model, seq_len, input_size)
+
+    print(model_wrapped.h, model_wrapped.c)
+
     u_torch_new = torch.tensor(u_new, dtype=torch.float, requires_grad=False)
     y_torch_new = torch.tensor(y_new, dtype=torch.float)
     u_torch_new_f = torch.clone(u_torch_new.view((input_size * seq_len, 1)))  # [bsize*seq_len, n_in]

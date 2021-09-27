@@ -95,3 +95,5 @@ if __name__ == '__main__':
     # R-squared metrics
     R_sq = metrics.r_squared(x_true_val, x_sim)
     print(f"R-squared metrics: {R_sq}")
+
+    plt.show()
