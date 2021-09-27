@@ -53,11 +53,13 @@ if __name__ == '__main__':
     J_red = J[n_skip * output_size:, :]
     y_f_red = y_f[n_skip * output_size:]
     n_param = J.shape[1]
+    print(n_param)
 
     Ip = np.eye(n_param)
     F = J_red.transpose() @ J_red
     A = F + sigma**2 * Ip
     theta_lin = np.linalg.solve(A, J_red.transpose() @ y_f_red)  # adaptation!
+    # print(theta_lin)
     np.save(os.path.join("models", "theta_lin_cf.npy"), theta_lin)  # cf: closed-form
 
     adapt_time = time.time() - time_start

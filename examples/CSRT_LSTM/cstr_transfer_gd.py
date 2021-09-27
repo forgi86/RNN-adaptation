@@ -105,3 +105,5 @@ if __name__ == '__main__':
     ax[1].plot(y[:, 1], 'k')
     ax[1].plot(y_sim[:, 1], 'r')
     ax[1].plot(y_lin[:, 1], 'b')
+
+    plt.show()

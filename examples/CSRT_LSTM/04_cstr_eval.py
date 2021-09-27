@@ -63,9 +63,9 @@ if __name__ == '__main__':
 
     # In[Plot]
     fig, ax = plt.subplots(2, 1, sharex=True)
-    ax[0].plot(y_new[:, 0], 'k', label="True")
-    ax[0].plot(y_sim_new[:, 0], 'r', label="Sim")
-    ax[0].plot(y_lin_new[:, 0], 'b', label="Lin")
+    ax[0].plot(y_new[:, 0], 'y', label="True")
+    ax[0].plot(y_sim_new[:, 0], 'r--', label="Nominal NN")
+    ax[0].plot(y_lin_new[:, 0], 'b--', label="Adapted")
     ax[0].legend()
 
     ax[1].plot(y_new[:, 1], 'k')
@@ -78,3 +78,6 @@ if __name__ == '__main__':
 
     R_sq_sim = metrics.r_squared(y_new[n_skip:, :], y_sim_new[n_skip:, :])
     print(f"R-squared nominal model: {R_sq_sim}")
+
+
+    plt.show()
