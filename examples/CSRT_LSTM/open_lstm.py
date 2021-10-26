@@ -24,7 +24,8 @@ class OpenLSTM(nn.Module):
 
         for i in range(nstep):
             # Feed in the known output to estimate state
-            out, (hn, cn) = self.model(y_train[:, i, :].view(64, 1, 2))
+            out, (hn, cn) = self.model(u_train[:, i, :].unsqueeze(1),
+                                       (y_train[:, i, :].view(hn.shape), cn))
             y_est.append(out)
 
         y_sim = torch.cat(y_est, dim=1)

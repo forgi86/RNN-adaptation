@@ -13,15 +13,18 @@ if __name__ == "__main__":
     np.random.seed(0)
     torch.manual_seed(0)
 
-    num_iter = 4000  # gradient-based optimization steps
-    lr = 1e-4  # learning rate
+    num_iter = 2000  # gradient-based optimization steps
+    lr = 1e-3  # learning rate
     test_freq = 10  # print a message every test_freq iterations
 
     u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
     y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))
 
-    print(u_train.shape[0])
     n_inputs = u_train.shape[-1]
+
+    u_train = torch.cat((u_train[:, 1:, :], y_train[:, :-1, :]), -1)
+    y_train = y_train[:, 1:, :]
+
 
     model = OpenLSTM(n_context, n_inputs)
 
@@ -35,7 +38,7 @@ if __name__ == "__main__":
     for itr in range(num_iter):
         optimizer.zero_grad()
 
-        y_sim = model(torch.cat((u_train, y_train), -1))
+        y_sim = model(u_train)
         loss = loss_fn(y_sim, y_train)
         loss.backward()
 
@@ -76,8 +79,13 @@ if __name__ == "__main__":
     # Test
     u_test = torch.tensor(np.load(os.path.join("data", "cstr", "u_test.npy")).astype(np.float32))
     y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_test.npy")).astype(np.float32))
+
+    u_test = torch.cat((u_test[:, 1:, :], y_test[:, :-1, :]), -1)
+    y_test = y_test[:, 1:, :]
+
+
     with torch.no_grad():
-        y_sim = model(torch.cat((u_test, y_test), -1))
+        y_sim = model(u_test)
 
     fig, ax = plt.subplots(2, 1, sharex=True)
     plt.suptitle("Test")
