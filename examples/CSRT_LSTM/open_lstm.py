@@ -3,14 +3,17 @@ import torch.nn as nn
 import torch.optim as optim
 
 class OpenLSTM(nn.Module):
-    def __init__(self, nstep):
+    def __init__(self, n_context, n_inputs):
         super(OpenLSTM, self).__init__()
-        self.nstep = nstep # 64
+        self.n_context = n_context # 64
         self.model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
+        self.n_inputs = n_inputs
 
-    def forward(self, u_train, y_train):
-        y1, (hn, cn) = self.estimate_state(u_train, y_train, self.nstep)
-        y2 = self.predict_state(u_train, y_train, self.nstep, (hn, cn))
+    def forward(self, u_train):
+        y1, (hn, cn) = self.estimate_state(u_train[:, :, :self.n_inputs],
+                                           u_train[:, :, self.n_inputs:], self.n_context)
+        y2 = self.predict_state(u_train[:, :, :self.n_inputs],
+                                u_train[:, :, self.n_inputs:], self.n_context, (hn, cn))
         y_sim = torch.cat((y1, y2), dim=1)
         return y_sim
 

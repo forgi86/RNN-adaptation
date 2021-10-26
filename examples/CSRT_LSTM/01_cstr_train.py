@@ -4,24 +4,26 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from OpenLSTM import OpenLSTM
+from open_lstm import OpenLSTM
 
 if __name__ == "__main__":
 
     # Set seed for reproducibility
-    nstep = 20
+    n_context = 40
     np.random.seed(0)
     torch.manual_seed(0)
 
-    num_iter = 2000  # gradient-based optimization steps
-    lr = 1e-3  # learning rate
-    n_skip = 64  # skip initial n_skip samples for training (ignore transient)
+    num_iter = 4000  # gradient-based optimization steps
+    lr = 1e-4  # learning rate
     test_freq = 10  # print a message every test_freq iterations
 
     u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
     y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))
 
-    model = OpenLSTM(nstep)
+    print(u_train.shape[0])
+    n_inputs = u_train.shape[-1]
+
+    model = OpenLSTM(n_context, n_inputs)
 
     loss_fn = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -33,7 +35,7 @@ if __name__ == "__main__":
     for itr in range(num_iter):
         optimizer.zero_grad()
 
-        y_sim = model(u_train, y_train)
+        y_sim = model(torch.cat((u_train, y_train), -1))
         loss = loss_fn(y_sim, y_train)
         loss.backward()
 
@@ -62,31 +64,32 @@ if __name__ == "__main__":
     batch_idx = 10
     ax[0].plot(y_train.detach().numpy()[batch_idx, :, 0], label='True')
     ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
-    ax[0].axvline(nstep, color='k', linestyle='--', alpha=0.2)
+    ax[0].axvline(n_context, color='k', linestyle='--', alpha=0.2)
     ax[0].legend()
 
     ax[1].plot(y_train.detach().numpy()[batch_idx, :, 1], label='True')
     ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
-    ax[1].axvline(nstep, color='k', linestyle='--', alpha=0.2)
+    ax[1].axvline(n_context, color='k', linestyle='--', alpha=0.2)
     ax[1].legend()
     plt.show()
 
     # Test
     u_test = torch.tensor(np.load(os.path.join("data", "cstr", "u_test.npy")).astype(np.float32))
     y_test = torch.tensor(np.load(os.path.join("data", "cstr", "y_test.npy")).astype(np.float32))
-    y_sim = model(u_test, y_test)
+    with torch.no_grad():
+        y_sim = model(torch.cat((u_test, y_test), -1))
 
     fig, ax = plt.subplots(2, 1, sharex=True)
     plt.suptitle("Test")
     batch_idx = 10
     ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='True')
     ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
-    ax[0].axvline(nstep, color='k', linestyle='--', alpha=0.2)
+    ax[0].axvline(n_context, color='k', linestyle='--', alpha=0.2)
     ax[0].legend()
 
     ax[1].plot(y_test.detach().numpy()[batch_idx, :, 1], label='True')
     ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
-    ax[1].axvline(nstep, color='k', linestyle='--', alpha=0.2)
+    ax[1].axvline(n_context, color='k', linestyle='--', alpha=0.2)
     ax[1].legend()
     plt.show()
 
