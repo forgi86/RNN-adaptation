@@ -89,7 +89,7 @@ if __name__ == '__main__':
     ax[0].plot(y_lin_new[:, 0], 'b--', label="Adapted")
     ax[0].legend()
 
-    ax[1].plot(y_new[:, 1], 'k')
+    ax[1].plot(y_new[:, 1], 'y')
     ax[1].plot(y_sim_new[:, 1], 'r')
     ax[1].plot(y_lin_new[:, 1], 'b')
 

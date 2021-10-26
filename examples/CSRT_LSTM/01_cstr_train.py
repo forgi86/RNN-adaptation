@@ -11,15 +11,21 @@ if __name__ == "__main__":
     np.random.seed(0)
     torch.manual_seed(0)
 
+    hidden_size = 16
+    # hidden_size = 256
+
     num_iter = 2000  # gradient-based optimization steps
     lr = 1e-3  # learning rate
     n_skip = 64  # skip initial n_skip samples for training (ignore transient)
+    n_skip = 0  # skip initial n_skip samples for training (ignore transient)
+
     test_freq = 10  # print a message every test_freq iterations
 
     u_train = torch.tensor(np.load(os.path.join("data", "cstr", "u_train.npy")).astype(np.float32))
     y_train = torch.tensor(np.load(os.path.join("data", "cstr", "y_train.npy")).astype(np.float32))
 
-    model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
+    model = nn.LSTM(input_size=2, hidden_size=hidden_size,
+                    proj_size=2, num_layers=1, batch_first=True)
     loss_fn = nn.MSELoss()
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
