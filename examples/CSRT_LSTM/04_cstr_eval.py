@@ -51,7 +51,6 @@ if __name__ == '__main__':
     """
     u = torch.unsqueeze(u_new, dim=0)
     y = torch.unsqueeze(y_new, dim=0)
-    print("Input shape: ", y.shape, u.shape)
 
     u_torch_new = torch.cat((u[:, 1:, :], y[:, :-1, :]), -1)
     y_torch_new = y[:, 1:, :]
@@ -64,7 +63,6 @@ if __name__ == '__main__':
     theta_lin = torch.tensor(theta_lin)
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new)
-    print("Sizes: ", y_sim_new_f.size(), seq_len, output_size, theta_lin.size())
     y_sim_new = y_sim_new_f.reshape(seq_len-1, output_size).detach().numpy()
     # y_sim_new = torch.squeeze(y_sim_new_f).detach().numpy()
 
@@ -73,7 +71,6 @@ if __name__ == '__main__':
     time_jvp_start = time.time()
     y_lin_new_f = jvp(y_sim_new_f, model_wrapped.parameters(), theta_lin_f)[0]
     time_jvp = time.time() - time_jvp_start
-    print(" y_lin_new_f ", y_lin_new_f.shape)
     y_lin_new = y_lin_new_f.reshape((seq_len-1), output_size).detach().numpy()
 
     # In[Plot]

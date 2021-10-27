@@ -54,7 +54,6 @@ def unflatten_like(vector, tensor_lst):
     likeTensorList (list or iterable): list of tensors with same number of ele-
         ments as vector
     """
-    print("unflatten: ", vector.size(), len(tensor_lst))
     outList = []
     i = 0
     for tensor in tensor_lst:

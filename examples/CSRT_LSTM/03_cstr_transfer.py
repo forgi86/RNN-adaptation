@@ -52,7 +52,6 @@ if __name__ == '__main__':
     """
     u = torch.unsqueeze(u, dim=0)
     y = torch.unsqueeze(y, dim=0)
-    print("Input shape: ", y.shape, u.shape)
 
     u_torch = torch.cat((u[:, 1:, :], y[:, :-1, :]), -1)
     y_torch = y[:, 1:, :]
@@ -73,7 +72,6 @@ if __name__ == '__main__':
     F = J_red.transpose() @ J_red
     A = F + sigma**2 * Ip
     theta_lin = np.linalg.solve(A, J_red.transpose() @ y_f_red)  # adaptation!
-    print("theta lin: ", theta_lin.shape)
     np.save(os.path.join("models", "theta_lin_cf.npy"), theta_lin)  # cf: closed-form
 
     adapt_time = time.time() - time_start

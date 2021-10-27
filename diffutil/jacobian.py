@@ -93,9 +93,7 @@ def parameter_jacobian(model, input, vectorize=True, flatten=True):
         # TODO: Refactor
         u = input[:, :, :model.input_size]
         batch_size, seq_len, inp = u.size()
-        print("Check: ", u.shape)
         u_new = u.reshape((seq_len * inp, batch_size))
-        print("Input :", u_new.shape)
         n_data = u_new.squeeze().shape[0]
         jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
         J = torch.cat(jacs_2d, dim=-1)
