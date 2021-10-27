@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # dataset_name = "test"
     # dataset_name = "transf"
     dataset_name = "eval"
-    context = 64
+    context = 25
     n_skip = 0  # skinitial n_skip samples for metrics (ignore transient)
 
     # Test

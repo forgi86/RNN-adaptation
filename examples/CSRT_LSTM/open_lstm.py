@@ -24,17 +24,17 @@ class OpenLSTM(nn.Module):
 
         for i in range(nstep):
             # Feed in the known output to estimate state
+            # Hidden state (hn) stores the previous output
+            # For state estimation, we feed in the known output value
             out, (hn, cn) = self.model(u_train[:, i, :].unsqueeze(1),
                                        (y_train[:, i, :].view(hn.shape), cn))
             y_est.append(out)
 
         y_sim = torch.cat(y_est, dim=1)
-        # loss = self.loss_fn(y_sim, y_train[:, :nstep, :])
         return y_sim, (hn, cn)
 
     def predict_state(self, u_train, y_train, nstep, state):
         y_sim, _ = self.model(u_train[:, nstep:, :], state)
-        # loss = self.loss_fn(y_sim, y_train[:, nstep:, :])
         return y_sim
 
     def get_model(self):

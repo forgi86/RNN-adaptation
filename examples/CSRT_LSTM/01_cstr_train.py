@@ -9,7 +9,7 @@ from open_lstm import OpenLSTM
 if __name__ == "__main__":
 
     # Set seed for reproducibility
-    n_context = 40
+    n_context = 25
     np.random.seed(0)
     torch.manual_seed(0)
 
@@ -24,7 +24,6 @@ if __name__ == "__main__":
 
     u_train = torch.cat((u_train[:, 1:, :], y_train[:, :-1, :]), -1)
     y_train = y_train[:, 1:, :]
-
 
     model = OpenLSTM(n_context, n_inputs)
 
