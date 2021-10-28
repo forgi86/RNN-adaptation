@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.optim as optim
 
 class OpenLSTM(nn.Module):
     def __init__(self, n_context, n_inputs, is_estimator=True):
@@ -14,7 +13,6 @@ class OpenLSTM(nn.Module):
 
     def forward(self, u_train):
         if self.is_estimator:
-
             y1 = self.estimate_state(u_train[:, :, :self.n_inputs],
                                      u_train[:, :, self.n_inputs:], self.n_context)
 
@@ -23,6 +21,7 @@ class OpenLSTM(nn.Module):
             y_sim = torch.cat((y1, y2), dim=1)
         else:
             state = (self.hn, self.cn)
+            print("forward openLSTM: ", u_train.size())
             y_sim, _ = self.model(u_train, state)
         return y_sim
 
@@ -30,6 +29,7 @@ class OpenLSTM(nn.Module):
         y_est = []
         hn = torch.zeros(1, u_train.size()[0], 2).requires_grad_()
         cn = torch.zeros(1, u_train.size()[0], 16).requires_grad_()
+        print("Open estimate_state: ", u_train.size(), y_train.size())
 
         for i in range(nstep):
             # Feed in the known output to estimate state

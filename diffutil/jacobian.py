@@ -90,6 +90,11 @@ def parameter_jacobian(model, input, vectorize=True, flatten=True):
     jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize)
 
     if flatten:
+        """
+        n_data = input.squeeze().shape[0]
+        jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
+        J = torch.cat(jacs_2d, dim=-1)
+        """
         # TODO: Refactor
         u = input[:, :, :model.input_size]
         batch_size, seq_len, inp = u.size()

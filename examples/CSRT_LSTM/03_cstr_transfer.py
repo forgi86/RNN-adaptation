@@ -23,8 +23,8 @@ if __name__ == '__main__':
     model_name = "lstm"
 
     # In[Load dataset]
-    u = torch.from_numpy(np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :])  # seq_len, input_size
-    y = torch.from_numpy(np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :])  # seq_len, output_size
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :] # seq_len, input_size
+    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
     batch_size = 1
@@ -34,34 +34,33 @@ if __name__ == '__main__':
 
     # In[Load LSTM model]
     # Setup neural model structure and load fitted model parameters
-    n_inputs = u.shape[-1]
-
-    model = OpenLSTM(context, n_inputs)
+    model = OpenLSTM(context, input_size)
     model_filename = f"{model_name}.pt"
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    # TODO: Remove all this reshaping stuff
     model_wrapped = LSTMWrapper(model, seq_len, input_size)
-    """
-    u_torch = torch.tensor(u, dtype=torch.float, requires_grad=False)
+    u_torch = torch.tensor(u[1:, :], dtype=torch.float, requires_grad=False)
     y_torch = torch.tensor(y, dtype=torch.float)
-    u_torch_f = torch.clone(u_torch.view((input_size * seq_len, 1)))  # [bsize*seq_len*n_in, ]
-    y_torch_f = torch.clone(y_torch.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
-    y_f = y_torch_f.detach().numpy()    
+    u_torch_f = torch.clone(u_torch.view((input_size * (seq_len-1), 1)))  # [bsize*seq_len*n_in, ]
+    y_torch_f = torch.clone(y_torch[1:, :].view(output_size * (seq_len-1), 1))  # [bsize*seq_len, ]
+    y_f = y_torch_f.detach().numpy()
+
+    u_torch_op = torch.cat((u_torch, y_torch[:-1, :]), dim=1).unsqueeze(0)
+    print("u in: ", u_torch_op.size())
+
     """
     u = torch.unsqueeze(u, dim=0)
     y = torch.unsqueeze(y, dim=0)
-
     u_torch = torch.cat((u[:, 1:, :], y[:, :-1, :]), -1)
     y_torch = y[:, 1:, :]
-
     y_torch_f = torch.clone(y_torch.view(output_size * (seq_len-1), 1))  # [bsize*seq_len, ]
     y_f = y_torch_f.detach().numpy()
+    """
 
     # In[Adaptation in parameter space (naive way)]
     time_jac_start = time.time()
-    J = parameter_jacobian(model_wrapped, u_torch, vectorize=vectorize).detach().numpy()  # full parameter jacobian
+    J = parameter_jacobian(model_wrapped, u_torch_op, vectorize=vectorize).detach().numpy()  # full parameter jacobian
     time_jac = time.time() - time_jac_start
 
     J_red = J[n_skip * output_size:, :]
