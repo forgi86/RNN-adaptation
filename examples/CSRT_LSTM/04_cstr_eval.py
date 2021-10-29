@@ -67,10 +67,12 @@ if __name__ == '__main__':
     ax[0].plot(y_sim_new[:, 0], 'r', label="Sim")
     ax[0].plot(y_lin_new[:, 0], 'b', label="Lin")
     ax[0].legend()
+    ax[0].grid()
 
     ax[1].plot(y_new[:, 1], 'k')
     ax[1].plot(y_sim_new[:, 1], 'r')
     ax[1].plot(y_lin_new[:, 1], 'b')
+    ax[1].grid()
 
     # R-squared metrics
     R_sq_lin = metrics.r_squared(y_new[n_skip:, :], y_lin_new[n_skip:, :])
