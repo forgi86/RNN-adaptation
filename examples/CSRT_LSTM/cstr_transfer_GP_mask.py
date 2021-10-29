@@ -34,7 +34,7 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    output_idx = 1  # must run the code twice for output 0/1
+    output_idx = 0  # must run the code twice for output 0/1
     use_linearstrategy = False
     sigma = 0.03
     context = 25
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     y_torch = torch.tensor(y_[1:, :], dtype=torch.float) # single output
     y_torch_f = torch.tensor(y[:-1, :], dtype=torch.float) # 2 output
 
-    # In[Adaptation in funloadction/parameter space]
+    # In[Adaptation in function/parameter space]
     gp_lh = gpytorch.likelihoods.GaussianLikelihood()
     gp_lh.noise = sigma**2
 
@@ -90,7 +90,6 @@ if __name__ == '__main__':
     with torch.no_grad():
         # Initialize the estimator with evaluation data
         model_wrapped.estimate_state(u_torch_new, y_torch_new_f, nstep=25, output_size=output_size)
-        # gp_model.update_covar(model_wrapped)
         y_sim_new = model_wrapped(u_torch_new)
     y_sim_new = y_sim_new.detach().numpy()
 
@@ -100,25 +99,28 @@ if __name__ == '__main__':
         gp_model.update_covar(model_wrapped)
         predictive_dist = gp_model(u_torch_new[context:, :])
         y_lin_new = predictive_dist.mean.data
+
     y_lin_new = y_lin_new[..., None].detach().numpy()
     time_inference = time.time() - time_inference_start
 
     y_context = y_torch_new[1:context, :].detach().numpy()
 
     # In[Plot]
-    fig = plt.figure()
-    plt.plot(y_new_[:, 0], 'k', label="True")
-    plt.plot(y_sim_new[:, 0], 'r', label="Sim")
-    plt.plot(np.concatenate((y_context[:, 0], y_lin_new[:, 0]), axis=0), 'b', label="Lin")
-    plt.legend()
-    plt.grid()
+    ax = plt.subplot()
+    ax.plot(y_new_[:, 0], 'k', label="True")
+    ax.plot(y_sim_new[:, 0], 'r', label="Sim")
+    ax.plot(np.concatenate((y_context[:, 0], y_lin_new[:, 0]), axis=0), 'b', label="Lin")
+    ax.axvline(context, color='k', linestyle='--', alpha=0.2)
+    ax.legend()
+    ax.grid(True)
     plt.show()
 
+    print(f"\nInference time: {time_inference:.2f}")
+
     # R-squared metrics
-    R_sq_lin = metrics.r_squared(y_new_[(context+1):, :], y_lin_new[n_skip:, :])
+    R_sq_lin = metrics.r_squared(y_new_[(context+1):, :], y_lin_new)
     print(f"R-squared linear model: {R_sq_lin}")
 
-    R_sq_sim = metrics.r_squared(y_new_[n_skip:, :], y_sim_new[n_skip:, :])
+    R_sq_sim = metrics.r_squared(y_new_[1:, :], y_sim_new)
     print(f"R-squared nominal model: {R_sq_sim}")
 
-    print(f"\nInference time: {time_inference:.2f}")

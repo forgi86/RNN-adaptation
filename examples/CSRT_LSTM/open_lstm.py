@@ -21,7 +21,7 @@ class OpenLSTM(nn.Module):
             y_sim = torch.cat((y1, y2), dim=1)
         else:
             state = (self.hn, self.cn)
-            print("forward openLSTM: ", u_train.size())
+            # print("forward openLSTM: ", u_train.size())
             y_sim, _ = self.model(u_train, state)
         return y_sim
 
@@ -29,11 +29,11 @@ class OpenLSTM(nn.Module):
         y_est = []
         hn = torch.zeros(1, u_train.size()[0], 2).requires_grad_()
         cn = torch.zeros(1, u_train.size()[0], 16).requires_grad_()
-        print("Open estimate_state: ", u_train.size(), y_train.size())
+        # print("Open estimate_state: ", u_train.size(), y_train.size())
 
         for i in range(nstep):
             # Feed in the known output to estimate state
-            # Hidden state (hn) stores the previous output
+            # Hidden state (hn) stores the previous outputq
             # For state estimation, we feed in the known output value
             out, (hn, cn) = self.model(u_train[:, i, :].unsqueeze(1),
                                        (y_train[:, i, :].view(hn.shape), cn))

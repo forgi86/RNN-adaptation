@@ -23,7 +23,7 @@ class LSTMWrapperSingleOutput(torch.nn.Module):
 
     def forward(self, u_in_f):
         u_in = u_in_f.view(1, -1, self.input_size)
-        print("Wrapper forward: ", u_in.size())
+        # print("Wrapper forward: ", u_in.size())
         y_out = self.lstm(u_in)
         return y_out[..., self.output_idx].view(-1, 1)
 
@@ -32,5 +32,5 @@ class LSTMWrapperSingleOutput(torch.nn.Module):
         # Add a dimension for 3d tensor for LSTM
         u_train = u_train.view(1, -1, self.input_size)
         y_train = y_train.view(1, -1, output_size)
-        print("Wrapper estimate: ", u_train.size(), y_train.size())
+        # print("Wrapper estimate: ", u_train.size(), y_train.size())
         self.lstm.estimate_state(u_train, y_train, nstep)
