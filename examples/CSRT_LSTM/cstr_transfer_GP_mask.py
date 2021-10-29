@@ -70,7 +70,8 @@ if __name__ == '__main__':
 
     # Before we initialize EGP and call eval() --> need to separately train LSMT estimator to initialize the state
     model_wrapped.estimate_state(u_torch, y_torch_f, nstep=25, output_size=output_size)
-    gp_model = ExactGPModel(u_torch, y_torch.squeeze(), gp_lh, model_wrapped, use_linearstrategy=use_linearstrategy)
+    gp_model = ExactGPModel(u_torch[context:, :], y_torch[context:, :].squeeze(),
+                            gp_lh, model_wrapped, use_linearstrategy=use_linearstrategy)
 
     # No GP training (we consider the kernel (hyper)parameters fixed.
     # We may think of training the measurement noise by mll optimization...
@@ -89,28 +90,32 @@ if __name__ == '__main__':
     with torch.no_grad():
         # Initialize the estimator with evaluation data
         model_wrapped.estimate_state(u_torch_new, y_torch_new_f, nstep=25, output_size=output_size)
-        gp_model.update_covar(model_wrapped)
+        # gp_model.update_covar(model_wrapped)
         y_sim_new = model_wrapped(u_torch_new)
     y_sim_new = y_sim_new.detach().numpy()
 
     time_inference_start = time.time()
-    with gpytorch.settings.fast_pred_var():  #, gpytorch.settings.max_cg_iterations(4000), gpytorch.settings.cg_tolerance(0.1):
-        predictive_dist = gp_model(u_torch_new)
+    with gpytorch.settings.fast_pred_var(), gpytorch.settings.cg_tolerance(0.1), gpytorch.settings.max_cg_iterations(4000):
+        model_wrapped.estimate_state(u_torch_new, y_torch_new_f, nstep=25, output_size=output_size)
+        gp_model.update_covar(model_wrapped)
+        predictive_dist = gp_model(u_torch_new[context:, :])
         y_lin_new = predictive_dist.mean.data
     y_lin_new = y_lin_new[..., None].detach().numpy()
     time_inference = time.time() - time_inference_start
+
+    y_context = y_torch_new[1:context, :].detach().numpy()
 
     # In[Plot]
     fig = plt.figure()
     plt.plot(y_new_[:, 0], 'k', label="True")
     plt.plot(y_sim_new[:, 0], 'r', label="Sim")
-    plt.plot(y_lin_new[:, 0], 'b', label="Lin")
+    plt.plot(np.concatenate((y_context[:, 0], y_lin_new[:, 0]), axis=0), 'b', label="Lin")
     plt.legend()
     plt.grid()
     plt.show()
 
     # R-squared metrics
-    R_sq_lin = metrics.r_squared(y_new_[n_skip:, :], y_lin_new[n_skip:, :])
+    R_sq_lin = metrics.r_squared(y_new_[(context+1):, :], y_lin_new[n_skip:, :])
     print(f"R-squared linear model: {R_sq_lin}")
 
     R_sq_sim = metrics.r_squared(y_new_[n_skip:, :], y_sim_new[n_skip:, :])

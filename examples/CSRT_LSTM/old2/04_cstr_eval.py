@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     # In[Settings]
     n_skip = 64  # skip initial n_skip samples for metrics (ignore transient)
-    model_name = "lstm"
+    model_name = "lstm_old"
     # dataset_name = "transf"
     dataset_name = "eval"
 
