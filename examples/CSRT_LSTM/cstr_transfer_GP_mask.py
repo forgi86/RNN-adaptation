@@ -99,8 +99,20 @@ if __name__ == '__main__':
         gp_model.update_covar(model_wrapped)
         predictive_dist = gp_model(u_torch_new[context:, :])
         y_lin_new = predictive_dist.mean.data
+        lower_conf, upper_conf = predictive_dist.confidence_region()
+
+    upper_conf = upper_conf.detach().numpy()
+    lower_conf = lower_conf.detach().numpy()
+    
+    if not os.path.exists(os.path.join("data", "cstr")):
+        os.makedirs(os.path.join("data", "cstr"))
 
     y_lin_new = y_lin_new[..., None].detach().numpy()
+
+    np.save(os.path.join("data", "cstr", "GP_upper_conf.npy"), upper_conf)
+    np.save(os.path.join("data", "cstr", "GP_lower_conf.npy"), lower_conf)
+    np.save(os.path.join("data", "cstr", "GP_predict.npy"), y_lin_new)
+
     time_inference = time.time() - time_inference_start
 
     y_context = y_torch_new[1:context, :].detach().numpy()
@@ -113,6 +125,19 @@ if __name__ == '__main__':
     ax.axvline(context, color='k', linestyle='--', alpha=0.2)
     ax.legend()
     ax.grid(True)
+
+    # y_lin_new = np.load(os.path.join("data", "cstr", "GP_predict.npy")).astype(np.float32)
+    # upper_conf = np.load(os.path.join("data", "cstr", "GP_upper_conf.npy")).astype(np.float32)
+    # lower_conf = np.load(os.path.join("data", "cstr", "GP_lower_conf.npy")).astype(np.float32)
+
+    # Plot confidence bounds for GP
+    x = np.arange(seq_len - 2)
+    fig, ax1 = plt.subplots()
+    ax1.fill_between(x=x, y1=lower_conf, y2=upper_conf, label="Bounds", color='b', alpha=.1)
+    ax1.plot(y_lin_new[:, 0], 'r', label="Sim")
+    ax1.axvline(context, color='k', linestyle='--', alpha=0.2)
+    ax1.legend()
+    ax1.grid(True)
     plt.show()
 
     print(f"\nInference time: {time_inference:.2f}")
