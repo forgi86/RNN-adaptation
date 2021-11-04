@@ -8,7 +8,7 @@ COL_U = ['V_IN']
 COL_Y = ['V_C']
 
 
-def rlc_loader(dataset, dataset_type="nl", output='V_C', noise_std=0.1, dtype=np.float32, scale=True, n_data=-1):
+def rlc_loader(dataset, dataset_type="nl", output='V_C', noise_std=0.1, dtype=np.float32, n_data=-1):
     filename = f"RLC_data_{dataset}_{dataset_type}.csv"
     df_data = pd.read_csv(os.path.join("data", filename))
     t = np.array(df_data[['time']], dtype=dtype)
@@ -16,10 +16,6 @@ def rlc_loader(dataset, dataset_type="nl", output='V_C', noise_std=0.1, dtype=np
     y = np.array(df_data[[output]], dtype=dtype)
     x = np.array(df_data[['V_C', 'I_L']], dtype=dtype)
     y += np.random.randn(*y.shape) * noise_std
-    if scale:
-        u = u/100
-        y = y/100
-        x = x/[100, 6]
 
     if n_data > 0:
         t = t[:n_data, :]

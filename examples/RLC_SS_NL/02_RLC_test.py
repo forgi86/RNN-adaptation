@@ -10,17 +10,17 @@ from loader import rlc_loader
 
 if __name__ == '__main__':
 
-    matplotlib.rc('text', usetex=True)
+    #matplotlib.rc('text', usetex=True)
 
     plot_input = False
 
     # dataset_type = 'train'
-    # dataset_type = 'test'
+    dataset_type = 'test'
     # dataset_type = 'transfer'
-    dataset_type = 'eval'
+    #dataset_type = 'eval'
 
     # model_name = 'ss_model_retrain'
-    model_name = 'ss_model'
+    # model_name = 'ss_model'
 
     # Column names in the dataset
     t, u, y, x = rlc_loader(dataset_type, "nl", noise_std=0.0)
