@@ -48,7 +48,7 @@ if __name__ == "__main__":
     np.save(os.path.join("data", "cstr", "y_test.npy"), y_test)
 
     # Generate transfer and evaluation datasets
-    batch_size = 1
+    batch_size = 15
     n_steps = 1024
     u_transf, u_eval, y_transf, y_eval = system_pert.generate_data(batch_size, n_steps, flow_period=50)
 

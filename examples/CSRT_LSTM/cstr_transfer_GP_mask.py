@@ -34,22 +34,22 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    output_idx = 0  # must run the code twice for output 0/1
-    use_linearstrategy = False
+    output_idx = 1 # must run the code twice for output 0/1
+    use_linearstrategy = True
     sigma = 0.03
     context = 25
     n_skip = 0  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
+    batch_size = 1
 
     # In[Load dataset]
-    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, input_size
+    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
     y_ = y[..., [output_idx]]
 
     # In[Check dimensions]
-    batch_size = 1
-    seq_len, input_size = u.shape
-    seq_len_, output_size = y.shape  # 2 outputs
+    _, seq_len, input_size = u.shape
+    _, seq_len_, output_size = y.shape  # 2 outputs
     assert(seq_len == seq_len_)
 
     # In[Load LSTM model]
@@ -59,10 +59,13 @@ if __name__ == '__main__':
     model_op.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # Wrap model to send LSTM 3D input
-    model_wrapped = LSTMWrapperSingleOutput(model_op, seq_len, input_size, output_idx)
-    u_torch = torch.tensor(u[1:, :], dtype=torch.float, requires_grad=False)
-    y_torch = torch.tensor(y_[1:, :], dtype=torch.float) # single output
-    y_torch_f = torch.tensor(y[:-1, :], dtype=torch.float) # 2 output
+    model_wrapped = LSTMWrapperSingleOutput(model_op, seq_len, input_size, output_idx, batch_size)
+    u_torch = torch.tensor(u[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_torch = torch.tensor(y_[:, 1:, :].reshape(-1, 1), dtype=torch.float) # single output
+    y_torch_f = torch.tensor(y[:, :-1, :].reshape(-1, output_size), dtype=torch.float) # 2 output
+
+    u_gp = torch.tensor(u[:, context+1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_gp = torch.tensor(y_[:, context+1:, :].reshape(-1, 1), dtype=torch.float)  # single output
 
     # In[Adaptation in function/parameter space]
     gp_lh = gpytorch.likelihoods.GaussianLikelihood()
@@ -70,22 +73,28 @@ if __name__ == '__main__':
 
     # Before we initialize EGP and call eval() --> need to separately train LSMT estimator to initialize the state
     model_wrapped.estimate_state(u_torch, y_torch_f, nstep=25, output_size=output_size)
-    gp_model = ExactGPModel(u_torch[context:, :], y_torch[context:, :].squeeze(),
-                            gp_lh, model_wrapped, use_linearstrategy=use_linearstrategy)
+    gp_model = ExactGPModel(u_gp, y_gp.squeeze(), gp_lh, model_wrapped, use_linearstrategy=use_linearstrategy)
 
     # No GP training (we consider the kernel (hyper)parameters fixed.
     # We may think of training the measurement noise by mll optimization...
     gp_model.eval()
     gp_lh.eval()
 
-    # In[Evaluate the GP-like model on new data]
-    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
-    y_new_ = y_new[..., [output_idx]]
+    print("----------------------------------------------------------------------------------------------------------")
+    batch_size = 1
+    model_wrapped.set_batch_size(batch_s=batch_size)
 
-    u_torch_new = torch.tensor(u_new[1:, :], dtype=torch.float)
-    y_torch_new = torch.tensor(y_new_, dtype=torch.float)
-    y_torch_new_f = torch.tensor(y_new[:-1, :], dtype=torch.float)
+    # In[Evaluate the GP-like model on new data]
+    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
+    y_new_ = y_new[..., [output_idx]] # Single output
+
+    u_torch_new = torch.tensor(u_new[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_torch_new = torch.tensor(y_new_[:, 1:, :].reshape(-1, 1), dtype=torch.float) # Single output
+    y_torch_new_f = torch.tensor(y_new[:, :-1, :].reshape(-1, output_size), dtype=torch.float)
+
+    u_gp_new = torch.tensor(u_new[:, context+1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_gp_new = torch.tensor(y_new_[:, context+1:, :].reshape(-1, 1), dtype=torch.float)  # single output
 
     with torch.no_grad():
         # Initialize the estimator with evaluation data
@@ -97,7 +106,7 @@ if __name__ == '__main__':
     with gpytorch.settings.fast_pred_var(), gpytorch.settings.cg_tolerance(0.1), gpytorch.settings.max_cg_iterations(4000):
         model_wrapped.estimate_state(u_torch_new, y_torch_new_f, nstep=25, output_size=output_size)
         gp_model.update_covar(model_wrapped)
-        predictive_dist = gp_model(u_torch_new[context:, :])
+        predictive_dist = gp_model(u_gp_new)
         y_lin_new = predictive_dist.mean.data
         lower_conf, upper_conf = predictive_dist.confidence_region()
 
@@ -109,9 +118,9 @@ if __name__ == '__main__':
 
     y_lin_new = y_lin_new[..., None].detach().numpy()
 
-    np.save(os.path.join("data", "cstr", "GP_upper_conf.npy"), upper_conf)
-    np.save(os.path.join("data", "cstr", "GP_lower_conf.npy"), lower_conf)
-    np.save(os.path.join("data", "cstr", "GP_predict.npy"), y_lin_new)
+    np.save(os.path.join("data", "cstr", "GP_upper_conf_1.npy"), upper_conf)
+    np.save(os.path.join("data", "cstr", "GP_lower_conf_1.npy"), lower_conf)
+    np.save(os.path.join("data", "cstr", "GP_predict_1.npy"), y_lin_new)
 
     time_inference = time.time() - time_inference_start
 
@@ -119,23 +128,27 @@ if __name__ == '__main__':
 
     # In[Plot]
     ax = plt.subplot()
-    ax.plot(y_new_[:, 0], 'k', label="True")
+    ax.plot(y_new_[0, 1:, 0], 'k', label="True")
     ax.plot(y_sim_new[:, 0], 'r', label="Sim")
     ax.plot(np.concatenate((y_context[:, 0], y_lin_new[:, 0]), axis=0), 'b', label="Lin")
-    ax.axvline(context, color='k', linestyle='--', alpha=0.2)
+    ax.axvline(context-1, color='k', linestyle='--', alpha=0.2)
     ax.legend()
     ax.grid(True)
+    plt.show()
 
     # y_lin_new = np.load(os.path.join("data", "cstr", "GP_predict.npy")).astype(np.float32)
     # upper_conf = np.load(os.path.join("data", "cstr", "GP_upper_conf.npy")).astype(np.float32)
     # lower_conf = np.load(os.path.join("data", "cstr", "GP_lower_conf.npy")).astype(np.float32)
 
+    print("U_lin_new : ", y_lin_new.shape, lower_conf.shape, upper_conf.shape)
     # Plot confidence bounds for GP
-    x = np.arange(seq_len - 2)
+    x = np.arange(context + 1, seq_len)
     fig, ax1 = plt.subplots()
+    ax1.plot(y_new_[0, 1:, 0], 'k', label="True")
+    ax1.plot(np.concatenate((y_context[:, 0], y_lin_new[:, 0]), axis=0), 'b', label="Lin")
     ax1.fill_between(x=x, y1=lower_conf, y2=upper_conf, label="Bounds", color='b', alpha=.1)
-    ax1.plot(y_lin_new[:, 0], 'r', label="Sim")
-    ax1.axvline(context, color='k', linestyle='--', alpha=0.2)
+    ax1.plot(y_sim_new[:, 0], 'r', label="Sim")
+    ax1.axvline(context-1, color='k', linestyle='--', alpha=0.2)
     ax1.legend()
     ax1.grid(True)
     plt.show()
@@ -143,9 +156,9 @@ if __name__ == '__main__':
     print(f"\nInference time: {time_inference:.2f}")
 
     # R-squared metrics
-    R_sq_lin = metrics.r_squared(y_new_[(context+1):, :], y_lin_new)
+    R_sq_lin = metrics.r_squared(y_new_[0, (context+1):, :], y_lin_new)
     print(f"R-squared linear model: {R_sq_lin}")
 
-    R_sq_sim = metrics.r_squared(y_new_[1:, :], y_sim_new)
+    R_sq_sim = metrics.r_squared(y_new_[0, 1:, :], y_sim_new)
     print(f"R-squared nominal model: {R_sq_sim}")
 

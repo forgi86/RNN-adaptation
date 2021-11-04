@@ -91,12 +91,12 @@ if __name__ == "__main__":
     batch_idx = 10
     ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='True')
     ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
-    ax[0].axvline(n_context, color='k', linestyle='--', alpha=0.2)
+    ax[0].axvline(n_context-1, color='k', linestyle='--', alpha=0.2)
     ax[0].legend()
 
     ax[1].plot(y_test.detach().numpy()[batch_idx, :, 1], label='True')
     ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
-    ax[1].axvline(n_context, color='k', linestyle='--', alpha=0.2)
+    ax[1].axvline(n_context-1, color='k', linestyle='--', alpha=0.2)
     ax[1].legend()
     plt.show()
 

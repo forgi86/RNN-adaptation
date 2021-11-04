@@ -4,7 +4,7 @@ import torch.nn as nn
 class OpenLSTM(nn.Module):
     def __init__(self, n_context, n_inputs, is_estimator=True):
         super(OpenLSTM, self).__init__()
-        self.n_context = n_context # 64
+        self.n_context = n_context # 25
         self.model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
         self.n_inputs = n_inputs
         self.hn = None
@@ -29,7 +29,6 @@ class OpenLSTM(nn.Module):
         y_est = []
         hn = torch.zeros(1, u_train.size()[0], 2).requires_grad_()
         cn = torch.zeros(1, u_train.size()[0], 16).requires_grad_()
-        # print("Open estimate_state: ", u_train.size(), y_train.size())
 
         for i in range(nstep):
             # Feed in the known output to estimate state

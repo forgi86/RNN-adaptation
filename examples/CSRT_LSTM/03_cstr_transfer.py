@@ -14,6 +14,7 @@ if __name__ == '__main__':
     # In[Set seed for reproducibility]
     np.random.seed(0)
     torch.manual_seed(0)
+    batch_size = 1
 
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
@@ -23,13 +24,12 @@ if __name__ == '__main__':
     model_name = "lstm"
 
     # In[Load dataset]
-    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :] # seq_len, input_size
-    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :, :] # seq_len, input_size
+    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
-    batch_size = 1
-    seq_len, input_size = u.shape
-    seq_len_, output_size = y.shape
+    _, seq_len, input_size = u.shape
+    _, seq_len_, output_size = y.shape
     assert(seq_len == seq_len_)
 
     # In[Load LSTM model]
@@ -39,15 +39,14 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    model_wrapped = LSTMWrapper(model, seq_len, input_size)
-    u_torch = torch.tensor(u[1:, :], dtype=torch.float, requires_grad=False)
-    y_torch = torch.tensor(y, dtype=torch.float)
+    model_wrapped = LSTMWrapper(model, seq_len, input_size, batch_s=batch_size)
+    u_torch = torch.tensor(u[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_torch = torch.tensor(y.reshape(-1, output_size), dtype=torch.float)
     u_torch_f = torch.clone(u_torch.view((input_size * (seq_len-1), 1)))  # [bsize*seq_len*n_in, ]
     y_torch_f = torch.clone(y_torch[1:, :].view(output_size * (seq_len-1), 1))  # [bsize*seq_len, ]
     y_f = y_torch_f.detach().numpy()
 
     u_torch_op = torch.cat((u_torch, y_torch[:-1, :]), dim=1).unsqueeze(0)
-    print("u in: ", u_torch_op.size())
 
     """
     u = torch.unsqueeze(u, dim=0)
