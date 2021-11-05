@@ -21,7 +21,6 @@ class OpenLSTM(nn.Module):
             y_sim = torch.cat((y1, y2), dim=1)
         else:
             state = (self.hn, self.cn)
-            # print("forward openLSTM: ", u_train.size())
             y_sim, _ = self.model(u_train, state)
         return y_sim
 

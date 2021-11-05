@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # dataset_name = "transf"
     dataset_name = "eval"
     context = 25
-    n_skip = 0  # skinitial n_skip samples for metrics (ignore transient)
+    n_skip = 0  # initial n_skip samples for metrics (ignore transient)
 
     # Test
     u_test = torch.tensor(np.load(os.path.join("data", "cstr", f"u_{dataset_name}.npy")).astype(np.float32))
@@ -33,16 +33,24 @@ if __name__ == "__main__":
 
     y_sim = model(u_test)
 
+    batch_idx = 0
+    np.save(os.path.join("data", "cstr", "02_cstr_eval.npy"), y_sim.detach().numpy())
+
     fig, ax = plt.subplots(2, 1, sharex=True)
     plt.suptitle("Test")
-    batch_idx = 0
-    ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='True')
-    ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Fit')
+    ax[0].plot(y_test.detach().numpy()[batch_idx, :, 0], label='Ground truth')
+    ax[0].plot(y_sim.detach().numpy()[batch_idx, :, 0], label='Estimated fit')
+    ax[0].axvline(context-1, color='k', linestyle='--', alpha=0.2)
+    ax[0].set_ylabel('Y')
+    ax[0].set_xlabel('X')
     ax[0].legend()
     ax[0].grid()
 
-    ax[1].plot(y_test.detach().numpy()[batch_idx, :, 1], label='True')
-    ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Fit')
+    ax[1].plot(y_test.detach().numpy()[batch_idx, :, 1], label='Ground truth')
+    ax[1].plot(y_sim.detach().numpy()[batch_idx, :, 1], label='Estimated fit')
+    ax[1].axvline(context-1, color='k', linestyle='--', alpha=0.2)
+    ax[1].set_ylabel('Y')
+    ax[1].set_xlabel('X')
     ax[1].legend()
     ax[1].grid()
     plt.show()

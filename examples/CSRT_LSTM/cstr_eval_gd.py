@@ -54,28 +54,18 @@ if __name__ == '__main__':
 
     # In[Model wrapping]
     model_wrapped = LSTMWrapper(model, seq_len, input_size,batch_s=batch_size)
-    """
-    u_torch_new = torch.tensor(u_new, dtype=torch.float, requires_grad=False)
-    y_torch_new = torch.tensor(y_new, dtype=torch.float)
-    u_torch_new_f = torch.clone(u_torch_new.view((input_size * seq_len, 1)))  # [bsize*seq_len, n_in]
-    y_torch_new_f = torch.clone(y_torch_new.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
-    """
-    # u = torch.unsqueeze(u_new, dim=0)
-    # y = torch.unsqueeze(y_new, dim=0)
-
     u_torch_new = torch.cat((u_new[:, 1:, :], y_new[:, :-1, :]), -1)
     y_torch_new = y_new[:, 1:, :]
 
     # In[Load theta_lin]
-    # theta_lin = np.zeros_like(theta_lin)
-    theta_lin = np.load(os.path.join("models", "theta_lin_cf.npy"))  # closed-form
+    theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))  # closed-form
     # theta_lin = np.load(os.path.join("models", "theta_lin_gd.npy"))  # gradient descent
     # theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))  # L-BFGS
     theta_lin = torch.tensor(theta_lin)
+
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new)
     y_sim_new = y_sim_new_f.reshape(seq_len-1, output_size).detach().numpy()
-    # y_sim_new = torch.squeeze(y_sim_new_f).detach().numpy()
 
     # In[Linearized model output]
     theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
@@ -85,15 +75,15 @@ if __name__ == '__main__':
     y_lin_new = y_lin_new_f.reshape((seq_len-1), output_size).detach().numpy()
 
     # Save output data
-    np.save(os.path.join("data", "cstr", "04_cstr_eval_sim.npy"), y_sim_new)
-    np.save(os.path.join("data", "cstr", "04_cstr_eval_lin.npy"), y_lin_new)
+    np.save(os.path.join("data", "cstr", "cstr_eval_gd_sim.npy"), y_sim_new)
+    np.save(os.path.join("data", "cstr", "cstr_eval_gd_lin.npy"), y_lin_new)
 
     # In[Plot]
     fig, ax = plt.subplots(2, 1, sharex=True)
     ax[0].plot(y_new[0, :, 0].detach().numpy(), 'k', label="Ground truth")
     ax[0].plot(y_tf[0, :, 0].detach().numpy(), 'g', label="Transfer data")
     ax[0].plot(y_sim_new[:, 0], 'b', label="LSTM")
-    ax[0].plot(y_lin_new[:, 0], '--r', label="BLR-LSTM")
+    ax[0].plot(y_lin_new[:, 0], '--r', label="JVP-LSTM")
     ax[0].axvline(context-1, color='k', linestyle='--', alpha=0.2)
     ax[0].set_ylabel('Y')
     ax[0].set_xlabel('X')
