@@ -51,7 +51,7 @@ if __name__ == '__main__':
     model_wrapped = StateSpaceWrapper(nn_solution)
 
     # In[Load theta_lin]
-    theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")))
+    theta_lin = np.load(os.path.join("models", "theta_lin.npy"))
 
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new_f)
