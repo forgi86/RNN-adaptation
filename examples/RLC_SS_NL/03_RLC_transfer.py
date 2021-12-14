@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import scipy.linalg
 import time
 import torch
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
@@ -58,7 +59,8 @@ if __name__ == '__main__':
     Ip = np.eye(n_param)
     F = J.transpose() @ J
     A = F + sigma**2 * Ip
-    theta_lin = np.linalg.solve(A, J.transpose() @ y)  # adaptation!
+    #theta_lin = np.linalg.solve(A, J.transpose() @ y)  # adaptation!
+    theta_lin = scipy.linalg.solve(A, J.transpose() @ y, assume_a='pos')
     np.save(os.path.join("models", "theta_lin.npy"), theta_lin)
 
     adapt_time = time.time() - time_start
