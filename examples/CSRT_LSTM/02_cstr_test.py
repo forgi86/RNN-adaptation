@@ -7,10 +7,10 @@ from torchid import metrics
 
 if __name__ == "__main__":
 
-    # model_name = "lstm"
-    model_name = "lstm_retrain"
+    model_name = "lstm"
+    # model_name = "lstm_retrain"
 
-    # dataset_name = "train"
+    dataset_name = "train"
     # dataset_name = "test"
     # dataset_name = "transf"
     dataset_name = "eval"
