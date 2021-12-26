@@ -90,32 +90,33 @@ def parameter_jacobian(model, input, vectorize=True, flatten=True):
     jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize)
 
     if flatten:
-        """
-        n_data = input.squeeze().shape[0]
-        jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
-        J = torch.cat(jacs_2d, dim=-1)
-        """
-        # TODO: Refactor
-        u = input[:, :, :model.input_size]
-        batch_size, seq_len, inp = u.size()
-        u_new = u.reshape((seq_len * inp, batch_size))
-        n_data = u_new.squeeze().shape[0]
-        jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
-        J = torch.cat(jacs_2d, dim=-1)
+        if len(input.shape) == 3:
+            # NOTE: Use the below code snippet for LSTM
+            # TODO: Refactor
+            u = input[:, :, :model.input_size]
+            batch_size, seq_len, inp = u.size()
+            u_new = u.reshape((seq_len * inp, batch_size))
+            n_data = u_new.squeeze().shape[0]
+            jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
+            J = torch.cat(jacs_2d, dim=-1)
+        else:
+            n_data = input.squeeze().shape[0]
+            jacs_2d = [jac.reshape(n_data, -1) for jac in jacs]
+            J = torch.cat(jacs_2d, dim=-1)
     else:
         J = jacs
 
     return J
 
-    #jac_dict = dict(zip(names, jacs))
+#jac_dict = dict(zip(names, jacs))
 
-    #with torch.no_grad():
-    #    sim_y = model(input)
-    #    n_data = input.squeeze().shape[0]
-    #    y_out_1d = torch.ravel(sim_y).detach().numpy()
-    #    params_1d = list(map(torch.ravel, params))
-    #    theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
-    #    jacs_2d = list(map(lambda x: x.reshape(n_data, -1), jacs))
-    #    J = torch.cat(jacs_2d, dim=-1).detach().numpy()
+#with torch.no_grad():
+#    sim_y = model(input)
+#    n_data = input.squeeze().shape[0]
+#    y_out_1d = torch.ravel(sim_y).detach().numpy()
+#    params_1d = list(map(torch.ravel, params))
+#    theta = torch.cat(params_1d, axis=0).detach().numpy()  # parameters concatenated
+#    jacs_2d = list(map(lambda x: x.reshape(n_data, -1), jacs))
+#    J = torch.cat(jacs_2d, dim=-1).detach().numpy()
 
-    # load_weights(model, names, tuple(params))
+# load_weights(model, names, tuple(params))

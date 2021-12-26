@@ -6,3 +6,5 @@
 /examples/CSRT_LSTM/data/
 .idea/
 /dyno_net.egg-info/
+/pytorch-maml/maml-data/
+/pytorch-maml/maml-results/

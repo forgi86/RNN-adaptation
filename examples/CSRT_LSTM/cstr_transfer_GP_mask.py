@@ -34,7 +34,7 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    output_idx = 0 # must run the code twice for output 0/1
+    output_idx = 0  # must run the code twice for output 0/1
     use_linearstrategy = False
     sigma = 0.03
     context = 25
@@ -61,8 +61,8 @@ if __name__ == '__main__':
     # Wrap model to send LSTM 3D input
     model_wrapped = LSTMWrapperSingleOutput(model_op, seq_len, input_size, output_idx, batch_size)
     u_torch = torch.tensor(u[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
-    y_torch = torch.tensor(y_[:, 1:, :].reshape(-1, 1), dtype=torch.float) # single output
-    y_torch_f = torch.tensor(y[:, :-1, :].reshape(-1, output_size), dtype=torch.float) # 2 output
+    y_torch = torch.tensor(y_[:, 1:, :].reshape(-1, 1), dtype=torch.float)  # single output
+    y_torch_f = torch.tensor(y[:, :-1, :].reshape(-1, output_size), dtype=torch.float)  # 2 output
 
     u_gp = torch.tensor(u[:, context+1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
     y_gp = torch.tensor(y_[:, context+1:, :].reshape(-1, 1), dtype=torch.float)  # single output
@@ -80,17 +80,17 @@ if __name__ == '__main__':
     gp_model.eval()
     gp_lh.eval()
 
-    print("----------------------------------------------------------------------------------------------------------")
+    print("------------------------------------------EVALUATION-----------------------------------------------------")
     batch_size = 1
     model_wrapped.set_batch_size(batch_s=batch_size)
 
     # In[Evaluate the GP-like model on new data]
-    u_new = np.load(os.path.join("data", "cstr", "u_eval.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, input_size
-    y_new = np.load(os.path.join("data", "cstr", "y_eval.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
+    u_new = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, input_size
+    y_new = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
     y_new_ = y_new[..., [output_idx]] # Single output
 
     u_torch_new = torch.tensor(u_new[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
-    y_torch_new = torch.tensor(y_new_[:, 1:, :].reshape(-1, 1), dtype=torch.float) # Single output
+    y_torch_new = torch.tensor(y_new_[:, 1:, :].reshape(-1, 1), dtype=torch.float)  # single output
     y_torch_new_f = torch.tensor(y_new[:, :-1, :].reshape(-1, output_size), dtype=torch.float)
 
     u_gp_new = torch.tensor(u_new[:, context+1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
@@ -118,9 +118,9 @@ if __name__ == '__main__':
 
     y_lin_new = y_lin_new[..., None].detach().numpy()
 
-    np.save(os.path.join("data", "cstr", "GP_upper_conf_0.npy"), upper_conf)
-    np.save(os.path.join("data", "cstr", "GP_lower_conf_0.npy"), lower_conf)
-    np.save(os.path.join("data", "cstr", "GP_predict_0.npy"), y_lin_new)
+    # np.save(os.path.join("data", "cstr", "GP_upper_conf_0.npy"), upper_conf)
+    # np.save(os.path.join("data", "cstr", "GP_lower_conf_0.npy"), lower_conf)
+    # np.save(os.path.join("data", "cstr", "GP_predict_0.npy"), y_lin_new)
     # TODO: Save sim
 
     time_inference = time.time() - time_inference_start
@@ -162,7 +162,7 @@ if __name__ == '__main__':
 
     # R-squared metrics
     R_sq_lin = metrics.r_squared(y_new_[0, (context+1):, :], y_lin_new)
-    print(f"R-squared linear model: {R_sq_lin}")
+    print(f"R-squared linearized model: {R_sq_lin}")
 
     R_sq_sim = metrics.r_squared(y_new_[0, 1:, :], y_sim_new)
     print(f"R-squared nominal model: {R_sq_sim}")

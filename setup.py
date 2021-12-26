@@ -9,7 +9,9 @@ setup(
     author='',
     author_email='',
     url='',
-    requires=(),
+    #  dependency_links=['https://github.com/tristandeleu/pytorch-meta.git',
+    #                  'https://github.com/tristandeleu/pytorch-maml.git'],
+    requires=[],
     zip_safe=True,
     license='MIT'
 )

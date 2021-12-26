@@ -7,6 +7,7 @@ from models import LSTMWrapper
 from diffutil.products import jvp_diff, unflatten_like
 import torch.optim as optim
 from open_lstm import OpenLSTM
+from torchid import metrics
 
 
 if __name__ == '__main__':
@@ -21,7 +22,7 @@ if __name__ == '__main__':
     sigma = 0.03
     n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
-    n_iter = 750  # 100
+    n_iter = 250  # 750 # 100
     lr = 1e-2
     batch_size = 1
     context = 25

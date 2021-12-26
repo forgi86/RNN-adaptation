@@ -6,6 +6,7 @@ import torch.nn as nn
 from models import LSTMWrapper
 from diffutil.products import jvp_diff, unflatten_like
 import torch.optim as optim
+from open_lstm import OpenLSTM
 
 
 if __name__ == '__main__':
@@ -18,40 +19,42 @@ if __name__ == '__main__':
 
     # In[Settings]
     sigma = 0.03
-    n_skip = 64  # skip initial n_skip samples for transfer (ignore transient)
+    n_skip = 0 # skip initial n_skip samples for transfer (ignore transient)
     model_name = "lstm"
     n_iter = 10  # 100
     lr = 1e-1
+    batch_size = 1
+    context = 25
 
     # In[Load dataset]
-    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, input_size
-    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[0, :, :]  # seq_len, output_size
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :,
+        :]  # seq_len, input_size
+    y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[:batch_size, :,
+        :]  # seq_len, output_size
 
     # In[Check dimensions]
-    batch_size = 1
-    seq_len, input_size = u.shape
-    seq_len_, output_size = y.shape
+    _, seq_len, input_size = u.shape
+    _, seq_len_, output_size = y.shape
     N = y.size
-    assert(seq_len == seq_len_)
+    assert (seq_len == seq_len_)
 
     # In[Load LSTM model]
     # Setup neural model structure and load fitted model parameters
-
-    model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
+    model_op = OpenLSTM(context, input_size)
     model_filename = f"{model_name}.pt"
-    model.load_state_dict(torch.load(os.path.join("models", model_filename)))
+    model_op.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    model_wrapped = LSTMWrapper(model, seq_len, input_size)
-    u_torch = torch.tensor(u, dtype=torch.float, requires_grad=False)
-    y_torch = torch.tensor(y, dtype=torch.float)
-    u_torch_f = torch.clone(u_torch.view(input_size * seq_len, 1))  # [bsize*seq_len, n_in]
-    y_torch_f = torch.clone(y_torch.view(output_size * seq_len, 1))  # [bsize*seq_len, ]
+    model_wrapped = LSTMWrapper(model_op, seq_len, input_size, batch_s=batch_size)
+    u_torch = torch.tensor(u[:, 1:, :].reshape(-1, input_size), dtype=torch.float, requires_grad=False)
+    y_torch = torch.tensor(y.reshape(-1, output_size), dtype=torch.float)
+    u_torch_f = torch.clone(u_torch.view((input_size * (seq_len - 1), 1)))  # [bsize*seq_len*n_in, ]
+    y_torch_f = torch.clone(y_torch[1:, :].view(output_size * (seq_len - 1), 1))  # [bsize*seq_len, ]
     y_f = y_torch_f.detach().numpy()
 
-    n_param = sum(map(torch.numel, model.parameters()))
-    #theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")).ravel())
-    #theta_lin = 1/np.sqrt(n_param)*torch.randn(n_param)
+    n_param = sum(map(torch.numel, model_op.parameters()))
+    # theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")).ravel())
+    # theta_lin = 1/np.sqrt(n_param)*torch.randn(n_param)
     theta_lin = torch.zeros(n_param)
     theta_lin.requires_grad_(True)
 
@@ -64,20 +67,20 @@ if __name__ == '__main__':
     def closure():
         optimizer.zero_grad()
 
-        theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
-        y_sim_f = model_wrapped(u_torch_f)
-        y_lin_f = jvp_diff(y_sim_f, model_wrapped.parameters(), theta_lin_f)[0]
+        theta_lin_f_ = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
+        y_sim_f_ = model_wrapped(u_torch_f)
+        y_lin_f_ = jvp_diff(y_sim_f_, model_wrapped.parameters(), theta_lin_f_)[0]
 
         # Compute loss
-        err_fit = y_torch_f[n_skip * output_size:] - y_lin_f[n_skip * output_size:]
+        err_fit = y_torch_f[n_skip * output_size:] - y_lin_f_[n_skip * output_size:]
         loss_fit = torch.sum(err_fit**2)
         loss_reg = sigma**2 * theta_lin.dot(theta_lin)
-        loss = loss_fit + loss_reg
-        loss = loss/1000
+        loss_ = loss_fit + loss_reg
+        loss_ = loss_/1000
 
-        print(f'Iter {itr} | Tradeoff Loss {loss:.3f} | Fit Loss {loss_fit:.6f} | Reg Loss {loss_reg:.6f}')
-        loss.backward()
-        return loss
+        print(f'Iter {itr} | Tradeoff Loss {loss_:.3f} | Fit Loss {loss_fit:.6f} | Reg Loss {loss_reg:.6f}')
+        loss_.backward()
+        return loss_
 
     for itr in range(n_iter):
 
@@ -97,7 +100,6 @@ if __name__ == '__main__':
     np.save(os.path.join("models", "theta_lin_lbfgs.npy"), theta_lin.detach().numpy())
 
     # In[Plot]
-
     theta_lin_f = unflatten_like(theta_lin, tensor_lst=list(model_wrapped.parameters()))
     y_sim_f = model_wrapped(u_torch_f)
     y_lin_f = jvp_diff(y_sim_f, model_wrapped.parameters(), theta_lin_f)[0]
@@ -114,3 +116,4 @@ if __name__ == '__main__':
     ax[1].plot(y[:, 1], 'k')
     ax[1].plot(y_sim[:, 1], 'r')
     ax[1].plot(y_lin[:, 1], 'b')
+    plt.show()

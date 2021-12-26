@@ -76,6 +76,7 @@ if __name__ == '__main__':
     ax[0].grid(True)
     ax[1].grid(True)
     ax[2].grid(True)
+    plt.show()
 
     # In[Save]
     if not os.path.exists("data"):

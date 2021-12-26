@@ -32,9 +32,10 @@ if __name__ == '__main__':
     vectorize = True  # vectorize jacobian evaluation (experimental!)
     sigma = 0.1
     model_name = "ss_model"
+    dataset = "transfer" #  "eval"
 
     # In[Load dataset]
-    t, u, y, x = loader.rlc_loader("transfer", dataset_type="nl", noise_std=sigma, n_data=2000)
+    t, u, y, x = loader.rlc_loader(dataset, dataset_type="nl", noise_std=sigma, n_data=2000)
     seq_len = t.size
 
     # In[Setup neural model structure and load fitted model parameters]
@@ -42,7 +43,6 @@ if __name__ == '__main__':
     nn_solution = ForwardEulerSimulator(ss_model)
     model_filename = f"{model_name}.pt"
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
-
     # In[Model wrapping]
     input_size = 1
     output_size = 1

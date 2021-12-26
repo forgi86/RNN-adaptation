@@ -19,6 +19,7 @@ if __name__ == '__main__':
     n_skip = 0 # skip initial n_skip samples for metrics (ignore transient)
     context = 25
     batch_size = 1
+    # seq = 256
 
     model_name = "lstm"
     dataset_transf = "transf"
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # In[Model wrapping]
-    model_wrapped = LSTMWrapper(model, seq_len, input_size,batch_s=batch_size)
+    model_wrapped = LSTMWrapper(model, seq_len, input_size, batch_s=batch_size)
     """
     u_torch_new = torch.tensor(u_new, dtype=torch.float, requires_grad=False)
     y_torch_new = torch.tensor(y_new, dtype=torch.float)
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     # theta_lin = np.load(os.path.join("models", "theta_lin_lbfgs.npy"))  # L-BFGS
     theta_lin = torch.tensor(theta_lin)
     # In[Nominal model output]
-    y_sim_new_f = model_wrapped(u_torch_new)
+    y_sim_new_f = model_wrapped(u_torch_new)  # Evaluate nominal model
     y_sim_new = y_sim_new_f.reshape(seq_len-1, output_size).detach().numpy()
     # y_sim_new = torch.squeeze(y_sim_new_f).detach().numpy()
 
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     time_jvp_start = time.time()
     y_lin_new_f = jvp(y_sim_new_f, model_wrapped.parameters(), theta_lin_f)[0]
     time_jvp = time.time() - time_jvp_start
-    y_lin_new = y_lin_new_f.reshape((seq_len-1), output_size).detach().numpy()
+    y_lin_new = y_lin_new_f.reshape((seq_len-1), output_size).detach().numpy() # Evaluate adapted model
 
     # Save output data
     np.save(os.path.join("data", "cstr", "04_cstr_eval_sim.npy"), y_sim_new)
@@ -109,8 +110,8 @@ if __name__ == '__main__':
     plt.show()
 
     # R-squared metrics
-    R_sq_lin = metrics.r_squared(y_new[0, 1:, :].detach().numpy(), y_lin_new)
-    print(f"R-squared linear model: {R_sq_lin}")
+    R_sq_lin = metrics.r_squared(y_new[0, context+1:, :].detach().numpy(), y_lin_new[context:, :])
+    print(f"R-squared linearized model: {R_sq_lin}")
 
-    R_sq_sim = metrics.r_squared(y_new[0, 1:, :].detach().numpy(), y_sim_new)
+    R_sq_sim = metrics.r_squared(y_new[0, context+1:, :].detach().numpy(), y_sim_new[context:, :])
     print(f"R-squared nominal model: {R_sq_sim}")

@@ -17,13 +17,13 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # Overall parameters
-    num_iter = 10000  # gradient-based optimization steps
+    num_iter = 10000  # 10000  # gradient-based optimization steps
     seq_len = 256  # subsequence length m
     batch_size = 16  # batch size q
     t_fit = 2e-3  # fitting on t_fit ms of data
     alpha = 1.0  # regularization weight
     lr = 1e-4  # learning rate
-    test_freq = 100  # print message every test_freq iterations
+    test_freq = 500  # print message every test_freq iterations
     var_idx = 0  # voltage
     add_noise = True
 
@@ -90,15 +90,17 @@ if __name__ == '__main__':
     # Training loop
 
     scripted_nn_solution = torch.jit.script(nn_solution)
-    for itr in range(0, num_iter):
-
+    indx = 0
+    save15 = True
+    # for itr in range(0, num_iter):
+    while True:
         optimizer.zero_grad()
 
         # Simulate
         batch_t, batch_x0_hidden, batch_u, batch_y, batch_x_hidden = get_batch(batch_size, seq_len)
-        #batch_x_sim = traced_nn_solution(batch_x0_hidden, batch_u) # 52 seconds RK | 13 FE
-        #batch_x_sim = nn_solution(batch_x0_hidden, batch_u) # 70 seconds RK | 13 FE
-        batch_x_sim = scripted_nn_solution(batch_x0_hidden, batch_u) # 71 seconds RK | 13 FE
+        #  batch_x_sim = traced_nn_solution(batch_x0_hidden, batch_u) # 52 seconds RK | 13 FE
+        #  batch_x_sim = nn_solution(batch_x0_hidden, batch_u) # 70 seconds RK | 13 FE
+        batch_x_sim = scripted_nn_solution(batch_x0_hidden, batch_u)  # 71 seconds RK | 13 FE
 
         # Compute fit loss
         batch_y_sim = batch_x_sim[..., [var_idx]]
@@ -118,14 +120,26 @@ if __name__ == '__main__':
         LOSS.append(loss.item())
         LOSS_CONSISTENCY.append(loss_consistency.item())
         LOSS_FIT.append(loss_fit.item())
-        if itr % test_freq == 0:
+        if indx % test_freq == 0:
             with torch.no_grad():
-                print(f'Iter {itr} | Tradeoff Loss {loss:.4f} '
+                print(f'Iter {indx} | Tradeoff Loss {loss:.4f} '
                       f'Consistency Loss {loss_consistency:.4f} Fit Loss {loss_fit:.4f}')
+                # print("Time: ", time.time() - start_time)
 
+        if save15 and (time.time() - start_time) > 15.0:
+            # Save model trained for 15 sec
+            save15 = False
+            print("Model save: 15", save15)
+            torch.save(nn_solution.ss_model.state_dict(), os.path.join("models", "ss_model_retrain_15.pt"))
+
+        indx = indx+1
         # Optimize
         loss.backward()
         optimizer.step()
+
+        if LOSS[-1] < 0.014 or indx > 10000:  # Run until loss < 1.1%
+            print(LOSS[-1])
+            break
 
     train_time = time.time() - start_time
     print(f"\nTrain time: {train_time:.2f}")
@@ -177,6 +191,7 @@ if __name__ == '__main__':
 
     ax[2].plot(np.array(u_torch_val), label='Input')
     ax[2].grid(True)
+    # plt.show()
 
     fig, ax = plt.subplots(1, 1)
     ax.plot(LOSS, 'k', label='ALL')
@@ -186,6 +201,7 @@ if __name__ == '__main__':
     ax.legend()
     ax.set_ylabel("Loss (-)")
     ax.set_xlabel("Iteration (-)")
+    # plt.show()
 
     if add_noise:
         fig_name = f"RLC_SS_loss_{seq_len}step_noise.pdf"
@@ -207,4 +223,5 @@ if __name__ == '__main__':
     ax[1].plot(x_hidden_fit_np[:, 1], 'r', label='Hidden')
     ax[1].legend()
     ax[1].grid(True)
+    # plt.show()
 

@@ -4,7 +4,7 @@ import torch.nn as nn
 class OpenLSTM(nn.Module):
     def __init__(self, n_context, n_inputs, is_estimator=True):
         super(OpenLSTM, self).__init__()
-        self.n_context = n_context # 25
+        self.n_context = n_context  # 25
         self.model = nn.LSTM(input_size=2, hidden_size=16, proj_size=2, num_layers=1, batch_first=True)
         self.n_inputs = n_inputs
         self.hn = None

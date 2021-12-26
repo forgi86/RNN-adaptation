@@ -99,8 +99,8 @@ if __name__ == '__main__':
     plt.show()
 
     # R-squared metrics
-    R_sq_lin = metrics.r_squared(y_new[0, 1:, :].detach().numpy(), y_lin_new)
+    R_sq_lin = metrics.r_squared(y_new[0, context+1:, :].detach().numpy(), y_lin_new[context:, :])
     print(f"R-squared linear model: {R_sq_lin}")
 
-    R_sq_sim = metrics.r_squared(y_new[0, 1:, :].detach().numpy(), y_sim_new)
+    R_sq_sim = metrics.r_squared(y_new[0, context+1:, :].detach().numpy(), y_sim_new[context:, :])
     print(f"R-squared nominal model: {R_sq_sim}")

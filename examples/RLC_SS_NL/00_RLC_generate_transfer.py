@@ -39,6 +39,7 @@ if __name__ == '__main__':
     t_sim = np.arange(N_sim) * Ts
     u_func = interp1d(t_sim, u, kind='zero', fill_value="extrapolate")
 
+    # params = {"C": 1050e-9, "L": 90e-6, "R": 10.0}
     params = {"C": 350e-9, "L": 50e-6, "R": 4.0}
 
     def f_ODE(t, x):
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     ax[0].grid(True)
     ax[1].grid(True)
     ax[2].grid(True)
+    # plt.show()
 
     # In[Save]
     if not os.path.exists("data"):

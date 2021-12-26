@@ -28,10 +28,10 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     # In[Settings]
-    model_name = "ss_model"  # "ss_model_retrain"
+    model_name = "ss_model_retrain_15"   # "ss_model"
     seq_len = 2000
     # dataset = "transfer"
-    dataset = "eval"
+    dataset = "eval"  # "transfer"
 
     # In[Load dataset]
     t_new, u_new, y_new, x_new = loader.rlc_loader(dataset, dataset_type="nl", noise_std=0.0, n_data=seq_len)
@@ -51,8 +51,8 @@ if __name__ == '__main__':
     model_wrapped = StateSpaceWrapper(nn_solution)
 
     # In[Load theta_lin]
-    theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")))
-    # theta_lin = np.load(os.path.join("models", "theta_lin_sens.npy"))
+    # theta_lin = torch.tensor(np.load(os.path.join("models", "theta_lin.npy")))
+    theta_lin = np.load(os.path.join("models", "theta_lin_sens.npy"))
 
     # In[Nominal model output]
     y_sim_new_f = model_wrapped(u_torch_new_f)
@@ -73,9 +73,9 @@ if __name__ == '__main__':
     # plt.show()
 
     # Saving state and input
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y.npy"), y_new)
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_sim.npy"), y_sim_new)
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_lin.npy"), y_lin_new)
+    # np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y.npy"), y_new)
+    # np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_sim.npy"), y_sim_new)
+    # np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_lin.npy"), y_lin_new)
 
     # R-squared metrics
     R_sq = metrics.r_squared(y_new, y_lin_new)

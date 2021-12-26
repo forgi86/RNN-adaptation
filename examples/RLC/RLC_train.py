@@ -40,6 +40,7 @@ if __name__ == '__main__':
     # In[Train]
     LOSS = []
     start_time = time.time()
+    y_hat = []
     for itr in range(0, num_iter):
 
         optimizer.zero_grad()
@@ -83,5 +84,6 @@ if __name__ == '__main__':
     plt.figure()
     plt.plot(LOSS)
     plt.grid(True)
+    plt.show()
 
 

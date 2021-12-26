@@ -15,6 +15,7 @@ if __name__ == '__main__':
     np.random.seed(0)
     torch.manual_seed(0)
     batch_size = 1
+    # seq = 256
 
     # In[Settings]
     vectorize = True  # vectorize jacobian evaluation (experimental!)
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     model_name = "lstm"
 
     # In[Load dataset]
-    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :, :] # seq_len, input_size
+    u = np.load(os.path.join("data", "cstr", "u_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, input_size
     y = np.load(os.path.join("data", "cstr", "y_transf.npy")).astype(np.float32)[:batch_size, :, :]  # seq_len, output_size
 
     # In[Check dimensions]
