@@ -5,6 +5,7 @@ from scipy import signal
 from random import randint
 import scipy
 from functools import partial
+import torch.nn as nn
 
 mat = np.atleast_2d
 
@@ -516,7 +517,7 @@ class Two_tank_model:
 
 
 class CSTR:
-    def __init__(self, Ts=0.1):
+    def __init__(self, Ts=0.1, params={}):
         self.name = 'CSTR'
         self.n_inputs = 2
         self.n_outputs = 2
@@ -524,6 +525,10 @@ class CSTR:
         self.current_state = self.zero_state.copy()
         self.current_inputs = np.array([0.8, 0.8])
         self.Ts = Ts
+
+        self.C_A0 = params.get('C_A0', 0.8)
+        self.k0_list = params.get('k0_list', [1.0, 0.7, 0.1, 0.006])
+        self.E = params.get('E', [8.33, 10.0, 50.0, 83.3])
 
     def set_state(self, state):
         self.current_state = state.copy()
@@ -537,13 +542,13 @@ class CSTR:
 
         q = self.current_inputs[0]   # Input flow  [m^3/s]
         T = self.current_inputs[1]   # Tank temperature  [K]
-        C_A0 = 0.8     # Concentration of A in input feed
+        C_A0 = self.C_A0     # Concentration of A in input feed
 
         C_A = state[0]
         C_R = state[1]
 
-        k0_list = [1.0, 0.7, 0.1, 0.006]   # Arrhenius pre-exponentials constants
-        E = [8.33, 10.0, 50.0, 83.3]       # Normalized activation energies
+        k0_list = self.k0_list   # Arrhenius pre-exponentials constants
+        E = self.E       # Normalized activation energies
 
         k = []
         for idx, k0 in enumerate(k0_list):
@@ -596,7 +601,7 @@ class CSTR:
 
         np.random.seed(150)
 
-        triangular_window = (signal.bartlett(flow_period+1, sym=True)*0.35 + 0.7)[:-1]
+        triangular_window = (signal.bartlett(flow_period + 1, sym=True) * 0.35 + 0.7)[:-1]
 
         inputs_train_list = []
         outputs_train_list = []
@@ -609,24 +614,32 @@ class CSTR:
             output_test_list_batch = []
 
             inputs_train = np.zeros([n_steps, self.n_inputs])
-            temperature_steps_value_train = [np.random.rand()*0.35 + 0.7 for i in range(int(n_steps/flow_period) + 1)]
+            temperature_steps_value_train = [np.random.rand() * 0.35 + 0.7 for i in
+                                             range(int(n_steps / flow_period) + 1)]
             inputs_test = np.zeros([n_steps, self.n_inputs])
-            temperature_steps_value_test = [np.random.rand()*0.35 + 0.7 for i in range(int(n_steps / flow_period) + 1)]
+            temperature_steps_value_test = [np.random.rand() * 0.35 + 0.7 for i in
+                                            range(int(n_steps / flow_period) + 1)]
 
             # Generating triangular wave for flow input and steps for temperature input
 
-            for i in range(int(n_steps/flow_period)):
-                inputs_train[i*flow_period:(i+1)*flow_period, 0] = triangular_window.copy()
-                inputs_train[i*flow_period:(i+1)*flow_period, 1] = np.ones([flow_period]) * temperature_steps_value_train[i]
+            for i in range(int(n_steps / flow_period)):
+                inputs_train[i * flow_period:(i + 1) * flow_period, 0] = triangular_window.copy()
+                inputs_train[i * flow_period:(i + 1) * flow_period, 1] = np.ones([flow_period]) * \
+                                                                         temperature_steps_value_train[i]
                 inputs_test[i * flow_period:(i + 1) * flow_period, 0] = triangular_window.copy()
-                inputs_test[i * flow_period:(i + 1) * flow_period, 1] = np.ones([flow_period]) * temperature_steps_value_test[i]
+                inputs_test[i * flow_period:(i + 1) * flow_period, 1] = np.ones([flow_period]) * \
+                                                                        temperature_steps_value_test[i]
             if n_steps < flow_period:
                 i = -1
-            if (i+1)*flow_period < n_steps:
-                inputs_train[(i+1)*flow_period: n_steps, 0] = triangular_window[:n_steps-(i+1)*flow_period].copy()
-                inputs_train[(i+1)*flow_period: n_steps, 1] = np.ones([n_steps-(i+1)*flow_period]) * temperature_steps_value_train[i+1]
-                inputs_test[(i + 1) * flow_period: n_steps, 0] = triangular_window[:n_steps-(i+1)*flow_period].copy()
-                inputs_test[(i + 1) * flow_period: n_steps, 1] = np.ones([n_steps-(i+1)*flow_period])*temperature_steps_value_test[i+1]
+            if (i + 1) * flow_period < n_steps:
+                inputs_train[(i + 1) * flow_period: n_steps, 0] = triangular_window[
+                                                                  :n_steps - (i + 1) * flow_period].copy()
+                inputs_train[(i + 1) * flow_period: n_steps, 1] = np.ones([n_steps - (i + 1) * flow_period]) * \
+                                                                  temperature_steps_value_train[i + 1]
+                inputs_test[(i + 1) * flow_period: n_steps, 0] = triangular_window[
+                                                                 :n_steps - (i + 1) * flow_period].copy()
+                inputs_test[(i + 1) * flow_period: n_steps, 1] = np.ones([n_steps - (i + 1) * flow_period]) * \
+                                                                 temperature_steps_value_test[i + 1]
 
             inputs_train_list.append(inputs_train)
             inputs_test_list.append(inputs_test)
@@ -634,13 +647,13 @@ class CSTR:
             self.set_state(np.random.rand(2))
 
             for step in range(n_steps):
-                state, output = self.step(inputs_train[step:step+1])
+                state, output = self.step(inputs_train[step:step + 1])
                 output_train_list_batch.append(output[0].copy())
 
             self.set_state(np.random.rand(2))
 
             for step in range(n_steps):
-                state, output = self.step(inputs_test[step:step+1])
+                state, output = self.step(inputs_test[step:step + 1])
                 output_test_list_batch.append(output[0].copy())
 
             outputs_train_list.append(np.array(output_train_list_batch))

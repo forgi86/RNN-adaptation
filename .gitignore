@@ -3,4 +3,8 @@
 /examples/RLC/models/
 /examples/RLC_SS_NL/models/
 /examples/RLC_SS_NL/fig/
+/examples/CSRT_LSTM/data/
 .idea/
+/dyno_net.egg-info/
+/pytorch-maml/maml-data/
+/pytorch-maml/maml-results/

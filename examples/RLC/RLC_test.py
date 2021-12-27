@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # In[Second-order dynamical system custom defined]
     G = SisoLinearDynamicalOperator(n_b, n_a)
     model_folder = os.path.join("models", model_name)
-    G.load_state_dict(torch.load(os.path.join(model_folder, "G.pt")))
+    G.load_state_dict(torch.load(os.path.join(model_folder, "model.pt")))  # "G.pt"
 
     # In[Parameter Jacobians]
     with torch.no_grad():
@@ -51,6 +51,7 @@ if __name__ == '__main__':
     plt.plot(t, y, 'k', label="$y$")
     plt.plot(t, y_sim_torch, 'b', label="$\hat y$")
     plt.legend()
+    plt.show()
 
 
 

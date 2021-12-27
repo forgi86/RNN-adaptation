@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
-from dynonet.utils.jacobian import parameter_jacobian
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
+from diffutil.jacobian import parameter_jacobian
 import loader
 
 if __name__ == '__main__':
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # In[Adaptation in parameter space (naive way)]
     # NOTE: the jacobian in the formulas and comments has the classical definition (not transposed as in the paper)
     u_torch = torch.tensor(u[None, :, :])
-    J = parameter_jacobian(G, u_torch)  # custom-made full parameter jacobian
+    J = parameter_jacobian(G, u_torch, vectorize=False)  # custom-made full parameter jacobian
     n_param = J.shape[1]
     Ip = np.eye(n_param)
     F = J.transpose() @ J
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # In[Evaluate linearized model on new data]
     t_new, u_new, y_new, x_new = loader.rlc_loader("eval", noise_std=0.0)
     u_torch_new = torch.tensor(u_new[None, :, :])
-    J_new = parameter_jacobian(G, u_torch_new)
+    J_new = parameter_jacobian(G, u_torch_new, vectorize=False)
     y_lin_new = J_new @ theta_lin
 
     # In[Plot]

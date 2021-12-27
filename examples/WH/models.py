@@ -1,6 +1,6 @@
 import torch
-from dynonet.module.lti import SisoLinearDynamicalOperator
-from dynonet.module.static import SisoStaticNonLinearity
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.static import SisoStaticNonLinearity
 
 
 class WHNet(torch.nn.Module):

@@ -1,10 +1,11 @@
 import torch
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 import gpytorch
 import finite_ntk
 import loader
+from torchid import metrics
 
 
 class DynoWrapper(torch.nn.Module):
@@ -15,6 +16,7 @@ class DynoWrapper(torch.nn.Module):
         self.n_out = n_out
 
     def forward(self, u_in):
+        # print(u_in.shape)
         u_in = u_in[None, :, :]  # [bsize, seq_len, n_in]
         y_out = self.dyno(u_in)  # [bsize, seq_len, n_out]
         n_out = y_out.shape[-1]
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     n_b = 2  # numerator coefficients
     n_a = 2  # denominator coefficients
     sigma = 10.0
-    use_linearstrategy = True
+    use_linearstrategy = False
 
     # In[Load dataset]
     t, u, y, x = loader.rlc_loader("transfer", noise_std=sigma)
@@ -83,7 +85,7 @@ if __name__ == '__main__':
     u_torch_new = torch.tensor(u_new[None, :, :])
     u_torch_new_f = torch.clone(u_torch_new.view((1 * n_data, n_in)))  # [bsize*seq_len, n_in]
 
-    with gpytorch.settings.fast_pred_var(): #, gpytorch.settings.max_cg_iterations(4000), gpytorch.settings.cg_tolerance(0.1):
+    with gpytorch.settings.fast_pred_var():  #, gpytorch.settings.max_cg_iterations(4000), gpytorch.settings.cg_tolerance(0.1):
         predictive_dist = gp_model(u_torch_new_f)
         y_lin_new = predictive_dist.mean.data
 
@@ -95,8 +97,18 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     plt.plot(t_new, y_new, 'k', label="True")
     plt.plot(t_new, y_sim_new, 'r', label="Sim")
-    plt.plot(t_new, y_lin_new.detach().numpy(), 'b', label="Lin")
+    plt.plot(t_new, y_lin_new.detach().numpy(), 'c', label="Lin")
     plt.legend()
+    plt.show()
+
+    print("Shapes: ", y_new.shape, y_sim_new.shape, y_lin_new.detach().numpy().shape)
+
+    # R-squared metrics
+    R_sq_lin = metrics.r_squared(y_new, y_lin_new.detach().numpy().reshape(-1, 1))
+    print(f"R-squared linearized model: {R_sq_lin}")
+
+    R_sq_sim = metrics.r_squared(y_new, y_sim_new)
+    print(f"R-squared nominal model: {R_sq_sim}")
 
     if use_linearstrategy:
         np.save("y_lin_gp_parspace.npy", y_lin_new.detach().numpy())

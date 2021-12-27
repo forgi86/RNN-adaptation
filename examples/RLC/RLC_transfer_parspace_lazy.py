@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import os
-from dynonet.module.lti import SisoLinearDynamicalOperator
+from torchid.dynonet.module.lti import SisoLinearDynamicalOperator
 from finite_ntk.lazy.ntk_lazytensor import NeuralTangent
 import loader
 

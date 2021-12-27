@@ -10,18 +10,17 @@ from loader import rlc_loader
 
 if __name__ == '__main__':
 
-    matplotlib.rc('text', usetex=True)
+    # matplotlib.rc('text', usetex=True)
 
     plot_input = False
 
+    # dataset_type = 'train'
+    dataset_type = 'test'
+    # dataset_type = 'transfer'
+    # dataset_type = 'eval'
 
-    #dataset_type = 'train'
-    #dataset_type = 'test'
-    #dataset_type = 'transfer'
-    dataset_type = 'eval'
-
-    #model_type = '64step_noise'
-    model_type = '256step_noise_V'
+    # model_name = 'ss_model_retrain'
+    model_name = 'ss_model'
 
     # Column names in the dataset
     t, u, y, x = rlc_loader(dataset_type, "nl", noise_std=0.0)
@@ -40,7 +39,7 @@ if __name__ == '__main__':
     # Setup neural model structure and load fitted model parameters
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
     nn_solution = ForwardEulerSimulator(ss_model)
-    model_filename = f"model_SS_{model_type}.pt"
+    model_filename = f"{model_name}.pt"
     nn_solution.ss_model.load_state_dict(torch.load(os.path.join("models", model_filename)))
 
     # Evaluate the model in open-loop simulation against validation data
@@ -58,40 +57,54 @@ if __name__ == '__main__':
     time_val_us = time_val*1e6
 
     if dataset_type == 'id':
-        t_plot_start = 0.0e-3#0.2e-3
+        t_plot_start = 0.0e-3  # 0.2e-3
     else:
-        t_plot_start = 0.0e-3#1.9e-3
-    t_plot_end = t_plot_start + 1.0#0.32e-3
+        t_plot_start = 0.0e-3  # 1.9e-3
+    t_plot_end = t_plot_start + 1.0  # 0.32e-3
 
     idx_plot_start = int(t_plot_start // ts)
     idx_plot_end = int(t_plot_end // ts)
 
-    ax[0].plot(time_val_us[idx_plot_start:idx_plot_end], x_true_val[idx_plot_start:idx_plot_end,0], 'k',  label='$v_C$')
-    ax[0].plot(time_val_us[idx_plot_start:idx_plot_end], x_sim[idx_plot_start:idx_plot_end,0],'r--', label='$\hat{v}^{\mathrm{sim}}_C$')
+    ax[0].plot(time_val_us[idx_plot_start:idx_plot_end],
+               x_true_val[idx_plot_start:idx_plot_end, 0],
+               'k',  label='$v_C$')
+    ax[0].plot(time_val_us[idx_plot_start:idx_plot_end],
+               x_sim[idx_plot_start:idx_plot_end, 0],
+               'r--', label=r'$\hat{v}^{\mathrm{sim}}_C$')
     ax[0].legend(loc='upper right')
     ax[0].grid(True)
-    ax[0].set_xlabel("Time ($\mu$s)")
+    ax[0].set_xlabel("Time mu_s")    # TODO: ("Time ($\mu$s)")
     ax[0].set_ylabel("Voltage (V)")
-    #ax[0].set_ylim([-300, 300])
+    # ax[0].set_ylim([-300, 300])
 
-    ax[1].plot(time_val_us[idx_plot_start:idx_plot_end], np.array(x_true_val[idx_plot_start:idx_plot_end:,1]), 'k', label='$i_L$')
-    ax[1].plot(time_val_us[idx_plot_start:idx_plot_end], x_sim[idx_plot_start:idx_plot_end:,1],'r--', label='$\hat i_L^{\mathrm{sim}}$')
+    ax[1].plot(time_val_us[idx_plot_start:idx_plot_end],
+               np.array(x_true_val[idx_plot_start:idx_plot_end:, 1]),
+               'k', label='$i_L$')
+    ax[1].plot(time_val_us[idx_plot_start:idx_plot_end],
+               x_sim[idx_plot_start:idx_plot_end:, 1],
+               'r--', label=r'$\hat i_L^{\mathrm{sim}}$')
     ax[1].legend(loc='upper right')
     ax[1].grid(True)
-    ax[1].set_xlabel("Time ($\mu$s)")
+    ax[1].set_xlabel("Time mu_s")  # TODO: ($\mu$s)")
     ax[1].set_ylabel("Current (A)")
-    #ax[1].set_ylim([-25, 25])
+    # ax[1].set_ylim([-25, 25])
 
     if plot_input:
         ax[2].plot(time_val_us[idx_plot_start:idx_plot_end], u_val[idx_plot_start:idx_plot_end], 'k')
-        #ax[2].legend(loc='upper right')
+        # ax[2].legend(loc='upper right')
         ax[2].grid(True)
-        ax[2].set_xlabel("Time ($\mu$s)")
+        ax[2].set_xlabel("Time mu_s")    # TODO: ("Time ($\mu$s)")
         ax[2].set_ylabel("Input voltage $v_C$ (V)")
-        #ax[2].set_ylim([-400, 400])
+        # ax[2].set_ylim([-400, 400])
 
-    fig_name = f"RLC_SS_{dataset_type}_{model_type}.pdf"
+    plt.show()
+    fig_name = f"RLC_SS_{dataset_type}_{model_name}.pdf"
     fig.savefig(os.path.join("fig", fig_name), bbox_inches='tight')
+
+    # Saving state and input
+    np.save(os.path.join("data", "RLC_SS_NL", "02_test_time_val.npy"), time_val_us)
+    np.save(os.path.join("data", "RLC_SS_NL", "02_test_x_true.npy"), x_true_val)
+    np.save(os.path.join("data", "RLC_SS_NL", "02_test_x_sim.npy"), x_sim)
 
     # R-squared metrics
     R_sq = metrics.r_squared(x_true_val, x_sim)

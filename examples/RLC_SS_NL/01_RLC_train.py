@@ -28,7 +28,7 @@ if __name__ == '__main__':
     add_noise = True
 
     # Column names in the dataset
-    t, u, y, x = rlc_loader("train", "nl", noise_std=10.0)
+    t, u, y, x = rlc_loader("train", "nl", noise_std=0.1)
 
     # Get fit data #
     ts = t[1] - t[0]
@@ -96,15 +96,15 @@ if __name__ == '__main__':
 
         # Simulate
         batch_t, batch_x0_hidden, batch_u, batch_y, batch_x_hidden = get_batch(batch_size, seq_len)
-        #batch_x_sim = traced_nn_solution(batch_x0_hidden, batch_u) # 52 seconds RK | 13 FE
-        #batch_x_sim = nn_solution(batch_x0_hidden, batch_u) # 70 seconds RK | 13 FE
-        batch_x_sim = scripted_nn_solution(batch_x0_hidden, batch_u) # 71 seconds RK | 13 FE
+        # batch_x_sim = traced_nn_solution(batch_x0_hidden, batch_u) # 52 seconds RK | 13 FE
+        # batch_x_sim = nn_solution(batch_x0_hidden, batch_u) # 70 seconds RK | 13 FE
+        batch_x_sim = scripted_nn_solution(batch_x0_hidden, batch_u)  # 71 seconds RK | 13 FE
 
         # Compute fit loss
         batch_y_sim = batch_x_sim[..., [var_idx]]
         err_fit = batch_y_sim - batch_y
         err_fit_scaled = err_fit/scale_error
-        loss_fit = torch.mean(err_fit_scaled**2)
+        loss_fit = torch.mean(err_fit_scaled**2)  # Loss function: MSE
 
         # Compute consistency loss
         err_consistency = batch_x_sim - batch_x_hidden
@@ -133,12 +133,14 @@ if __name__ == '__main__':
     # Save model
     if not os.path.exists("models"):
         os.makedirs("models")
-    if add_noise:
-        model_filename = f"model_SS_{seq_len}step_noise_V.pt"
-        hidden_filename = f"hidden_SS_{seq_len}step_noise_V.pt"
-    else:
-        model_filename = f"model_SS_{seq_len}step_nonoise_V.pt"
-        hidden_filename = f"hidden_SS_{seq_len}step_nonoise_V.pt"
+    # if add_noise:
+    #     model_filename = f"model_SS_{seq_len}step_noise_V.pt"
+    #     hidden_filename = f"hidden_SS_{seq_len}step_noise_V.pt"
+    # else:
+    #     model_filename = f"model_SS_{seq_len}step_nonoise_V.pt"
+    #     hidden_filename = f"hidden_SS_{seq_len}step_nonoise_V.pt"
+    model_filename = "ss_model.pt"
+    hidden_filename = "ss_hidden.pt"
 
     torch.save(nn_solution.ss_model.state_dict(), os.path.join("models", model_filename))
     torch.save(x_hidden_fit, os.path.join("models", hidden_filename))
@@ -174,6 +176,7 @@ if __name__ == '__main__':
 
     ax[2].plot(np.array(u_torch_val), label='Input')
     ax[2].grid(True)
+    plt.show()
 
     fig, ax = plt.subplots(1, 1)
     ax.plot(LOSS, 'k', label='ALL')
@@ -183,6 +186,7 @@ if __name__ == '__main__':
     ax.legend()
     ax.set_ylabel("Loss (-)")
     ax.set_xlabel("Iteration (-)")
+    plt.show()
 
     if add_noise:
         fig_name = f"RLC_SS_loss_{seq_len}step_noise.pdf"
@@ -194,14 +198,24 @@ if __name__ == '__main__':
     x_hidden_fit_np = x_hidden_fit.detach().numpy()
     fig, ax = plt.subplots(2, 1, sharex=True)
     ax[0].plot(x[:, 0], 'k', label='True')
-    #ax[0].plot(x_fit[:, 0], 'b', label='Measured')
+    # ax[0].plot(x_fit[:, 0], 'b', label='Measured')
     ax[0].plot(x_hidden_fit_np[:, 0], 'r', label='Hidden')
     ax[0].legend()
     ax[0].grid(True)
 
     ax[1].plot(x[:, 1], 'k', label='True')
-    #ax[1].plot(x_fit[:, 1], 'b', label='Measured')
+    # ax[1].plot(x_fit[:, 1], 'b', label='Measured')
     ax[1].plot(x_hidden_fit_np[:, 1], 'r', label='Hidden')
     ax[1].legend()
     ax[1].grid(True)
+    plt.show()
 
+    # Saving state and input
+    np.save(os.path.join("data", "RLC_SS_NL", "01_train_x_true.npy"), np.array(x_true_torch_val))
+    np.save(os.path.join("data", "RLC_SS_NL", "01_train_x_sim.npy"), np.array(x_sim_torch_val))
+    np.save(os.path.join("data", "RLC_SS_NL", "01_train_u_val.npy"), np.array(u_torch_val))
+    np.save(os.path.join("data", "RLC_SS_NL", "01_train_x_hidden.npy"), x_hidden_fit_np)
+
+    np.save(os.path.join("data", "RLC_SS_NL", "01_loss.npy"), LOSS)
+    np.save(os.path.join("data", "RLC_SS_NL", "01_consist_loss.npy"), LOSS_CONSISTENCY)
+    np.save(os.path.join("data", "RLC_SS_NL", "01_fit_loss.npy"), LOSS_FIT)

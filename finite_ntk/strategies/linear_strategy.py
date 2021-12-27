@@ -31,7 +31,7 @@ class LinearPredictionStrategy(DefaultPredictionStrategy):
         likelihood,
         root=None,
         inv_root=None,
-        epsilon=1e-3,
+        epsilon=1e-4,
         preconditioner=None,
     ):
         r"""

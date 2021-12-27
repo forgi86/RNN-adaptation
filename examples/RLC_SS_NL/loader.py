@@ -8,7 +8,7 @@ COL_U = ['V_IN']
 COL_Y = ['V_C']
 
 
-def rlc_loader(dataset, dataset_type="nl", output='V_C', noise_std=10.0, dtype=np.float32, scale=True, n_data=-1):
+def rlc_loader(dataset, dataset_type="nl", output='V_C', noise_std=0.1, dtype=np.float32, scale=True, n_data=-1):
     filename = f"RLC_data_{dataset}_{dataset_type}.csv"
     df_data = pd.read_csv(os.path.join("data", filename))
     t = np.array(df_data[['time']], dtype=dtype)
