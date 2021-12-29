@@ -21,7 +21,6 @@ in terms of the features spanned by the model's Jacobian with respect to its nom
   * full parameter Jacobians matrix in [jacobian.py](diffutil/jacobian.py)
   * Jacobian-vector / transposed Jacobian-vector products in [products.py](diffutil/products.py)
 * [torchid](torchid):  system identification tools with PyTorch. Copied from https://github.com/forgi86/pytorch-ident
-* [doc](doc): paper
 
 
 # Software requirements:
