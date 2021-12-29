@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import torch
-import torch.nn as nn
 import matplotlib.pyplot as plt
 from torchid import metrics
 from open_lstm import OpenLSTM
