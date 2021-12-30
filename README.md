@@ -45,7 +45,7 @@ If you find this project useful, we encourage you to
 * Star this repository :star: 
 * Cite the [paper](https://onlinelibrary.wiley.com/doi/abs/10.1002/acs.3216) 
 ```
-@article{forgione2022dyno,
+@article{forgione2022adapt,
   title={On the adaptation of recurrent neural networks for system identification},
   author={Forgione, M. and Gallieri, M. and Muni, A. and Piga, D.},
   journal={arXiv e-prints},
