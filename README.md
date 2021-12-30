@@ -14,7 +14,7 @@ in terms of the features spanned by the model's Jacobian with respect to its nom
 
 # Folders:
 * [examples](examples): examples transfer learning with
-  * [CSTR reactor](examples/CSRT)
+  * [CSTR reactor](examples/CSTR)
   * [Non-linear RLC circuit](examples/RLC)
   * [Wiener-Hammerstein system](examples/WH) (not discussed in the paper)
 * [diffutil](diffutil): computation of:
