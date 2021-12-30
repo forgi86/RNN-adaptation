@@ -5,17 +5,18 @@ of the paper [On the adaptation of recurrent neural networks for system identifi
 
 
 
-We introduce a transfer learning approach which enables fast and efficient adaptation
+We introduce a **transfer learning** approach which enables fast and efficient adaptation
 of Recurrent Neural Network models. A nominal RNN model is first identified using available measurements.
 The system dynamics are then assumed to change, leading to an unacceptable degradation of the nominal model performance  on the perturbed system.
+
 To cope with the  mismatch, the model is augmented  with an additive correction term trained on fresh data from the new dynamic regime.
-The correction term is learned through a Bayesian Linear Regression (BLR) method defined
-in terms of the features spanned by the model's Jacobian with respect to its nominal parameters.
+The correction term is learned through a **Bayesian Linear Regression** (BLR) method defined
+in terms of the features spanned by the nominal model's **Jacobian** with respect to its parameters.
 
 # Folders:
 * [examples](examples): examples transfer learning with
-  * [CSTR reactor](examples/CSRT_LSTM)
-  * [Non-linear RLC circuit](examples/RLC_SS_NL)
+  * [CSTR reactor](examples/CSTR)
+  * [Non-linear RLC circuit](examples/RLC)
   * [Wiener-Hammerstein system](examples/WH) (not discussed in the paper)
 * [diffutil](diffutil): computation of:
   * full parameter Jacobians matrix in [jacobian.py](diffutil/jacobian.py)
@@ -44,8 +45,10 @@ If you find this project useful, we encourage you to
 
 * Star this repository :star: 
 * Cite the [paper](https://onlinelibrary.wiley.com/doi/abs/10.1002/acs.3216) 
+
+To cite the paper, you may use the following BibTex entry:
 ```
-@article{forgione2022dyno,
+@article{forgione2022adapt,
   title={On the adaptation of recurrent neural networks for system identification},
   author={Forgione, M. and Gallieri, M. and Muni, A. and Piga, D.},
   journal={arXiv e-prints},
