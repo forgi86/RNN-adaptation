@@ -17,7 +17,7 @@ def jvp(y, x, v):
     """Computes a jacobian-vector product J v, aka Rop (Right Operation)
     This is what forward-mode automatic differentiation directly obtains.
     It can also be obtained via reverse-mode differentiation using the
-    well-known trick below (source?)
+    trick below.
 
     Arguments:
     y (torch.tensor): output of differentiated function
@@ -32,8 +32,7 @@ def jvp(y, x, v):
 def jvp_diff(y, x, v):
     """Computes a jacobian-vector product J v, aka Rop (Right Operation)
     This is what forward-mode automatic differentiation directly obtains.
-    It can also be obtained via reverse-mode differentiation using the
-    well-known trick below (source?)
+    The result of the operation can be differentiated.
 
     Arguments:
     y (torch.tensor): output of differentiated function
