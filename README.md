@@ -49,6 +49,6 @@ If you find this project useful, we encourage you to
   title={On the adaptation of recurrent neural networks for system identification},
   author={Forgione, M. and Gallieri, M. and Muni, A. and Piga, D.},
   journal={arXiv e-prints},
-  year={2019}
+  year={2021}
 }
 ```
