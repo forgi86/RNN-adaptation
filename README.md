@@ -62,6 +62,6 @@ Using the IEEEtran bibliography style, it should look like:
 M. Forgione, A. Muni, M. Gallieri, and D. Piga, "On the adaptation of recurrent neural networks for system identification,"
 *arXiv preprint arXiv:XXXX.YYYY*, 2022. <br/><br/>
 
-# Bibliograby
+# Bibliography
 [1] W. Maddox, S. Tang, P. Moreno, A. Wilson, and A. Damianou, "Fast Adaptation with Linearized Neural Networks",  
 in *Proc. of the International Conference on Artificial Intelligence and Statistics*, 2021. <br/><br/>
