@@ -176,16 +176,16 @@ class PlotRLC():
     def plot_EKF_eval_zoom(self):
         sns.set_style("whitegrid")   # 250:550
         fig, axes = plt.subplots(1, 1)
-        #sns.lineplot(ax=axes, data=self.y_EKF_true_eval.squeeze()[100:450], label="Ground Truth",
-        #             linewidth=0.75)
+        # sns.lineplot(ax=axes, data=self.y_EKF_true_eval.squeeze()[100:450], label="Ground Truth",
+        #              linewidth=0.75)
         sns.lineplot(ax=axes, data=self.y_new.squeeze()[100:250], label="Ground Truth",
-                     linewidth=1.)
+                     linewidth=1.5)
         sns.lineplot(ax=axes, data=self.y_sim_new.squeeze()[100:250], label="Nominal",
-                     linestyle='dashed', linewidth=1.)
+                     linestyle='dashed', linewidth=1.5)
         sns.lineplot(ax=axes, data=self.y_EKF_pred_eval.squeeze()[100:250], label="EKF",
-                     linestyle='dashed', linewidth=1.)
+                     linestyle='dashed', linewidth=1.5)
         sns.lineplot(ax=axes, data=self.y_lin_new.squeeze()[100:250], label="BLR",
-                     linestyle='dashed', linewidth=1.)
+                     linestyle='dashed', linewidth=1.5)
         axes.axvline(0, ls='--', color='black', linewidth=1.5, alpha=.75)
         axes.axvline(149, ls='--', color='black', linewidth=1.5, alpha=.75)
         handles, labels = axes.get_legend_handles_labels()

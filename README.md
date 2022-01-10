@@ -50,7 +50,7 @@ To cite the paper, you may use the following BibTex entry:
 ```
 @article{forgione2022adapt,
   title={On the adaptation of recurrent neural networks for system identification},
-  author={Forgione, M. and Gallieri, M. and Muni, A. and Piga, D.},
+  author={Forgione, M. and Muni, A. and Gallieri, M. and Piga, D.},
   journal={arXiv e-prints},
   year={2021}
 }
