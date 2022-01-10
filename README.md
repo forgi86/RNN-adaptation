@@ -1,18 +1,19 @@
 # On the adaptation of recurrent neural networks for system identification
 
 This repository contains the Python code to reproduce the results
-of the paper [On the adaptation of recurrent neural networks for system identification](https://arxiv.org/pdf/2006.02250.pdf) by Marco Forgione, Marco Gallieri, Aneri Muni, and Dario Piga.
-
+of the paper [On the adaptation of recurrent neural networks for system identification](https://arxiv.org/pdf/2006.02250.pdf) by Marco Forgione, Aneri Muni, Dario Piga, and Marco Gallieri. 
 
 We introduce a **transfer learning** approach which enables fast and efficient adaptation
-of Recurrent Neural Network models. A nominal RNN model is first identified using available measurements.
+of Recurrent Neural Network models. 
+
+A nominal RNN model is first identified using available measurements.
 The system dynamics are then assumed to change, leading to an unacceptable degradation of the nominal model performance  on the **perturbed system**.
 
 To cope with the  mismatch, the model is augmented  with an additive correction term trained on fresh data from the new dynamic regime.
 The correction term is learned through a **Bayesian Linear Regression** (BLR) method defined
 in terms of the features spanned by the nominal model's **Jacobian** with respect to its parameters.
 
-A **non-parametric view** of the approach is also proposed, which extends recent work on **Gaussian Process**  with **Neural Tangent Kernel** (NTK-GP) 
+A **non-parametric view** of the approach is also proposed, which extends the recent work on **Gaussian Process**  with **Neural Tangent Kernel** (NTK-GP) 
 discussed in [1] to the RNN case (RNTK-GP). 
 
 # Folders:
@@ -52,7 +53,7 @@ To cite the paper, you may use the following BibTex entry:
 ```
 @article{forgione2022adapt,
   title={On the adaptation of recurrent neural networks for system identification},
-  author={Forgione, M. and Muni, A. and Gallieri, M. and Piga, D.},
+  author={Forgione, M. and Muni, A. and Piga, D. and Gallieri, M.},
   journal={arXiv e-prints},
   year={2022}
 }
@@ -60,9 +61,9 @@ To cite the paper, you may use the following BibTex entry:
 
 Using the IEEEtran bibliography style, it should look like:
 
-M. Forgione, A. Muni, M. Gallieri, and D. Piga, "On the adaptation of recurrent neural networks for system identification,"
+M. Forgione, A. Muni, D. Piga, and M. Gallieri, "On the adaptation of recurrent neural networks for system identification,"
 *arXiv preprint arXiv:XXXX.YYYY*, 2022. <br/><br/>
 
 # Bibliography
-[1] W. Maddox, S. Tang, P. Moreno, A. Wilson, and A. Damianou, "Fast Adaptation with Linearized Neural Networks",  
+[1] W. Maddox, S. Tang, P. Moreno, A. Wilson, and A. Damianou, "Fast Adaptation with Linearized Neural Networks,"  
 in *Proc. of the International Conference on Artificial Intelligence and Statistics*, 2021. <br/><br/>
