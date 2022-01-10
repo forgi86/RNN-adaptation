@@ -6,13 +6,14 @@ of the paper [On the adaptation of recurrent neural networks for system identifi
 
 We introduce a **transfer learning** approach which enables fast and efficient adaptation
 of Recurrent Neural Network models. A nominal RNN model is first identified using available measurements.
-The system dynamics are then assumed to change, leading to an unacceptable degradation of the nominal model performance  on the perturbed system.
+The system dynamics are then assumed to change, leading to an unacceptable degradation of the nominal model performance  on the **perturbed system**.
 
 To cope with the  mismatch, the model is augmented  with an additive correction term trained on fresh data from the new dynamic regime.
 The correction term is learned through a **Bayesian Linear Regression** (BLR) method defined
 in terms of the features spanned by the nominal model's **Jacobian** with respect to its parameters.
 
-A **non-parametric view** of the approach is also proposed, which extends recent work on **Gaussian Process**  with Neural Tangent Kernel (NTK-GP) [1] to the RNN case (RNTK-GP). 
+A **non-parametric view** of the approach is also proposed, which extends recent work on **Gaussian Process**  with **Neural Tangent Kernel** (NTK-GP) 
+discussed in [1] to the RNN case (RNTK-GP). 
 
 # Folders:
 * [examples](examples): examples transfer learning with
