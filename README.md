@@ -13,8 +13,14 @@ To cope with the  mismatch, the model is augmented  with an additive correction 
 The correction term is learned through a **Bayesian Linear Regression** (BLR) method defined
 in terms of the features spanned by the nominal model's **Jacobian** with respect to its parameters.
 
+![RNN_adaptation](doc/RNN_adaptation.png "RNN model adaptation strategy")
+
 A **non-parametric view** of the approach is also proposed, which extends the recent work on **Gaussian Process**  with **Neural Tangent Kernel** (NTK-GP) 
 discussed in [1] to the RNN case (RNTK-GP). 
+
+Finally, we introduce an approach to **initialize the RNN state** based on a **context of past data**, so that an estimate of the initial state is not needed on top of the parameter estimation.
+
+![RNN_initialization](doc/RNN_initialization.png "RNN model initialization strategy")
 
 # Folders:
 * [examples](examples): examples transfer learning with
