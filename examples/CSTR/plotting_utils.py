@@ -78,7 +78,7 @@ class PlotDyno():
         # ax[1].plot(y_sim_02[0, :, 1], 'b')
         # ax[1].plot(y_sim_04[:, 1], 'y')
         ax[1].plot(np.concatenate((self.y_context_1[:, 0], self.y_lin_04[self.context:, 1]), axis=0), '--r',
-                   label="BLR-LSTM")
+                   label="JFR-LSTM")
         # ax[1].plot(y_sim_gd[:, 1], 'm')
         ax[1].plot(np.concatenate((self.y_context_1[:, 0], self.y_lin_gd[self.context:, 1]), axis=0), '--c',
                    label="JVP-LSTM")
@@ -112,7 +112,7 @@ class PlotDyno():
         print(data_op1.shape, data_op0.shape)
         y0 = pd.DataFrame(np.transpose(data_op0))
         y1 = pd.DataFrame(np.transpose(data_op1), columns=["Samples", "Ground truth", "LSTM",
-                                                           "BLR", "LM-BLR", "GP-LSTM"])
+                                                           "JFR", "LM-JFR", "GP-LSTM"])
 
         sns.set_style("whitegrid")
         fig, axes = plt.subplots(2, 1)

@@ -151,22 +151,22 @@ class PlotRLC():
     def plot_EKF_eval(self):
         sns.set_style("whitegrid")
         fig, axes = plt.subplots(1, 1)
-        sns.lineplot(ax=axes, data=self.y_new[2:].squeeze(), label="Ground Truth",
+        sns.lineplot(ax=axes, data=100*self.y_new[2:].squeeze(), label="Ground Truth",
                      linewidth=0.5)
         axes.axvline(100, ls='--', color='black', linewidth=1.5, alpha=.75)
         axes.axvline(250, ls='--', color='black', linewidth=1.5, alpha=.75)
-        sns.lineplot(ax=axes, data=self.y_sim_new.squeeze(), label="Nominal",
+        sns.lineplot(ax=axes, data=100*self.y_sim_new.squeeze(), label="Nominal",
                      linestyle='dashed', linewidth=0.75)
-        sns.lineplot(ax=axes, data=self.y_EKF_pred_eval.squeeze(), label="EKF",
+        sns.lineplot(ax=axes, data=100*self.y_EKF_pred_eval.squeeze(), label="EKF",
                      linestyle='dashed', linewidth=0.75)
-        sns.lineplot(ax=axes, data=self.y_lin_new.squeeze(), label="BLR",
+        sns.lineplot(ax=axes, data=100*self.y_lin_new.squeeze(), label="JFR",
                      linestyle='dashed', linewidth=0.75)
 
         handles, labels = axes.get_legend_handles_labels()
         axes.legend([], [], frameon=False)
         axes.set(ylabel=r'$\mathrm{v_C (V)}$', xlabel='Samples')
         axes.legend(handles, labels, ncol=4, loc='lower center', frameon=False, fontsize=8)
-        axes.set_ylim([-0.03, 0.03])
+        axes.set_ylim([-3.0, 3.0])
         fig.tight_layout()
 
         # R-squared metrics
@@ -178,13 +178,13 @@ class PlotRLC():
         fig, axes = plt.subplots(1, 1)
         # sns.lineplot(ax=axes, data=self.y_EKF_true_eval.squeeze()[100:450], label="Ground Truth",
         #              linewidth=0.75)
-        sns.lineplot(ax=axes, data=self.y_new.squeeze()[100:250], label="Ground Truth",
+        sns.lineplot(ax=axes, data=100*self.y_new.squeeze()[100:250], label="Ground Truth",
                      linewidth=1.5)
-        sns.lineplot(ax=axes, data=self.y_sim_new.squeeze()[100:250], label="Nominal",
+        sns.lineplot(ax=axes, data=100*self.y_sim_new.squeeze()[100:250], label="Nominal",
                      linestyle='dashed', linewidth=1.5)
-        sns.lineplot(ax=axes, data=self.y_EKF_pred_eval.squeeze()[100:250], label="EKF",
+        sns.lineplot(ax=axes, data=100*self.y_EKF_pred_eval.squeeze()[100:250], label="EKF",
                      linestyle='dashed', linewidth=1.5)
-        sns.lineplot(ax=axes, data=self.y_lin_new.squeeze()[100:250], label="BLR",
+        sns.lineplot(ax=axes, data=100*self.y_lin_new.squeeze()[100:250], label="JFR",
                      linestyle='dashed', linewidth=1.5)
         axes.axvline(0, ls='--', color='black', linewidth=1.5, alpha=.75)
         axes.axvline(149, ls='--', color='black', linewidth=1.5, alpha=.75)
@@ -192,7 +192,7 @@ class PlotRLC():
         axes.legend([], [], frameon=False)
         axes.set(ylabel=r'$\mathrm{v_C (V)}$', xlabel='Samples')
         axes.legend(handles, labels, ncol=4, loc='lower center', frameon=False, fontsize=8)
-        axes.set_ylim([-0.03, 0.03])
+        axes.set_ylim([-3.0, 3.0])
         # axes.set_xticks(range(100, 450, 50))
         axes.set_xticklabels(range(80, 270, 20))
 
@@ -205,5 +205,5 @@ class PlotRLC():
 
 if __name__ == "__main__":
     pt = PlotRLC()
-    pt.plot_EKF_eval_zoom()
+    pt.plot_EKF_eval()
     plt.show()
