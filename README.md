@@ -1,7 +1,7 @@
 # On the adaptation of recurrent neural networks for system identification
 
 This repository contains the Python code to reproduce the results
-of the paper [On the adaptation of recurrent neural networks for system identification](https://arxiv.org/pdf/2006.02250.pdf) by Marco Forgione, Aneri Muni, Dario Piga, and Marco Gallieri. 
+of the paper [On the adaptation of recurrent neural networks for system identification](https://arxiv.org/pdf/2201.08660.pdf) by Marco Forgione, Aneri Muni, Dario Piga, and Marco Gallieri. 
 
 We introduce a **transfer learning** approach which enables fast and efficient adaptation
 of Recurrent Neural Network models. 
@@ -53,14 +53,14 @@ conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
 If you find this project useful, we encourage you to
 
 * Star this repository :star: 
-* Cite the [paper](https://onlinelibrary.wiley.com/doi/abs/10.1002/acs.3216) 
+* Cite the [paper](https://arxiv.org/pdf/2201.08660.pdf) 
 
 To cite the paper, you may use the following BibTex entry:
 ```
 @article{forgione2022adapt,
   title={On the adaptation of recurrent neural networks for system identification},
   author={Forgione, M. and Muni, A. and Piga, D. and Gallieri, M.},
-  journal={arXiv e-prints},
+  journal={arXiv e-prints arXiv:2201.08660},
   year={2022}
 }
 ```
@@ -68,7 +68,7 @@ To cite the paper, you may use the following BibTex entry:
 Using the IEEEtran bibliography style, it should look like:
 
 M. Forgione, A. Muni, D. Piga, and M. Gallieri, "On the adaptation of recurrent neural networks for system identification,"
-*arXiv preprint arXiv:XXXX.YYYY*, 2022. <br/><br/>
+*arXiv preprint arXiv:2201.08660*, 2022. <br/><br/>
 
 # Bibliography
 [1] W. Maddox, S. Tang, P. Moreno, A. Wilson, and A. Damianou, "Fast Adaptation with Linearized Neural Networks,"  
