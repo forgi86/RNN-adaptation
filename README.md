@@ -68,7 +68,7 @@ To cite the paper, you may use the following BibTex entry:
 Using the IEEEtran bibliography style, it should look like:
 
 M. Forgione, A. Muni, D. Piga, and M. Gallieri, "On the adaptation of recurrent neural networks for system identification,"
-*arXiv preprint arXiv:XXXX.YYYY*, 2022. <br/><br/>
+*arXiv preprint arXiv:2201.08660*, 2022. <br/><br/>
 
 # Bibliography
 [1] W. Maddox, S. Tang, P. Moreno, A. Wilson, and A. Damianou, "Fast Adaptation with Linearized Neural Networks,"  
