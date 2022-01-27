@@ -584,7 +584,7 @@ class CSTR:
     def step(self, input_series, time_divisions=100):
 
         self.set_inputs(input_series[0])
-        for step in range(time_divisions):
+        for step in range(time_divisions): # Euler integration with small stepsize specified by time_divisions (Ts/time_divisions)
             output = self.current_state.copy()
             self.current_state = self.current_state.copy() + (self.Ts/time_divisions)*np.array(self.run(0., self.current_state)).copy()
         return self.current_state.copy(), np.reshape(output, [1, self.n_outputs])
@@ -597,9 +597,65 @@ class CSTR:
             self.current_state = self.current_state.copy() + (self.Ts/time_divisions)*np.array(self.run(0., self.current_state)).copy()
         return self.current_state.copy(), np.reshape(self.current_state, [1, self.n_outputs])
 
-    def generate_data(self, batch_size, n_steps, flow_period=50):
+    def generate_train_data(self, n_traj, n_steps, flow_period=50, seed=150, rand_input_u=True, rand_init_state=True):
 
-        np.random.seed(150)
+        np.random.seed(seed)
+
+        def generate_system_input():
+            triangular_window = (signal.bartlett(flow_period + 1, sym=True) * 0.35 + 0.7)[:-1]
+
+            inputs_train = np.zeros([n_steps, self.n_inputs])
+            temperature_steps_value_train = [np.random.rand() * 0.35 + 0.7 for i in
+                                             range(int(n_steps / flow_period) + 1)]
+
+            # Generating triangular wave for flow input and steps for temperature input
+
+            for i in range(int(n_steps / flow_period)):
+                inputs_train[i * flow_period:(i + 1) * flow_period, 0] = triangular_window.copy()
+                inputs_train[i * flow_period:(i + 1) * flow_period, 1] = np.ones([flow_period]) * \
+                                                                         temperature_steps_value_train[i]
+
+            if n_steps < flow_period:
+                i = -1
+            if (i + 1) * flow_period < n_steps:
+                inputs_train[(i + 1) * flow_period: n_steps, 0] = triangular_window[
+                                                                  :n_steps - (i + 1) * flow_period].copy()
+                inputs_train[(i + 1) * flow_period: n_steps, 1] = np.ones([n_steps - (i + 1) * flow_period]) * \
+                                                                  temperature_steps_value_train[i + 1]
+            return inputs_train
+
+        inputs_train = generate_system_input()
+
+        init_state = np.random.rand(2)
+
+        inputs_train_list = []
+        outputs_train_list = []
+
+        for batch in range(n_traj):
+
+            output_train_list_batch = []
+
+            if rand_input_u:
+                inputs_train = generate_system_input()
+
+            inputs_train_list.append(inputs_train)
+
+            # set initial state
+            if rand_init_state:
+                init_state = np.random.rand(2)
+            self.set_state(init_state)
+
+            for step in range(n_steps):
+                state, output = self.step(inputs_train[step:step + 1])
+                output_train_list_batch.append(output[0].copy())
+
+            outputs_train_list.append(np.array(output_train_list_batch))
+
+        return np.array(inputs_train_list), np.array(outputs_train_list)
+    
+    def generate_data(self, batch_size, n_steps, flow_period=50, seed=150):
+
+        np.random.seed(seed)
 
         triangular_window = (signal.bartlett(flow_period + 1, sym=True) * 0.35 + 0.7)[:-1]
 

@@ -6,3 +6,6 @@
 /examples/RLC_SS_NL/fig/
 /examples/CSRT_LSTM/data/
 .idea/
+
+__pycache__
+*.npy
