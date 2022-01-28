@@ -10,11 +10,12 @@ def _get_args() -> dict:
     parser = argparse.ArgumentParser()
     parser.add_argument('--base-dir', type=str, required=True)
     parser.add_argument('--name', type=str, default='cstr')
-    parser.add_argument('--n_traj', type=int, default=256)
-    parser.add_argument('--n_steps', type=int, default=512)
+    parser.add_argument('--n-traj', type=int, default=256)
+    parser.add_argument('--n-steps', type=int, default=512)
     parser.add_argument('--num-val-classes', type=int, default=256)
     parser.add_argument('--num-test-classes', type=int, default=256)
     parser.add_argument('--task-factor', type=int, default=10)
+    parser.add_argument('--n-jobs', type=int, default=6)
     args = vars(parser.parse_args())
     return args
 
@@ -29,6 +30,7 @@ def _main():
     num_val_classes = args['num_val_classes']
     num_test_classes = args['num_test_classes']
     task_factor = args['task_factor']
+    n_jobs = args['n_jobs']
     #
     cstr_rand_input = CSTR_Task_Dataset_Gen(base_dir=base_dir,
                                             name=name,
@@ -38,7 +40,8 @@ def _main():
                                             rand_input_u=True,
                                             num_val_classes=num_val_classes,
                                             num_test_classes=num_test_classes,
-                                            task_factor=task_factor)
+                                            task_factor=task_factor,
+                                            n_jobs=n_jobs)
 
     cstr_rand_input.save()
     #
@@ -50,7 +53,8 @@ def _main():
                                            rand_input_u=False,
                                            num_val_classes=num_val_classes,
                                            num_test_classes=num_test_classes,
-                                           task_factor=task_factor)
+                                           task_factor=task_factor,
+                                           n_jobs=n_jobs)
     cstr_rand_init.save()
 
 
