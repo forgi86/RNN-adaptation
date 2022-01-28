@@ -199,7 +199,7 @@ class CSTR_Task_Dataset_Gen(object):
         if self.rand_input_u:
             suffix += '_randinput'
 
-        name = self.name + f"_taskfactor{self.task_factor}" + suffix
+        name = self.name + f"_ntraj{self.n_traj}_nsteps{self.n_steps}_taskfactor{self.task_factor}" + suffix
         base_dir = Path(self.base_dir) / name
 
         for split, datasets in self.datasets.items():
