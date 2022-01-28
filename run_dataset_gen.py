@@ -3,7 +3,7 @@ from multitask.cstr_generate import CSTR_Task_Dataset_Gen, CSTR_Task
 from multitask.cstr_generate import visualize_tasks
 
 # command:
-# python run.py --base-dir /home/max/phd/data/ode --name cstr --n_traj 2 --n_steps 256 --num-val-classes 16 --num-test-classes 8 --task-factor 10
+# python run_dataset_gen.py --base-dir /home/max/phd/data/ode --name cstr --n-traj 2 --n-steps 256 --num-val-classes 16 --num-test-classes 8 --task-factor 10
 
 
 def _get_args() -> dict:

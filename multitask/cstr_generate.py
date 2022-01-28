@@ -152,8 +152,6 @@ class CSTR_Task_Dataset_Gen(object):
                                                    Any]]) -> List[CSTR_Task]:
         tasks = []
 
-        # TODO parallelize here
-        #traj_block = Parallel(n_jobs=self.n_jobs, verbose=1)(delayed(_solve_transform)(row) for row in y0_block)
         def create_task(params):
             seed = self.rng.integers(low=0, high=1000000)
             task = CSTR_Task(params,
@@ -180,8 +178,8 @@ class CSTR_Task_Dataset_Gen(object):
         tasks = []
         for i in range(1, 11):
             new_params = copy.deepcopy(self.model_params_nominal)
-            new_params['C_A0'] *= i  ## impact
-            e_array = np.array(new_params['k0_list']) * i**2  ## impact
+            new_params['C_A0'] *= i
+            e_array = np.array(new_params['k0_list']) * i 
             new_params['k0_list'] = e_array.tolist()
             tasks.append(
                 CSTR_Task(new_params,
