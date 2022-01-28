@@ -8,6 +8,7 @@ from worlds.worlds import CSTR
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from pathlib import Path
+from joblib import Parallel, delayed
 
 
 class CSTR_Task(object):
@@ -92,7 +93,8 @@ class CSTR_Task_Dataset_Gen(object):
                  num_val_classes: int = 512,
                  num_test_classes: int = 256,
                  seed: int = 42,
-                 task_factor: int = 10):
+                 task_factor: int = 10,
+                 n_jobs: int = 6):
         self.base_dir = base_dir
         self.name = name
         self.n_traj = n_traj
@@ -100,6 +102,7 @@ class CSTR_Task_Dataset_Gen(object):
         self.rand_input_u = rand_input_u
         self.rand_init_state = rand_init_state
         self.task_factor = task_factor  # this determines the scale (factor) which is multiplied with nominal parameters
+        self.n_jobs = n_jobs
 
         self.model_params_nominal = model_params_nominal
         if self.model_params_nominal is None:
@@ -132,9 +135,7 @@ class CSTR_Task_Dataset_Gen(object):
         params = []
 
         scale_c_a0 = self.rng.uniform(1., self.task_factor, size=n_tasks)
-        scale_k0_list = self.rng.uniform(1.,
-                                         self.task_factor,
-                                         size=n_tasks)
+        scale_k0_list = self.rng.uniform(1., self.task_factor, size=n_tasks)
 
         for i in range(n_tasks):
             # TODO generate tasks differently here
@@ -150,13 +151,11 @@ class CSTR_Task_Dataset_Gen(object):
     def generate_tasks(self, param_list: List[Dict[str,
                                                    Any]]) -> List[CSTR_Task]:
         tasks = []
-        # TODO parallelize here 
+
+        # TODO parallelize here
         #traj_block = Parallel(n_jobs=self.n_jobs, verbose=1)(delayed(_solve_transform)(row) for row in y0_block)
-        # def create_task(params):
-
-        for params in tqdm(param_list, desc="Generating datasets"):
+        def create_task(params):
             seed = self.rng.integers(low=0, high=1000000)
-
             task = CSTR_Task(params,
                              self.n_traj,
                              self.n_steps,
@@ -164,7 +163,17 @@ class CSTR_Task_Dataset_Gen(object):
                              self.rand_init_state,
                              seed=seed,
                              standardize_data=True)
-            tasks.append(task)
+
+            return task
+
+        tasks = Parallel(n_jobs=self.n_jobs, verbose=0)(
+            delayed(create_task)(params)
+            for params in tqdm(param_list, desc="Generating datasets"))
+
+        # single thread
+        # for params in tqdm(param_list, desc="Generating datasets"):
+        #     task = create_task(params)
+        #     tasks.append(task)
         return tasks
 
     def visualize_model_variation(self):
@@ -190,7 +199,7 @@ class CSTR_Task_Dataset_Gen(object):
         if self.rand_input_u:
             suffix += '_randinput'
 
-        name = self.name +f"_taskfactor{self.task_factor}" + suffix
+        name = self.name + f"_taskfactor{self.task_factor}" + suffix
         base_dir = Path(self.base_dir) / name
 
         for split, datasets in self.datasets.items():
@@ -219,7 +228,7 @@ def visualize_tasks(tasks_data: List[CSTR_Task],
                     title: str = None):
     fig, ax = plt.subplots(4, 1, sharex=True, figsize=(8, 8))
     if title:
-        plt.suptitle(title)
+        plt.suptitle(title + f" - num_tasks: {len(tasks_data)}")
     for task in tasks_data:
         data = task.train_data
         ax[0].plot(data[traj_index, :, 0])  # q
@@ -237,21 +246,32 @@ def visualize_tasks(tasks_data: List[CSTR_Task],
         ax[3].grid(True)
         ax[3].legend(frameon=False, loc=(1, 0))
 
-
     return fig
+
 
 def visualize_nominal_perturbed():
     # parameters from paper
-    params_nom = {'C_A0': 0.8,
-              'k0_list': [1.0, 0.7, 0.1, 0.006],
-              'E_list': [8.33, 10.0, 50.0, 83.3]}
+    params_nom = {
+        'C_A0': 0.8,
+        'k0_list': [1.0, 0.7, 0.1, 0.006],
+        'E_list': [8.33, 10.0, 50.0, 83.3]
+    }
 
-    params_pert = {'C_A0': 0.75,
-                   'k0_list': [1.0, 0.7, 0.1, 0.006],
-                   'E_list': [7.33, 9.0, 60.0, 93.3]}
+    params_pert = {
+        'C_A0': 0.75,
+        'k0_list': [1.0, 0.7, 0.1, 0.006],
+        'E_list': [7.33, 9.0, 60.0, 93.3]
+    }
 
-    task_nom = CSTR_Task(params_nom, rand_input_u=False, rand_init_state=False, seed=42)
-    task_pert = CSTR_Task(params_pert, rand_input_u=False, rand_init_state=False, seed=42)
+    task_nom = CSTR_Task(params_nom,
+                         rand_input_u=False,
+                         rand_init_state=False,
+                         seed=42)
+    task_pert = CSTR_Task(params_pert,
+                          rand_input_u=False,
+                          rand_init_state=False,
+                          seed=42)
 
-    fig = visualize_tasks([task_nom, task_pert], title='nominal vs. perturbed system')
+    fig = visualize_tasks([task_nom, task_pert],
+                          title='nominal vs. perturbed system')
     return fig
