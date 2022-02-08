@@ -132,11 +132,12 @@ class RLC_Task_Dataset_Gen(object):
             resistor_range=(2, 7),  # in Ohm
             inductor_range=(40, 70),  # in µH
             capacitor_range=(200, 400),  # in nF
+            n_jobs=4
     ):
         self.base_dir = base_dir
         self.name = name
         self.model_params_nominal = model_params_nominal
-
+        self.n_jobs = n_jobs
         self.resistor_range = resistor_range
         self.inductor_range = inductor_range
         self.capacitor_range = capacitor_range
@@ -376,6 +377,7 @@ if __name__ == '__main__':
     # visualize_tasks()
     # plt.show()
     base_dir = "/system/user/publicdata/meta_learning/ode"
+    # base_dir = "home/max/phd/data/ode"
 
     rlc_data = RLC_Task_Dataset_Gen(base_dir=base_dir)
     rlc_data.save()
