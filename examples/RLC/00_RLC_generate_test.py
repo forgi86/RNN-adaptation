@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import control.matlab
 import pandas as pd
 import os
-from examples.RLC.symbolic_RLC import fxu_ODE, fxu_ODE_nl
+from symbolic_RLC import fxu_ODE, fxu_ODE_nl
 
 if __name__ == '__main__':
 
