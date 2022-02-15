@@ -4,6 +4,17 @@ import numpy as np
 import nodepy
 from typing import List
 
+# copy this model
+# seq-len full trajectory length -> predict last n of seq-len
+
+# 32 samples im datensatz, 2000 schritte
+
+# training minibatches 16 sequenzen a 256 schritte
+# get batch function
+
+# seq_len: 256
+# batchsize: 16
+# restrict trajectories to 1 (with ## at end of dataset name)
 
 class ForwardEulerSimulator(nn.Module):
 

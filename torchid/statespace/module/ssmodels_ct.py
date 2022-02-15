@@ -5,6 +5,10 @@ from torch.jit import Final
 from typing import List
 
 
+# seq-to-one: funktioniert besser, daten ineffizient, längere trainingszeit (schwächeres trainingssignal, da nur ein timestep)
+
+# 
+
 class NeuralStateSpaceModel(nn.Module):
     r"""A state-space continuous-time model.
 

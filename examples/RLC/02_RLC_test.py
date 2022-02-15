@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ts = t[1, 0] - t[0, 0]
 
     # Build validation data
-    t_val_start = 0
+    t_val_start = 0     #! one (?) time series for evaluation
     t_val_end = t[2000]
     idx_val_start = int(t_val_start // ts)
     idx_val_end = int(t_val_end // ts)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     x_0 = np.zeros(2).astype(np.float32)
     with torch.no_grad():
         x_sim_torch = nn_solution(torch.tensor(x_0), torch.tensor(u_val))
-        loss = torch.mean(torch.abs(x_sim_torch - torch.tensor(x_true_val)))
+        loss = torch.mean(torch.abs(x_sim_torch - torch.tensor(x_true_val))) #! mean absolute error !!!
 
     # Plot results
     x_sim = np.array(x_sim_torch)

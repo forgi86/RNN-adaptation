@@ -75,7 +75,7 @@ class RLC_Task(object):
 
             # system states [v_c, i_l]
             x = y.y.T  # transpose -> x has shape (n_steps, 2)
-
+            
             traj = np.concatenate((te.reshape(-1, 1), u.reshape(-1, 1), x),
                                   axis=1)
             trajectories.append(traj)
@@ -374,11 +374,14 @@ if __name__ == '__main__':
     # task = RLC_Task(model_params=params, n_traj=3)
     # print('generated')
 
-    # visualize_tasks()
-    # plt.show()
-    base_dir = "/system/user/publicdata/meta_learning/ode"
-    # base_dir = "home/max/phd/data/ode"
+    fig = visualize_tasks()
+    plt.show()
+    figname = 'rlc_tasks.jpg'
+    fig.savefig(figname, dpi=300, bbox_inches="tight")
 
-    rlc_data = RLC_Task_Dataset_Gen(base_dir=base_dir)
-    rlc_data.save()
-    print("Done.")
+    # base_dir = "/system/user/publicdata/meta_learning/ode"
+    # # base_dir = "home/max/phd/data/ode"
+
+    # rlc_data = RLC_Task_Dataset_Gen(base_dir=base_dir)
+    # rlc_data.save()
+    # print("Done.")
