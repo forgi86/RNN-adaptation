@@ -1,4 +1,5 @@
 *.pyc
+*.DS_Store
 /examples/WH2009/models/
 /examples/RLC/models/
 /examples/RLC_SS_NL/models/
