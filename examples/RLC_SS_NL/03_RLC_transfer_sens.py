@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
         # Current state and current output sensitivity
         x.append(x_step)
-        phi_step = s_step[[0], :].t()  # Special case of (15b), due to the simple output structure of this model
+        phi_step = s_step[[0], :].t()  # Special case of (14b), due to the simple output structure of this model
         J.append(phi_step)
 
         # Current P, theta, x to store
@@ -92,12 +92,12 @@ if __name__ == '__main__':
         x_step = (x_step + delta_x).detach().requires_grad_(True)
         y_step = x_step[0]
 
-        s_step = s_step + J_x @ s_step + J_theta  # Eq. 15a in the paper
+        s_step = s_step + J_x @ s_step + J_theta  # Eq. 14a in the paper
 
     J = torch.stack(J).squeeze(-1).numpy()
 
-    # Eq 11b in the paper. Note: if you even use sp.linalg.solve and specify assume_a='pos',
-    # it should use cholesky factorization to solve the linear system, as mentioned in the paper
+    # Solution to linear Eq. 15 in the paper. Note: if you even use sp.linalg.solve and specify assume_a='pos',
+    # it should use Cholesky factorization to solve the linear system, as mentioned in the paper.
     Ip = np.eye(n_param)
     F = J.transpose() @ J
     A = F + sigma**2 * Ip
