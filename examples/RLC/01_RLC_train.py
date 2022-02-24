@@ -4,6 +4,9 @@ import numpy as np
 import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import sys
+from pathlib import Path 
+sys.path.append(str(Path(__file__).parent.parent.parent))
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
 from torchid.statespace.module.ss_simulator_ct import ForwardEulerSimulator
 from loader import rlc_loader
@@ -30,7 +33,7 @@ if __name__ == '__main__':
     # Column names in the dataset
     t, u, y, x = rlc_loader("train", "nl", noise_std=0.1)
 
-    # Get fit data #
+    # Get fit data 
     ts = t[1] - t[0]
     n_fit = int(t_fit // ts)  # x.shape[0]
     u_fit = u[0:n_fit]
@@ -112,7 +115,8 @@ if __name__ == '__main__':
         loss_consistency = torch.mean(err_consistency_scaled**2)
 
         # Compute trade-off loss
-        loss = loss_fit + alpha*loss_consistency
+        # loss = loss_fit + alpha*loss_consistency
+        loss = loss_fit
 
         # Statistics
         LOSS.append(loss.item())
