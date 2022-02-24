@@ -23,7 +23,7 @@ class RLC_Task(object):
     def __init__(
             self,
             model_params: Dict[str, Any],
-            n_traj: int = 32,
+            n_traj: int = 6, # prev.: 32
             n_steps: int = 2000,
             Ts: float = 1e-6,  # in s
             input_bandwidth: float = 80e3,  # in Hz
@@ -129,10 +129,10 @@ class RLC_Task_Dataset_Gen(object):
             num_val_classes: int = 512,
             num_test_classes: int = 256,
             seed: int = 1,
-            resistor_range=(2, 7),  # in Ohm
-            inductor_range=(40, 70),  # in µH
-            capacitor_range=(200, 400),  # in nF
-            n_jobs=4
+            resistor_range=(1, 14),  # in Ohm
+            inductor_range=(20, 140),  # in µH
+            capacitor_range=(100, 800),  # in nF
+            n_jobs=24
     ):
         self.base_dir = base_dir
         self.name = name
@@ -224,9 +224,13 @@ class RLC_Task_Dataset_Gen(object):
         n_vis_tasks = 100
         fig = visualize_tasks(n_vis_tasks, self.resistor_range,
                               self.inductor_range, self.capacitor_range)
+        # figname = str(
+        #     base_dir
+        # ) + f"/{n_vis_tasks} tasks - resistor_range {self.resistor_range} Ohm, \ncapacitor_range {self.capacitor_range} nF, \ninductor_range {self.inductor_range} µH"
         figname = str(
             base_dir
-        ) + f"/{n_vis_tasks} tasks - resistor_range {self.resistor_range} Ohm, \ncapacitor_range {self.capacitor_range} nF, \ninductor_range {self.inductor_range} µH"
+        ) + f"/{n_vis_tasks} tasks - resistor_range {self.resistor_range} Ohm, \ncapacitor_range {self.capacitor_range} nF, \ninductor_range {self.inductor_range} µH.png"
+
         fig.savefig(figname, dpi=300, bbox_inches="tight")
 
 
