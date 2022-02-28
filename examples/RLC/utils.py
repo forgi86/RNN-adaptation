@@ -27,7 +27,7 @@ def setup_run_dir(experiment_name: str, run_dir: Path = None) -> Path:
     if run_dir is None:
         run_dir = Path().cwd() / 'runs' / run_name
     else:
-        run_dir = run_dir / run_name
+        run_dir = run_dir
 
     run_dir.mkdir(parents=True, exist_ok=False)
 

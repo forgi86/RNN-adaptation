@@ -146,12 +146,7 @@ if __name__ == '__main__':
     # Save model
     if not os.path.exists("models"):
         os.makedirs("models")
-    # if add_noise:
-    #     model_filename = f"model_SS_{seq_len}step_noise_V.pt"
-    #     hidden_filename = f"hidden_SS_{seq_len}step_noise_V.pt"
-    # else:
-    #     model_filename = f"model_SS_{seq_len}step_nonoise_V.pt"
-    #     hidden_filename = f"hidden_SS_{seq_len}step_nonoise_V.pt"
+
     model_filename = "ss_model.pt"
     hidden_filename = "ss_hidden.pt"
 
@@ -182,14 +177,17 @@ if __name__ == '__main__':
     ax[0].plot(np.array(x_sim_torch_val[:, 0]), label='Fit')
     ax[0].legend()
     ax[0].grid(True)
+    ax[0].set_ylabel("output voltage v_c")
 
     ax[1].plot(np.array(x_true_torch_val[:, 1]), label='True')
     ax[1].plot(np.array(x_sim_torch_val[:, 1]), label='Fit')
     ax[1].legend()
     ax[1].grid(True)
+    ax[1].set_ylabel("current i_l")
 
     ax[2].plot(np.array(u_torch_val), label='Input')
     ax[2].grid(True)
+    ax[2].set_ylabel("input v_in")
     # plt.show()
     fig.savefig(str(fig_dir/"RLC_SS_state_preds_training_data.pdf"), bbox_inches='tight')
 
