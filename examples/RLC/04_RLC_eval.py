@@ -1,7 +1,11 @@
 import os
 import numpy as np
 import torch
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
 import matplotlib.pyplot as plt
+from examples.RLC.utils import get_time_str
 from torchid.statespace.module.ssmodels_ct import NeuralStateSpaceModel
 from torchid.statespace.module.ss_simulator_ct import ForwardEulerSimulator
 from diffutil.products import jvp, unflatten_like
@@ -30,12 +34,20 @@ if __name__ == '__main__':
     # In[Settings]
     model_name = "ss_model"  # "ss_model_retrain"
     seq_len = 2000
+    sigma=0.1
     # dataset = "transfer"
     dataset = "eval"
+    ds_filename = 'transfereval/R:4.0_L:5e-05_C:3.5e-07.npy'
+    # ds_filename = 'val/R:1.0935361214295956_L:9.589787600234677e-05_C:2.9333830098482676e-07.npy'
+
 
     # In[Load dataset]
-    t_new, u_new, y_new, x_new = loader.rlc_loader(dataset, dataset_type="nl", noise_std=0.0, n_data=seq_len)
-
+    # t_new, u_new, y_new, x_new = loader.rlc_loader(dataset, dataset_type="nl", noise_std=0.0, n_data=seq_len)
+    t_new, u_new, y_new, x_new = loader.rlc_loader_multitask(ds_filename,
+                                             trajectory=1,
+                                             steps=2000,
+                                             noise_std=sigma,
+                                             scale=False)
     # In[Second-order dynamical system custom defined]
     # Setup neural model structure and load fitted model parameters
     ss_model = NeuralStateSpaceModel(n_x=2, n_u=1, n_feat=50)
@@ -70,16 +82,26 @@ if __name__ == '__main__':
     plt.plot(y_lin_new, 'b', label="Lin-Sense")
     plt.legend()
     plt.grid()
+    plt.xlim(0, 500)
     # plt.show()
+    datetime_str = get_time_str()
+    plt.savefig(f"fig/rlc_eval_results_{datetime_str}.pdf", bbox_inches='tight')
 
     # Saving state and input
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y.npy"), y_new)
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_sim.npy"), y_sim_new)
-    np.save(os.path.join("data", "RLC_SS_NL", "04_eval_y_lin.npy"), y_lin_new)
+    save_path = Path.cwd() / 'data' / 'RLC_SS_NL'
+    save_path.mkdir(parents=True, exist_ok=True)
+    np.save(str(save_path/  "04_eval_y.npy"), y_new)
+    np.save(str(save_path/  "04_eval_y_sim.npy"), y_sim_new)
+    np.save(str(save_path/  "04_eval_y_lin.npy"), y_lin_new)
 
-    # R-squared metrics
+    # R-squared and MSE metrics
     R_sq = metrics.r_squared(y_new, y_lin_new)
     print(f"R-squared linear model: {R_sq}")
 
     R_sq = metrics.r_squared(y_new, y_sim_new)
     print(f"R-squared nominal model: {R_sq}")
+    
+    mse = np.mean((y_new-y_lin_new)**2, axis=0)
+    print(f"MSE linear model: {mse}")
+    mse = np.mean((y_new-y_sim_new)**2, axis=0)
+    print(f"MSE nominal model: {mse}")

@@ -378,14 +378,26 @@ if __name__ == '__main__':
     # task = RLC_Task(model_params=params, n_traj=3)
     # print('generated')
 
-    fig = visualize_tasks()
-    plt.show()
-    figname = 'rlc_tasks.jpg'
-    fig.savefig(figname, dpi=300, bbox_inches="tight")
+    # fig = visualize_tasks()
+    # plt.show()
+    # figname = 'rlc_tasks.jpg'
+    # fig.savefig(figname, dpi=300, bbox_inches="tight")
 
-    # base_dir = "/system/user/publicdata/meta_learning/ode"
     # # base_dir = "home/max/phd/data/ode"
 
     # rlc_data = RLC_Task_Dataset_Gen(base_dir=base_dir)
     # rlc_data.save()
     # print("Done.")
+
+    # Generate datasets from Forgione Paper
+    params_transfereval = {"C": 350e-9, "L": 50e-6, "R": 4.0}
+    # params = {"C": 270e-9, "L": 50e-6, "R": 3.0}
+    task_transfereval = RLC_Task(model_params=params_transfereval, n_traj=3)
+    base_dir = Path("/system/user/publicdata/meta_learning/ode")
+    dataset_dir = base_dir / "rlc_dataset-resistor_range1_14-capacitor_range100_800-inductor_range20_140"
+    
+    save_dir_transfereval = dataset_dir/'transfereval'
+    save_dir_transfereval.mkdir(exist_ok=True, parents=True)
+    task_transfereval.save(save_dir_transfereval)
+
+    # print('generated')

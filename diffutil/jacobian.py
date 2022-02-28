@@ -87,7 +87,7 @@ def parameter_jacobian(model, input, vectorize=True, flatten=True):
     f_par = functools.partial(f_par_mod_in, param_names=names, module=model, inputs=input)
     f_par(*params)
 
-    jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize)
+    jacs = torch.autograd.functional.jacobian(f_par, params, vectorize=vectorize) # vectorize not supported in pytorch 1.7.1
 
     if flatten:
         if len(input.shape) == 3:
