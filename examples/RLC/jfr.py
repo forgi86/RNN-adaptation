@@ -92,11 +92,11 @@ class JFRTester(object):
 
         eval_results = {}
 
-        for dataset in datasets:
+        for i, dataset in enumerate(datasets):
             ds_filename = split + '/' + dataset.name
             eval_results[ds_filename] = {}
             pbar = tqdm(support_sizes)
-            pbar.set_description(f'Dataset {ds_filename}')
+            pbar.set_description(f'ds({i}): {ds_filename}')
             for support_size in pbar:
                 theta_lin = self._calculate_linear_adaption(
                     ds_filename=ds_filename, support_size=support_size)
@@ -348,6 +348,7 @@ class JFRTester(object):
         # np.save(preds_dir / "inputs_u.npy", np.array(u_torch_val))
         # np.save(preds_dir / "state_space_learned_consistency.npy",
         #         x_hidden_fit_np)
+        plt.close()
 
     def _calculate_linear_adaption(self,
                                    ds_filename: str,
@@ -439,6 +440,7 @@ class JFRTester(object):
         fig.savefig(str(plot_dir / f'plot_ds-{ds_filename.replace("/","_")}_support-{support_size}.png'),
                     bbox_inches='tight',
                     dpi=300)
+        plt.close()
 
         #* save predictions
         preds_dir = self._run_dir / 'predictions_eval'
@@ -447,7 +449,6 @@ class JFRTester(object):
                  output=y_new,
                  prediction_no_finetune=y_sim_new,
                  prediction_jfr_adapted=y_lin_new)
-
         # R-squared and MSE metrics
         r_sq_lin = metrics.r_squared(y_new, y_lin_new)
         # print(f"R-squared linear model: {r_sq_lin}")
@@ -491,3 +492,4 @@ if __name__ == '__main__':
     jfr.evaluate(split='test',
                  support_sizes=support_sizes,
                  n_datasets=None)
+    print('Done.')
