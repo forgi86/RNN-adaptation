@@ -34,17 +34,19 @@ if __name__ == '__main__':
     # Column names in the dataset
     # t, u, y, x = rlc_loader("train", "nl", noise_std=0.1)
     ds_filename = 'train/R:3.0_L:5e-05_C:2.7e-07.npy'
+    trajectory_stop = 3
+    num_timesteps = 2000
+    val_trajectory = 0
     t, u, y, x = loader.rlc_loader_multitask(ds_filename,
                                          trajectory=0,
-                                         steps=2000,
+                                         trajectory_stop=trajectory_stop,
+                                         steps=num_timesteps,
                                          noise_std=0.1,
                                          scale=False)
     # Get fit data 
-    ts = t[1] - t[0]
-    n_fit = int(t_fit // ts)  # x.shape[0]
-    u_fit = u[0:n_fit]
-    y_fit = y[0:n_fit]
-    time_fit = t[0:n_fit]
+    u_fit = u
+    y_fit = y
+    time_fit = t
 
     # Fit data to pytorch tensors #
     u_torch_fit = torch.from_numpy(u_fit)
@@ -67,18 +69,19 @@ if __name__ == '__main__':
     def get_batch(batch_size, seq_len):
 
         # Select batch indexes
-        num_train_samples = y_fit.shape[0]
+        num_train_samples = y_fit.shape[1]
+        batch_traj = np.random.choice(np.arange(trajectory_stop), batch_size, replace=True)
         batch_start = np.random.choice(np.arange(num_train_samples - seq_len, dtype=np.int64),
                                        batch_size, replace=False)  # batch start indices
         batch_idx = batch_start[:, np.newaxis] + np.arange(seq_len)  # batch samples indices
         batch_idx = batch_idx.T  # transpose indexes to obtain batches with structure (m, q, n_x)
 
         # Extract batch data
-        batch_t = torch.tensor(time_fit[batch_idx])
-        batch_x0_hidden = x_hidden_fit[batch_start, :]
-        batch_x_hidden = x_hidden_fit[[batch_idx]]
-        batch_u = torch.tensor(u_fit[batch_idx])
-        batch_y = torch.tensor(y_fit[batch_idx])
+        batch_t = torch.tensor(time_fit[batch_traj, batch_idx])
+        batch_x0_hidden = x_hidden_fit[batch_traj, batch_start, :]
+        batch_x_hidden = x_hidden_fit[batch_traj, batch_idx]
+        batch_u = torch.tensor(u_fit[batch_traj, batch_idx])
+        batch_y = torch.tensor(y_fit[batch_traj, batch_idx])
 
         return batch_t, batch_x0_hidden, batch_u, batch_y, batch_x_hidden
 
@@ -155,11 +158,9 @@ if __name__ == '__main__':
     torch.save(nn_solution.ss_model.state_dict(), os.path.join("models", model_filename))
     torch.save(x_hidden_fit, os.path.join("models", hidden_filename))
 
-    t_val = 5e-3
-    n_val = int(t_val // ts)  # x.shape[0]
-
-    input_data_val = u[0:n_val]
-    state_data_val = x[0:n_val]
+    # use trajectory 0 for plotting
+    input_data_val = u[val_trajectory, 0:num_timesteps]
+    state_data_val = x[val_trajectory, 0:num_timesteps]
 
     x0_val = np.zeros(2, dtype=np.float32)
     x0_torch_val = torch.from_numpy(x0_val)

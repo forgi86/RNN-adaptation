@@ -46,11 +46,15 @@ if __name__ == "__main__":
 def rlc_loader_multitask(ds_filename: str,
                          trajectory: int,
                          steps: int,
+                         trajectory_stop: int = None, 
                          noise_std: float = 0.1,
                          scale: bool = True,
                          base_dir: str = BASE_DIR, 
                          dtype=np.float32):
-
+    """
+    if trajectory_end is given the training data consists of multiple trajectories and 
+    return values have one additional trajectory dimension.
+    """
     base_dir = Path(base_dir)
     file = base_dir / ds_filename
 
@@ -68,25 +72,45 @@ def rlc_loader_multitask(ds_filename: str,
 
     # add output noise according to Forgione paper code
     all_data[:, :, 2] += np.random.randn(*all_data[:, :, 2].shape) * noise_std
+    if not trajectory_stop:
+        all_data_traj = all_data[trajectory]
 
-    all_data_traj = all_data[trajectory]
+        # extract t, u, x, y
+        t = all_data_traj[:, [0]]
+        u = all_data_traj[:, [1]]
+        y = all_data_traj[:, [2]]
+        x = all_data_traj[:, 2:]
 
-    # extract t, u, x, y
-    t = all_data_traj[:, [0]]
-    u = all_data_traj[:, [1]]
-    y = all_data_traj[:, [2]]
-    x = all_data_traj[:, 2:]
+        if scale:
+            u = u / 100
+            y = y / 100
+            x = x / [100, 6]
 
-    if scale:
-        u = u / 100
-        y = y / 100
-        x = x / [100, 6]
+        if steps > 0:
+            t = t[:steps, :]
+            u = u[:steps, :]
+            y = y[:steps, :]
+            x = x[:steps, :]
+    else:
+        assert trajectory_stop > trajectory
+        all_data_traj = all_data[trajectory:trajectory_stop]
 
-    if steps > 0:
-        t = t[:steps, :]
-        u = u[:steps, :]
-        y = y[:steps, :]
-        x = x[:steps, :]
+        # extract t, u, x, y
+        t = all_data_traj[:, :, [0]]
+        u = all_data_traj[:, :, [1]]
+        y = all_data_traj[:, :, [2]]
+        x = all_data_traj[:, :, 2:]
+
+        if scale:
+            u = u / 100
+            y = y / 100
+            x = x / [100, 6]
+
+        if steps > 0:
+            t = t[:, :steps, :]
+            u = u[:, :steps, :]
+            y = y[:, :steps, :]
+            x = x[:, :steps, :]
 
     return t.astype(dtype), u.astype(dtype), y.astype(dtype), x.astype(dtype)
 
