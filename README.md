@@ -1,6 +1,15 @@
 # JFR Baseline for SubGD
 
-This repo extends the orginal repo to the few-shot setting and implements JFR as baseline.
+This repo extends the orginal repo to the few-shot setting and implements JFR as baseline for RLC.
+
+The data generatation code is can be found in [multitask](multitask).
+
+JFR baseline for the RLC system can be found in [examples/RLC/jfr.py](examples/RLC/jfr.py).
+
+Notebooks for plots and results are in the [notebooks](notebooks) folder.
+
+
+#
 
 # On the adaptation of recurrent neural networks for system identification
 
