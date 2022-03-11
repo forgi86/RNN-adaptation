@@ -1,3 +1,7 @@
+# JFR Baseline for SubGD
+
+This repo extends the orginal repo to the few-shot setting and implements JFR as baseline.
+
 # On the adaptation of recurrent neural networks for system identification
 
 This repository contains the Python code to reproduce the results
