@@ -23,7 +23,7 @@ class RLC_Task(object):
     def __init__(
             self,
             model_params: Dict[str, Any],
-            n_traj: int = 6, # prev.: 32
+            n_traj: int = 6,  # prev.: 32
             n_steps: int = 2000,
             Ts: float = 1e-6,  # in s
             input_bandwidth: float = 80e3,  # in Hz
@@ -75,7 +75,7 @@ class RLC_Task(object):
 
             # system states [v_c, i_l]
             x = y.y.T  # transpose -> x has shape (n_steps, 2)
-            
+
             traj = np.concatenate((te.reshape(-1, 1), u.reshape(-1, 1), x),
                                   axis=1)
             trajectories.append(traj)
@@ -132,8 +132,7 @@ class RLC_Task_Dataset_Gen(object):
             resistor_range=(1, 14),  # in Ohm
             inductor_range=(20, 140),  # in µH
             capacitor_range=(100, 800),  # in nF
-            n_jobs=24
-    ):
+            n_jobs=24):
         self.base_dir = base_dir
         self.name = name
         self.model_params_nominal = model_params_nominal
@@ -305,28 +304,33 @@ def simulate_rlc_system(model_params: Dict[str, Any],
 
     return x
 
-
 def visualize_tasks(
         n_tasks=100,
+        task_params: List[Dict[str, float]] = None,
         resistor_range=(2, 7),  # in Ohm
         inductor_range=(40, 70),  # in µH
         capacitor_range=(200, 400),  # in nF
+        plot_nominal_model: bool= False,
+        n_steps:int = 2000
 ):
-    n_steps = 500
-
     # inputs
     u, te = generate_colored_noise(bandwidth=80e3, Ts=1e-6, n_steps=n_steps)
-    # different models for the tasks
-    task_models = generate_rlc_task_params(n_tasks,
-                                           resistor_range=resistor_range,
-                                           inductor_range=inductor_range,
-                                           capacitor_range=capacitor_range)
-    nominal_model = {"C": 270e-9, "L": 50e-6, "R": 3.0}
-    # simulate systems
-    nominal_traj = simulate_rlc_system(nominal_model, u, te)
+    if task_params:
+        task_models = task_params
+    else:
+        # different models for the tasks
+        task_models = generate_rlc_task_params(n_tasks,
+                                               resistor_range=resistor_range,
+                                               inductor_range=inductor_range,
+                                               capacitor_range=capacitor_range)
+    
+    if plot_nominal_model:
+        nominal_model = {"C": 270e-9, "L": 50e-6, "R": 3.0}
+        # simulate systems
+        nominal_traj = simulate_rlc_system(nominal_model, u, te)
 
     task_trajectories = []
-    for task_model in task_models:
+    for task_model in task_models[:n_tasks]:
         traj = simulate_rlc_system(task_model, u, te)
         task_trajectories.append(traj)
 
@@ -342,17 +346,17 @@ def visualize_tasks(
         ax[1].plot(te[:plot_steps],
                    task_traj[:plot_steps, 1],
                    label=name_template.format(**task_models[i]))
-
-    ax[0].plot(te[:plot_steps],
-               nominal_traj[:plot_steps, 0],
-               'r',
-               lw=2,
-               label=name_template.format(**nominal_model))
-    ax[1].plot(te[:plot_steps],
-               nominal_traj[:plot_steps, 1],
-               'r',
-               lw=2,
-               label=name_template.format(**nominal_model))
+    if plot_nominal_model:
+        ax[0].plot(te[:plot_steps],
+                   nominal_traj[:plot_steps, 0],
+                   'r',
+                   lw=2,
+                   label=name_template.format(**nominal_model))
+        ax[1].plot(te[:plot_steps],
+                   nominal_traj[:plot_steps, 1],
+                   'r',
+                   lw=2,
+                   label=name_template.format(**nominal_model))
     ax[0].legend(frameon=False, loc=(1, 0))
 
     ax[2].plot(te[:plot_steps], u[:plot_steps], 'b')
@@ -395,8 +399,8 @@ if __name__ == '__main__':
     task_transfereval = RLC_Task(model_params=params_transfereval, n_traj=3)
     base_dir = Path("/system/user/publicdata/meta_learning/ode")
     dataset_dir = base_dir / "rlc_dataset-resistor_range1_14-capacitor_range100_800-inductor_range20_140"
-    
-    save_dir_transfereval = dataset_dir/'transfereval'
+
+    save_dir_transfereval = dataset_dir / 'transfereval'
     save_dir_transfereval.mkdir(exist_ok=True, parents=True)
     task_transfereval.save(save_dir_transfereval)
 
