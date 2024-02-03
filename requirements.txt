@@ -111,7 +111,7 @@ rqt-top==0.4.8
 rqt-topic==0.4.11
 rqt-web==0.4.8
 rviz==1.13.17
-scikit-learn==0.24.2
+scikit-learn==1.0.1
 scipy @ file:///tmp/build/80754af9/scipy_1618855955483/work
 sensor-msgs==1.12.8
 sip==4.19.13
